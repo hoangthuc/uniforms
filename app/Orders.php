@@ -70,6 +70,7 @@ class Orders extends Model
             0 => 'Cash on delivery',
             1 => 'Direct bank transfer',
             2 => 'PayPal',
+            3 => 'Authorize',
         ];
         return $product_type;
     }

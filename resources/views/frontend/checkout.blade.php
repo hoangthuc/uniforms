@@ -189,6 +189,38 @@
                                                         </div>
                                                     </div>
 
+                                                    <div class="card">
+                                                        <div class="card-header" id="headingThree">
+                                                            <h2 class="mb-0">
+                                                                <a class="btn btn-link btn-block text-left font-weight-bold collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                                    Authorize.net
+                                                                </a>
+                                                            </h2>
+                                                        </div>
+                                                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#ChooseGatePayment">
+                                                            <div class="card-body">
+                                                                <div data-payment="paymentFormAuthorize" data-total="{{ json_encode($total) }}">
+                                                                    <form id="paymentForm"
+                                                                          method="POST"
+                                                                          action="">
+                                                                        <input type="hidden" name="dataValue" id="dataValue" />
+                                                                        <input type="hidden" name="dataDescriptor" id="dataDescriptor" />
+                                                                        <button type="button"
+                                                                                class="AcceptUI"
+                                                                                data-billingAddressOptions='{"show":false, "required":false}'
+                                                                                data-apiLoginID="{{ env('AUTHORIZE_NET_LOGIN_ID') }}"
+                                                                                data-clientKey="{{ env('AUTHORIZE_NET_CLIENT_KEY') }}"
+                                                                                data-acceptUIFormBtnTxt="Submit"
+                                                                                data-acceptUIFormHeaderTxt="Card Information"
+                                                                                data-paymentOptions='{"showCreditCard": true}'
+                                                                                data-responseHandler="responseHandler">Pay
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
 
                                                 </div>
 
@@ -212,4 +244,28 @@
             </div>
         </div>
     </section>
+@endsection
+@section('footer_layout')
+    <script type="text/javascript" src="{{ asset('js/AcceptUI.js') }}" charset="utf-8"></script>
+<script>
+    var data_payment = {
+        "createTransactionRequest": {
+            "merchantAuthentication": {
+                "name": "{{ env('AUTHORIZE_NET_LOGIN_ID') }}",
+                "transactionKey": "{{ env('AUTHORIZE_NET_TRANSACTION_KEY') }}"
+            },
+            "refId": "{{ uniqid(rand(0,99)) }}",
+            "transactionRequest": {
+                "transactionType": "authCaptureTransaction",
+                "amount": "{{ round($total['total'], 2) }}",
+                "payment": {
+                    "opaqueData": {
+                        "dataDescriptor": "COMMON.ACCEPT.INAPP.PAYMENT",
+                        "dataValue": "9471056021205027705001",
+                    }
+                }
+            }
+        }
+    };
+</script>
 @endsection

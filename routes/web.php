@@ -310,8 +310,3 @@ Route::get('/checkout', function(){
 Route::get('/order/{id}', function($id){
     return view('frontend.order_detail',['slug'=>'order','order_id'=>$id]);
 })->name('order_detail');
-
-
-// payment Authorize.Net
-Route::get('payment', 'PaymentController@index');
-Route::post('payment', 'PaymentController@index');

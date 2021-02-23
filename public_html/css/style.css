@@ -1621,3 +1621,6 @@ display: inline-block;
     box-shadow: 0px 0px 2px #00000040;
     cursor: pointer;
 }
+[datasearchproduct] .title_product .d-categories{
+    font-size: 15px;
+}

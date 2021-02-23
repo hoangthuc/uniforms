@@ -894,6 +894,7 @@ if(!function_exists('display_resulf_ajax_search') ){
                         <div class="price">
                             <label>SKU: </label> <strong><?= $item_product->sku ?></strong>
                             <label>Price: </label> <strong><?= format_currency( App\Product::get_meta_product($item_product->id,'price'),2,'$') ?></strong>
+                            <label>Categories:</label> <strong class="d-categories"><?= display_list_category_product($item_product->id) ?></strong>
                         </div>
                     </div>
                 </div>

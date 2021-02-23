@@ -12,7 +12,7 @@
             }(t, e), d(),
             function() {
                 var t = document.createElement("style");
-                t.type = "text/css", t.innerHTML = "#AcceptUIBackground {visibility: hidden;opacity: 0;z-index: -1; }#AcceptUIContainer.show {visibility: visible; z-index: 200;opacity: 1; top: 50%;}#AcceptUIBackground.show { opacity: .7;visibility: visible;z-index: 999998;}#paymentForm .AcceptUI{visibility: hidden;}", document.getElementsByTagName("head")[0].appendChild(t)
+                t.type = "text/css", t.innerHTML = "#AcceptUIBackground {visibility: hidden;opacity: 0;z-index: -1; }#AcceptUIContainer.show {visibility: visible; z-index: 200;opacity: 1; top: 50%;}#AcceptUIBackground.show { opacity: .7;visibility: visible;z-index: 8;}#collapseThree .AcceptUI{visibility: hidden;}", document.getElementsByTagName("head")[0].appendChild(t)
             }()
     }
 
@@ -35,7 +35,7 @@
         var t = w(l),
             e = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
             n = m();
-        I() ? (t.style.top = "0", t.style.marginLeft = "-10px", t.style.width = "100%", t.style.height = "100%") : (e <= 550 ? (t.style.left = "0", t.style.width = e + "px", t.style.marginLeft = "0") : ( t.style.width = "550px"), n <= c ? (t.style.top = "0", t.style.height = n + "px", t.style.marginTop = "0") : (t.style.height = c + "px"))
+        I() ? (t.style.top = "0", t.style.marginLeft = "-10px", t.style.width = "100%", t.style.height = "100%") : (e <= 550 ? (t.style.left = "0", t.style.width = e + "px", t.style.marginLeft = "0") : ( t.style.width = "100%"), n <= c ? (t.style.top = "0", t.style.height = n + "px", t.style.marginTop = "0") : (t.style.height = c + "px"))
     }
 
     function o() {
@@ -48,7 +48,7 @@
             var t = document.body,
                 e = document.documentElement;
             return Math.max(t.scrollHeight, t.offsetHeight, e.clientHeight, e.scrollHeight, e.offsetHeight)
-        }() + "px") : ((e = document.createElement("div")).innerHTML = '<div id="' + s + '" style="opacity: 0.1; background: #000000; position: absolute;  left: 0; right: 0; top: 0; bottom: 0; min-height: 450px;"></div>', e = e.firstChild, document.addEventListener && (e.style.zIndex = "999998"), document.body.insertBefore(e, t))
+        }() + "px") : ((e = document.createElement("div")).innerHTML = '<div id="' + s + '" style="opacity: 0.1; background: #000000; position: absolute;  left: 0; right: 0; top: 0; bottom: 0; min-height: 450px;"></div>', e = e.firstChild, document.addEventListener && (e.style.zIndex = "8"), document.body.insertBefore(e, t))
     }
 
     function d(t) {
@@ -62,7 +62,7 @@
                 pktData: window.location.origin
             },
             d = ~navigator.userAgent.indexOf("Android") && navigator.userAgent.match(/Chrome\/[.0-9]* Mobile/);
-        I() ? (c = m(), e.style.borderRadius = "0px") : e.style.borderRadius = "6px", e.style.visibility = "", e.style.position = "relative", e.style.boxShadow = "rgba(0, 0, 0, 0.40) 5px 5px 16px", e.style.zIndex = "999999", e.style.display = "block", d || (e.style.overflow = "hidden"), n.src = i + "#" + encodeURIComponent(JSON.stringify(o)), n.style.height = "100%", n.style.width = "100%", n.style.scrolling = "no", n.style.seamless = "seamless", n.style.overflowY = "hidden", n.style.overflowX = "hidden", document.body.querySelector('[data-payment="paymentFormAuthorize"]').appendChild(a), document.getElementById(l) || document.body.querySelector('[data-payment="paymentFormAuthorize"]').appendChild(e), r = function(n, i, a) {
+        I() ? (c = m(), e.style.borderRadius = "0px") : e.style.borderRadius = "6px", e.style.visibility = "", e.style.position = "relative", e.style.boxShadow = "rgba(0, 0, 0, 0.40) 5px 5px 16px", e.style.zIndex = "9", e.style.display = "block", d || (e.style.overflow = "hidden"), n.src = i + "#" + encodeURIComponent(JSON.stringify(o)), n.style.height = "100%", n.style.width = "100%", n.style.scrolling = "no", n.style.seamless = "seamless", n.style.overflowY = "hidden", n.style.overflowX = "hidden", document.body.querySelector('[data-payment="paymentFormAuthorize"]').appendChild(a), document.getElementById(l) || document.body.querySelector('[data-payment="paymentFormAuthorize"]').appendChild(e), r = function(n, i, a) {
             var o;
             return function() {
                 var t = this,
@@ -115,7 +115,7 @@
                     filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)",
                     minWidth: "100%",
                     minHeight: "100%",
-                    zIndex: "999998"
+                    zIndex: "8"
                 };
             if (!e)
                 for (var i in (e = document.createElement("div")).id = t, n) e.style[i] = n[i];
@@ -155,7 +155,6 @@ function responseHandler(response) {
         }
     } else {
         console.log(response);
-        // paymentFormUpdate(response.opaqueData);
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         data_payment.createTransactionRequest.transactionRequest.payment.opaqueData.dataDescriptor = response.opaqueData.dataDescriptor;
@@ -176,13 +175,18 @@ function responseHandler(response) {
             console.log(data);
             var i = 0;
         if (data.messages.resultCode === "Error") {
+            var msg_error = '';
             while (i < data.transactionResponse.errors.length) {
                 console.log(
-                    data.transactionResponse.errors[i].errorCode + ": " +
-                    data.transactionResponse.errors[i].errorText
+                    data.transactionResponse.errors[i].errorCode + ": " + data.transactionResponse.errors[i].errorText
                 );
+                msg_error +=data.transactionResponse.errors[i].errorCode + ": " + data.transactionResponse.errors[i].errorText;
                 i = i + 1;
             }
+            Swal.fire({
+                icon: 'error',
+                text: msg_error,
+            });
         }else{
             while (i < data.transactionResponse.messages.length) {
                 console.log(
@@ -191,6 +195,13 @@ function responseHandler(response) {
                 );
                 i = i + 1;
             }
+            let data_info = [];
+            let total = document.body.querySelector('[data-payment="paymentFormAuthorize"]').getAttribute('data-total');
+            data_info[1] = {name:'payment',value: payment_order()};
+            data_info[2] = {name:'products',value: cart.products};
+            data_info[3] = {name:'total',value: JSON.parse(total)  };
+            data_info[4] = {name:'payment_type',value: 3 };
+            send_order(data_info);
         }
             }
                 )
