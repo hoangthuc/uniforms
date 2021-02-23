@@ -1581,7 +1581,7 @@ function show_color_list_product($product_id){
     $color=[];
     foreach ($select as $key => $item){
         $attributes = App\Product::get_product_attributes_detail($key);
-        if(!$attributes->type){
+        if($attributes && !$attributes->type){
             foreach ($item->value as $value){
                 if($value){
                     if(!$attributes->type && !isset($color[$value->value]) )$color[$value->value]=[
