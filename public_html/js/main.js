@@ -589,23 +589,29 @@ function ValidatePhone(inputText)
         return false;
     }
 }
-
+var request;
 function search_key_product(event) {
     let cat = $('.show_select [name="type"]').val();
     let key =  $(event).val();
     let resulf_search = document.querySelector('[DataSearchProduct]');
     resulf_search.className = 'resulf-search';
     resulf_search.innerHTML = '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>';
-    $.ajax({
-        url: setting.ajax_url,
-        type: 'post',
-        data: {cat:cat,search: key, action: 'search_product_ajax', _token: setting.token},
-        success: function (resulf) {
-            if (resulf) {
-                setTimeout( function(){resulf_search.innerHTML =  resulf;},500)
+    if(request && !request.status){
+        request.abort();
+    }
+
+    request =  $.ajax({
+            url: setting.ajax_url,
+            type: 'post',
+            data: {cat:cat,search: key, action: 'search_product_ajax', _token: setting.token},
+            success: function (resulf) {
+                if (resulf) {
+                    resulf_search.innerHTML =  resulf;
+                }
             }
-        }
-    });
+        });
+
+
 }
 
 function form_register(event){

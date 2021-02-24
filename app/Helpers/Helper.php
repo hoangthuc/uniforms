@@ -1607,3 +1607,42 @@ function show_color_list_product($product_id){
     }
     return $color;
 }
+
+function compare_vocabulary($text,$c_text){
+    $text = strtolower($text);
+    $c_text = strtolower($c_text);
+    $c_text = explode(' ',$c_text);
+    $i=0;
+    $count = 0;
+    while ( $i < count($c_text)){
+        $catname =  str_replace('|','',$c_text[$i]);
+        $catname =  str_replace(',','',$catname);
+        $catname =  str_replace('"','',$catname);
+        if ($catname && strstr( $text, $catname ) ) {
+            $count++;
+        }
+        $i++;
+    }
+
+   return  round( $count/$i,2 )*100;
+}
+
+function list_compare_cat(){
+    $categories_array =  \App\Product::get_product_categories_all();
+    $products = Product::get_products(['limit'=>400]);
+    $table = [];
+    foreach ($products as $product){
+        $productname =  $product->name;
+        foreach ($categories_array as $cat){
+            if(isset($cat->name)){
+                $p = compare_vocabulary($productname,$cat->name);
+                if($p > 50){
+                    $table[$product->id]['categories'][$cat->id] = $cat->name.'('.$p.'%)';
+                }
+
+            }
+        }
+        if( isset($table[$product->id]['categories']) ) $table[$product->id]['product'] = (array)$product;
+    }
+return $table;
+}

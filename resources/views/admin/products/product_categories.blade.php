@@ -6,7 +6,14 @@
     $Categories = App\Product::get_sort_categories($product_categories);
     $product_departments = \App\Product::product_departments();
     $parent = (isset($_GET['parent']))?$_GET['parent']:'';
-    ?>
+    $table_cat = list_compare_cat();
+    echo '<table>';
+    foreach ($table_cat as $p_id => $p){
+        echo '<tr><td>'. \App\Product::get_meta_product($p_id,'sku') .'</td><td>'.$p['product']['name'].'</td>';
+        echo '<td>'.implode(',', $p['categories'] ).'</td></tr>';
+    }
+    echo '</table>';
+        ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
