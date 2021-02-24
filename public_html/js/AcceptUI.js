@@ -35,7 +35,7 @@
         var t = w(l),
             e = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
             n = m();
-        I() ? (t.style.top = "0", t.style.marginLeft = "-10px", t.style.width = "100%", t.style.height = "100%") : (e <= 550 ? (t.style.left = "0", t.style.width = e + "px", t.style.marginLeft = "0") : ( t.style.width = "100%"), n <= c ? (t.style.top = "0", t.style.height = n + "px", t.style.marginTop = "0") : (t.style.height = c + "px"))
+        I() ? (t.style.top = "0", t.style.marginLeft = "-10px", t.style.width = "100%", t.style.height = "100%") : (e <= 550 ? (t.style.left = "0", t.style.width = e + "px", t.style.marginLeft = "0") : ( t.style.width = "100%"), n <= c ? (t.style.top = "0", t.style.height = "288px", t.style.marginTop = "0") : (t.style.height = c + "px"))
     }
 
     function o() {
@@ -146,13 +146,20 @@
 function responseHandler(response) {
     if (response.messages.resultCode === "Error") {
         var i = 0;
+        var msg_error = '';
         while (i < response.messages.message.length) {
             console.log(
                 response.messages.message[i].code + ": " +
                 response.messages.message[i].text
             );
+            msg_error +=response.messages.message[i].code + ": " +
+                response.messages.message[i].text;
             i = i + 1;
         }
+        Swal.fire({
+            icon: 'error',
+            text: msg_error,
+        });
     } else {
         console.log(response);
         var myHeaders = new Headers();

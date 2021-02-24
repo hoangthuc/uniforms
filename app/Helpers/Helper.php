@@ -528,7 +528,7 @@ if( !function_exists('showItemProduct') ){
             <a href="<?= $product['url'] ?>" style="background-image: url(<?= $product['image']?$product['image']:asset('images/products/default.jpg')  ?>)"><img src="<?= $product['image']  ?>"></a>
             <div class="list-color-product">
             <?php foreach($colors as $color): ?>
-            <span class="item_color" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= $color['img'] ?>" style="background-color: <?= $color['data_type'] ?>"></span>
+            <span class="item_color" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:'' ?>" style="background-color: <?= (isset($color['data_type']))?$color['data_type']:'' ?>"></span>
             <?php endforeach; ?>
             </div>
         </div>
@@ -1585,17 +1585,22 @@ function show_color_list_product($product_id){
         if($attributes && !$attributes->type){
             foreach ($item->value as $value){
                 if($value){
-                    if(!$attributes->type && !isset($color[$value->value]) )$color[$value->value]=[
-                        'id'=>$value->value,
-                        'name'=>$value->title,
-                    ];
+                    if(!$attributes->type && !isset($color[$value->value]) ){
+                        $attributes = App\Product::get_product_attributes_detail($value->value);
+                        $color[$value->value]=[
+                            'id'=>$value->value,
+                            'name'=>$value->title,
+                            'data_type'=>$attributes->data_type,
+                            'img'=> asset('images/products/default.jpg'),
+                        ];
+                    }
                 }
 
             }
         }
 
     }
-    foreach ($data as $item){
+    if($data)foreach ($data as $item){
         foreach ($item->select as $id){
             if(isset($color[$id]) && !isset($color[$id]['img']) ){
                 $attributes = App\Product::get_product_attributes_detail($id);
@@ -1626,23 +1631,31 @@ function compare_vocabulary($text,$c_text){
 
    return  round( $count/$i,2 )*100;
 }
-
+// save auto category to product by name
 function list_compare_cat(){
     $categories_array =  \App\Product::get_product_categories_all();
     $products = Product::get_products(['limit'=>400]);
     $table = [];
     foreach ($products as $product){
         $productname =  $product->name;
+        $categories_old = App\Relationships::get_relationships($product->id,'product_category_',2);
+        \App\Relationships::delete_relationship($product->id,'product_category_');
+        if($categories_old)foreach ($categories_old as $cat){
+            $table[$product->id]['categories'][$cat->id] = $cat->name;
+            \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
+        }
         foreach ($categories_array as $cat){
-            if(isset($cat->name)){
+            if(isset($cat->name) && !isset($table[$product->id]['categories'][$cat->id])){
                 $p = compare_vocabulary($productname,$cat->name);
                 if($p > 50){
-                    $table[$product->id]['categories'][$cat->id] = $cat->name.'('.$p.'%)';
+                    $table[$product->id]['categories'][$cat->id] = $cat->name;
+                    \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
                 }
 
             }
         }
-        if( isset($table[$product->id]['categories']) ) $table[$product->id]['product'] = (array)$product;
+        if( !isset($table[$product->id]['categories']) )$table[$product->id]['categories'] = [];
+            $table[$product->id]['product'] = (array)$product;
     }
 return $table;
 }
