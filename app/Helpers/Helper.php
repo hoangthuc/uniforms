@@ -1629,13 +1629,14 @@ function compare_vocabulary($text,$c_text){
         $catname =  str_replace('|','',$c_text[$i]);
         $catname =  str_replace(',','',$catname);
         $catname =  str_replace('"','',$catname);
+        $catname =  (substr($catname,-1,1)=='s')?substr($catname,0,-1):$catname;
         if ($catname && strstr( $text, $catname ) ) {
             $count++;
         }
         $i++;
     }
 
-   return  round( $count/$i,2 )*100;
+   return  array('p'=>round( $count/$i,2 )*100, 'c'=>$count,'t'=>$i);
 }
 // save auto category to product by name
 function list_compare_cat(){
@@ -1645,17 +1646,22 @@ function list_compare_cat(){
     foreach ($products as $product){
         $productname =  $product->name;
         $categories_old = App\Relationships::get_relationships($product->id,'product_category_',2);
-        \App\Relationships::delete_relationship($product->id,'product_category_');
+      //  \App\Relationships::delete_relationship($product->id,'product_category_');
         if($categories_old)foreach ($categories_old as $cat){
             $table[$product->id]['categories'][$cat->id] = $cat->name;
-            \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
+          //  \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
         }
         foreach ($categories_array as $cat){
             if(isset($cat->name) && !isset($table[$product->id]['categories'][$cat->id])){
-                $p = compare_vocabulary($productname,$cat->name);
-                if($p > 50){
+                $data_cat = str_replace('&',' ',$cat->name);
+               // $data_cat = str_replace('-',' ',$data_cat);
+                $data_cat = str_replace('/',' ',$data_cat);
+                $data_cat = str_replace('"','',$data_cat);
+                $data_cat = trim($data_cat);
+                $resulf = compare_vocabulary($productname,$data_cat);
+                if($resulf['p'] > 50 || $resulf['c'] > 1){
                     $table[$product->id]['categories'][$cat->id] = $cat->name;
-                    \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
+                   // \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
                 }
 
             }

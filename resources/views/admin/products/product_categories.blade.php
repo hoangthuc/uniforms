@@ -6,6 +6,31 @@
     $Categories = App\Product::get_sort_categories($product_categories);
     $product_departments = \App\Product::product_departments();
     $parent = (isset($_GET['parent']))?$_GET['parent']:'';
+//    $tables = list_compare_cat();
+//    echo '<table>';
+//    foreach ($tables as $row){
+//        echo '<tr>
+//<td>'. \App\Product::get_meta_product($row['product']['id'],'sku') .'</td>
+//<td>'.$row['product']['name'].'</td>';
+//    if(isset($row['categories']))echo '<td>'.implode(',',$row['categories']).'</td>';
+//echo '</tr>';
+//    }
+//    echo '</table>';
+    $xlsx = \App\SimpleXLSX::parse( public_path('uploads/import_product_category.xlsx') );
+    $data_product = [];
+    foreach ( $xlsx->rows() as $r => $row ) {
+      $product_id =   \App\Product::check_product_bysku($row[0]);
+      $list_category = explode(',',$row[2]);
+        // save category
+        if ( isset($list_category) ) {
+            \App\Relationships::delete_relationship($product_id,'product_category_');
+            foreach ($list_category as $item) {
+                $category = \App\Product::check_categories($item);
+                if( isset($category))\App\Relationships::save_relationships($product_id, $category, 'product_category_');
+            }
+        }
+    }
+
         ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
