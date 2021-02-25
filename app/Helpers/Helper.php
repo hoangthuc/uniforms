@@ -521,22 +521,29 @@ if( !function_exists('showItemProduct') ){
                 'quantily'=>1,
                 'subtotal'=>$product['price'],
                 'thumbnail'=>$product['image'],
-        ]
+        ];
+        if(!empty($colors)){
+            $colors_default = end($colors);
+            $data['attributes'] ='Color: '.$colors_default['name'];
+            $data['key'] =$data['key'].'_'.$colors_default['id'];
+            $data['Color'] =$colors_default['name'];
+            $data['thumbnail'] =(isset($colors_default['img']))?$colors_default['img']:asset('images/products/default.jpg');
+        }
         ?>
         <div class="thumbnail-product" data-color='<?= json_encode($colors) ?>' >
             <span class="SKU">SKU: <?= $product['sku']  ?></span>
             <a href="<?= $product['url'] ?>" style="background-image: url(<?= $product['image']?$product['image']:asset('images/products/default.jpg')  ?>)"><img src="<?= $product['image']  ?>"></a>
-            <div class="list-color-product">
+            <div class="<?php echo (count($colors)> 12)?'show-colume-2':''; ?> list-color-product ">
             <?php foreach($colors as $color): ?>
-            <span class="item_color" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:'' ?>" style="background-color: <?= (isset($color['data_type']))?$color['data_type']:'' ?>"></span>
-            <?php endforeach; ?>
+            <span class="item_color" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style="background-color: <?= (isset($color['data_type']))?$color['data_type']:'' ?>"></span>
+            <?php endforeach;  ?>
             </div>
         </div>
         <div class="category"><?= $product['category']  ?></div>
         <div class="title-product"><a href="<?= $product['url'] ?>"><?= $product['title']  ?></a></div>
         <div class="price-product pb-2 d-flex">
          <span>$<?= number_format($product['price'], 2, ',', ' '); ?></span>
-            <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' onclick="add_to_cart(this)">Add Cart <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
+            <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' onclick="add_to_cart(this)">Quick buy <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
         </div>
     <?php
         $resulf = ob_get_contents();
@@ -1580,7 +1587,7 @@ function show_color_list_product($product_id){
     $data = json_decode($data);
     $select = json_decode($select);
     $color=[];
-    foreach ($select as $key => $item){
+    if($select)foreach ($select as $key => $item){
         $attributes = App\Product::get_product_attributes_detail($key);
         if($attributes && !$attributes->type){
             foreach ($item->value as $value){
@@ -1590,8 +1597,7 @@ function show_color_list_product($product_id){
                         $color[$value->value]=[
                             'id'=>$value->value,
                             'name'=>$value->title,
-                            'data_type'=>$attributes->data_type,
-                            'img'=> asset('images/products/default.jpg'),
+                            'data_type'=>$attributes->data_type
                         ];
                     }
                 }

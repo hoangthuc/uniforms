@@ -3,8 +3,13 @@
     <?php
     $banner= '';
     $category = \App\Product::get_product_categories_bylug($slug);
+    $category_child = \App\Product::get_product_categories_parent(['parent_id'=>$category->id]);
+    $list_cat = [$category->id];
+    if($category_child)foreach ($category_child as $child){
+        $list_cat[] = $child->id;
+    }
     if( isset($category->media) )$banner = App\Media::get_url_media($category->media);
-    $query = ['product'=>[$category->id],'slug'=>$slug,'product_attribute'=>[],'sort'=>'sku'];
+    $query = ['product'=>$list_cat,'slug'=>$slug,'product_attribute'=>[],'sort'=>'sku'];
 //    $filters = get_filter_product( ['cat'=>[$category->id] ] );
     $filter_products = getProductFilterPage($query);
     ?>

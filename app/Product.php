@@ -108,9 +108,10 @@ class Product extends Model
 
 
     // get all categories
-    public static function get_product_categories_parent($where=''){
+    public static function get_product_categories_parent($query=[]){
+        $parent_id = isset($query['parent_id'])?$query['parent_id']:null;
         $products = DB::table('product_categories')
-            ->where('parent_id',null)->get();
+            ->where('parent_id',$parent_id)->get();
         return $products;
     }
 
