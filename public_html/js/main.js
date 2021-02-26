@@ -246,6 +246,10 @@ function change_quantily(button){
   var key = $(button).data('product-id');
   let check = in_cart(key,cart.products);
   let quantily = $(button).val();
+  if(!quantily || Number( quantily )<1){
+      quantily=1;
+      $(button).val(quantily);
+  }
   cart.products[check]['quantily'] = Number( quantily );
   send_cart(cart.products);
   cart_total();
@@ -394,10 +398,12 @@ async function start_filter_product(page=1){
             if(resulf){
                 setTimeout(function(){document.querySelector('#loadingpage').className = 'd-none';},500);
                 resulf= JSON.parse(resulf);
+                console.log(resulf);
                 document.querySelector('[data-products-resulf] .row').innerHTML = resulf.data;
                 document.querySelectorAll('.pagition-product').forEach(el=>{
                     el.innerHTML = resulf.pagition;
                 })
+                document.querySelector('[Data-Resulfs-Count]').textContent = String(resulf.total);
             }
         }
     })

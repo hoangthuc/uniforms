@@ -1649,7 +1649,7 @@ function list_compare_cat(){
       //  \App\Relationships::delete_relationship($product->id,'product_category_');
         if($categories_old)foreach ($categories_old as $cat){
             $table[$product->id]['categories'][$cat->id] = $cat->name;
-          //  \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
+      //      \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
         }
         foreach ($categories_array as $cat){
             if(isset($cat->name) && !isset($table[$product->id]['categories'][$cat->id])){
@@ -1660,8 +1660,8 @@ function list_compare_cat(){
                 $data_cat = trim($data_cat);
                 $resulf = compare_vocabulary($productname,$data_cat);
                 if($resulf['p'] > 50 || $resulf['c'] > 1){
-                    $table[$product->id]['categories'][$cat->id] = $cat->name;
-                   // \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
+                   // $table[$product->id]['categories'][$cat->id] = $cat->name;
+          //          \App\Relationships::save_relationships($product->id, $cat->id, 'product_category_');
                 }
 
             }

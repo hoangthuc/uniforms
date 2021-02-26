@@ -133,11 +133,17 @@ class Product extends Model
         // Sort categories
     public static function get_sort_categories($categories){
         $data =[];
-        foreach($categories as $category){
-            if(isset($category->parent_id)){
-               if( !isset($data[$category->parent_id]) )$data[$category->parent_id] = (array)self::get_product_categories_detail($category->parent_id);
-                $data[$category->parent_id]['child'][$category->id] = (array)$category;
-            }else{
+        if( count($categories) > 1 ){
+            foreach($categories as $category){
+                if(isset($category->parent_id)){
+                    if( !isset($data[$category->parent_id]) )$data[$category->parent_id] = (array)self::get_product_categories_detail($category->parent_id);
+                    $data[$category->parent_id]['child'][$category->id] = (array)$category;
+                }else{
+                    if( !isset($data[$category->id]))$data[$category->id] = (array)$category;
+                }
+            }
+        }else{
+            foreach($categories as $category){
                 if( !isset($data[$category->id]))$data[$category->id] = (array)$category;
             }
         }

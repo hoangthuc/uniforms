@@ -52,6 +52,7 @@
                         <option value="top_sell_month" >Best sell in month</option>
                         <option value="top_sell_year">Best sell in year</option>
                     </select>
+                    <span Data-Resulfs-Count>{{ format_currency($filter_products['pagition']['total']).' Results' }}</span>
                     <div class="pagition-product float-right">{!! DisplayPagition($filter_products['pagition']) !!}</div>
                 </div>
             </div>
@@ -76,7 +77,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="content col-md-12"><div class="alert alert-info" role="alert">Not found product!</div></div>
+                            <div class="content col-md-12"><div class="alert alert-info" role="alert">Please contact our customer support for this item email.</div></div>
                         @endif
                     </div>
                 </div>

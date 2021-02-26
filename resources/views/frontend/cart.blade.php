@@ -36,7 +36,7 @@
                                     <h6 class="font-weight-bold">Quantity</h6>
                                 </div>
                                 <div class="col-md-2">
-                                    <h6 class="font-weight-bold">Total</h6>
+                                    <h6 class="font-weight-bold">Action</h6>
                                 </div>
                             </div>
                         </div>

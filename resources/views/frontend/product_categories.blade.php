@@ -10,7 +10,7 @@
     }
     if( isset($category->media) )$banner = App\Media::get_url_media($category->media);
     $query = ['product'=>$list_cat,'slug'=>$slug,'product_attribute'=>[],'sort'=>'sku'];
-//    $filters = get_filter_product( ['cat'=>[$category->id] ] );
+    //$filters = get_filter_product( ['cat'=>[$category->id] ] );
     $filter_products = getProductFilterPage($query);
     ?>
     <section class="products-page">
@@ -51,6 +51,7 @@
                         <option value="top_sell_month" >Best sell in month</option>
                         <option value="top_sell_year">Best sell in year</option>
                     </select>
+                    <span Data-Resulfs-Count>{{ format_currency($filter_products['pagition']['total']).' Results' }}</span>
                     <div class="pagition-product float-right">{!! DisplayPagition($filter_products['pagition']) !!}</div>
                 </div>
             </div>
@@ -93,8 +94,8 @@
 @endsection
 @section('footer_layout')
     <script>
-        var cat_default = {!! json_encode( [$category->id] ) !!};
-        var query_filter = {!! json_encode( ['cat'=>[$category->id] ]  ) !!};
+        var cat_default = {!! json_encode( $list_cat ) !!};
+        var query_filter = {!! json_encode( ['cat'=>$list_cat ]  ) !!};
         display_filter_product();
     </script>
 @endsection

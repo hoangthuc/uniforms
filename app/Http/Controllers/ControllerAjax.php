@@ -324,6 +324,8 @@ class ControllerAjax extends Controller
             $data['slug'] = $request['slug'];
             $filter_products = getProductFilterPage( $data);
             $resulf['pagition'] = DisplayPagition($filter_products['pagition']);
+            $resulf['total'] = format_currency($filter_products['pagition']['total']).' Resulfs';
+
             if($filter_products['data']){
                 foreach($filter_products['data'] as $key=>$item){
                     $resulf['data'] .= '<div class="'.$colume.'" Data-Item-Product> <div class="item-content bg-white">'.showItemProduct($item).'</div></div>';
