@@ -264,11 +264,11 @@ function cart_total(){
     cart.products.forEach(item=>{
       Subtotal += Number( item.subtotal ) * item.quantily ;
     });
-    $('#shopping-cart-subtotal').text('$'+Subtotal.toFixed(2) );
-    $('#shopping-cart-tax').text('$'+ (Tax*Subtotal).toFixed(2) );
-    $('#shopping-cart-shipping').text('$'+ Shipping );
+    $('#shopping-cart-subtotal').text( format_currency(Subtotal,'$') );
+    $('#shopping-cart-tax').text( format_currency(Tax*Subtotal,'$') );
+    $('#shopping-cart-shipping').text( format_currency(Shipping,'$') );
     Total = Number(Shipping) + Subtotal + Tax*Subtotal;
-    $('#shopping-cart-total').text('$'+ Total.toFixed(2) );
+    $('#shopping-cart-total').text( format_currency(Total,'$') );
   }
     if(!cart.products.length && document.querySelector('#frmShoppingCart .cart_extra')){
         document.querySelector('#frmShoppingCart .cart_extra').className = 'd-none';
@@ -817,7 +817,7 @@ function send_review_product(event){
     let t= $('[datatitlereview]').attr('data-title');
     let d= $('[datadescriptionreview]').val();
     let p= $(event).attr('data-product');
-    if(r){
+    if(r && Number(r) >0){
         document.querySelector('#loadingpage').className = 'd-block';
         $.ajax({
             url: setting.ajax_url,
@@ -840,6 +840,11 @@ function send_review_product(event){
                 }
             }
         });
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Please choose review'
+        })
     }
 }
 // payment with cash

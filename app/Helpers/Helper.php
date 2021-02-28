@@ -1180,7 +1180,7 @@ if(!function_exists('get_rating_analytic')){
        if($list_reviews){
            foreach ($list_reviews as $rate){
                $rating += $rate->rating;
-               $rating_percent[$rate->rating]++;
+               if( isset($rating_percent[$rate->rating]) )$rating_percent[$rate->rating]++;
            }
        }
        $total  = $list_reviews->total();
