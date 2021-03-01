@@ -543,7 +543,7 @@ if( !function_exists('showItemProduct') ){
         <div class="title-product"><a href="<?= $product['url'] ?>"><?= $product['title']  ?></a></div>
         <div class="price-product pb-2 d-flex">
          <span>$<?= number_format($product['price'], 2, ',', ' '); ?></span>
-            <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' onclick="add_to_cart(this)">Quick buy <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
+            <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' onclick="add_to_cart(this)">Add to cart <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
         </div>
     <?php
         $resulf = ob_get_contents();

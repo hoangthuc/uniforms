@@ -12,7 +12,7 @@
             }(t, e), d(),
             function() {
                 var t = document.createElement("style");
-                t.type = "text/css", t.innerHTML = "#AcceptUIBackground {visibility: hidden;opacity: 0;z-index: -1; }#AcceptUIContainer.show {visibility: visible; z-index: 200;opacity: 1; top: 50%;}#AcceptUIBackground.show { opacity: .7;visibility: visible;z-index: 8;}#collapseThree .AcceptUI{visibility: hidden;}", document.getElementsByTagName("head")[0].appendChild(t)
+                t.type = "text/css", t.innerHTML = "#AcceptUIBackground {visibility: hidden;opacity: 0;z-index: -1; }#AcceptUIContainer.show {visibility: visible; z-index: 200;opacity: 1; top: 50%;}#AcceptUIBackground.show { opacity: .7;visibility: visible;z-index: 8;}#collapseThree .AcceptUI{visibility: hidden;}#AcceptUIContainer{    min-height: 288px;}", document.getElementsByTagName("head")[0].appendChild(t)
             }()
     }
 
@@ -35,7 +35,7 @@
         var t = w(l),
             e = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
             n = m();
-        I() ? (t.style.top = "0", t.style.marginLeft = "-10px", t.style.width = "100%", t.style.height = "100%") : (e <= 550 ? (t.style.left = "0", t.style.width = e + "px", t.style.marginLeft = "0") : ( t.style.width = "100%"), n <= c ? (t.style.top = "0", t.style.height = "288px", t.style.marginTop = "0") : (t.style.height = c + "px"))
+        I() ? (t.style.top = "0", t.style.marginLeft = "-10px", t.style.width = "100%", t.style.height = "100%") : (e <= 550 ? (t.style.left = "0", t.style.width = e + "px", t.style.marginLeft = "0") : ( t.style.width = "100%"), n <= c ? (t.style.top = "0", t.style.height = "288px", t.style.marginTop = "0") : (t.style.height = "288px"))
     }
 
     function o() {

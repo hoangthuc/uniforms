@@ -164,7 +164,7 @@
                                     cart
                                 </button>
                                 <button type="button" class="btn btn-unipro form-control "
-                                        data-href="{{ url('checkout') }}" onclick="buy_now(this)">Add to cart
+                                        data-href="{{ url('cart') }}" onclick="buy_now(this)">Add to cart
                                 </button>
                             </div>
                         </div>

@@ -17,7 +17,7 @@
 //    }
 //    echo '</table>';
 
-//    $xlsx = \App\SimpleXLSX::parse( public_path('uploads/reset_import_product_category.xlsx') );
+//    $xlsx = \App\SimpleXLSX::parse( public_path('uploads/import_product_category_latest.xlsx') );
 //    $data_product = [];
 //    foreach ( $xlsx->rows() as $r => $row ) {
 //      $product_id =   \App\Product::check_product_bysku($row[0]);

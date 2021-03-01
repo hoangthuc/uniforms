@@ -106,7 +106,7 @@
                                                    <span>{{ $item['attributes'] }}</span>
                                                 </div>
                                                 <div class="col-1 amount text-center">{{ $item['quantily'] }}</div>
-                                                <div class="col-2 price text-right">${{ format_currency( floatval($item['subtotal']),2)  }}</div>
+                                                <div class="col-2 price text-right">{{ format_currency( floatval($item['subtotal'])*$item['quantily'] ,2,'$')  }}</div>
                                             </div>
                                                 @endforeach
                                             @endif

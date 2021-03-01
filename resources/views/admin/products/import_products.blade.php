@@ -4,6 +4,63 @@
     $products =  App\Product::get_products();
     $product_status = App\Product::product_status();
 
+//    $info = ['images'=>0];
+//    $xlsx = \App\SimpleXLSX::parse( public_path('imports/2021/03/unipro/import_product.xlsx') );
+//    $header = [];
+//    $body = [];
+//    foreach ( $xlsx->rows() as $r => $row ) {
+//        if(empty($row[6]) || !file_exists( 'imports/2021/03/unipro/'.format_text_cell($row[6]) )){
+//            $body[$row[1]]['sku'] = format_text_cell($row[1]);
+//            $body[$row[1]]['name'] = format_text_cell($row[2]);
+//            $body[$row[1]]['featured_image'] = format_text_cell($row[6]);
+//        }
+//
+//    }
+//
+//    // set variants
+//    $header_var = [];
+//    $body_var = [];
+//    foreach ( $xlsx->rows(2) as $r => $row ) {
+//        if($r==0)$header_var = $row;
+//        if(!isset($body_var[$row[0].$row[4]]) && $r > 0 && !file_exists( 'imports/2021/03/unipro/'.format_text_cell($row[3])) ){
+//            $body_var[$row[0].$row[4]]['sku'] =format_text_cell($row[0]);
+//            $body_var[$row[0].$row[4]]['color'] = \App\Product::get_product_attributes_by_datatype(format_text_cell($row[4]),1)->name;
+//            $body_var[$row[0].$row[4]]['featured_image'] = format_text_cell($row[3]);
+//        }else if(!isset($body_var[$row[0].$row[4]]) && $r > 0 && $row[4] && empty($row[3])  ){
+//            $body_var[$row[0].$row[4]]['sku'] =format_text_cell($row[0]);
+//            $body_var[$row[0].$row[4]]['color'] = \App\Product::get_product_attributes_by_datatype(format_text_cell($row[4]),1)->name;
+//            $body_var[$row[0].$row[4]]['featured_image'] = format_text_cell($row[3]);
+//        }else{
+//            $body_var[$row[0].$row[4]]['sku'] =format_text_cell($row[0]);
+//            $body_var[$row[0].$row[4]]['color'] = format_text_cell($row[4]);
+//            $body_var[$row[0].$row[4]]['featured_image'] = format_text_cell($row[3]);
+//            $body_var[$row[0].$row[4]]['status'] = 'OK';
+//        }
+//
+//
+//    }
+//    echo '<table>';
+//    foreach ($body as  $tr){
+//        echo '<tr>
+//<td>'.$tr['sku'].'</td>
+//<td>'.$tr['name'].'</td>
+//<td>'.$tr['featured_image'].'</td>
+//</tr>';
+//    }
+//    echo '</table>';
+//
+//echo '<table>';
+//    foreach ($body_var as $k=> $tr){
+//        if( !isset($tr['status']) ){
+//            echo '<tr>
+//<td>'.$tr['sku'].'</td>
+//<td>'.$tr['color'].'</td>
+//<td>'.$tr['featured_image'].'</td>
+//</tr>';
+//        }
+//
+//    }
+//    echo '</table>';
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">

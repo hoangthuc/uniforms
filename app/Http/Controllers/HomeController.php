@@ -59,8 +59,15 @@ class HomeController extends Controller
 
     public function register(Request $request){
         $resulf = [];
+        $cart = session()->get('cart');
         foreach ($request['data'] as $value) {
             $data[$value['name']] = $value['value'];
+        }
+        if(isset($data['redirect_url'])){
+            $redirect_url = $data['redirect_url'];
+            unset($data['redirect_url']);
+        }else{
+            $redirect_url = url('my-account');
         }
         $isUsernameExists = DB::table('users')->where('username', $data['username'])->count();
         $isEmailExists =  DB::table('users')->where('email', $data['email'])->count();
@@ -85,9 +92,10 @@ class HomeController extends Controller
                     ), true);
 
             }
+            session()->put('cart', $cart);
             $resulf['success'] = 'Successfully!';
             $resulf['user'] = $user;
-            $resulf['redirect'] = url('my-account');
+            $resulf['redirect'] = $redirect_url;
             return \GuzzleHttp\json_encode($resulf);
         }
 

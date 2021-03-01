@@ -222,7 +222,7 @@ function update_cart(data){
                 console.log(resulf);
                 if( resulf['success'] ){
                     $('#mini-cart').text( cart.products ? cart.products.length: 0 );
-                    location.href = setting.checkout;
+                    location.href = setting.cart;
                 }
             }
         }
@@ -250,6 +250,8 @@ function change_quantily(button){
       quantily=1;
       $(button).val(quantily);
   }
+  document.querySelector('.cart-single-item[data-item-id="'+key+'"] .total-price').textContent = format_currency(cart.products[check]['subtotal'] * quantily,'$');
+  console.log(cart.products[check]['subtotal'] * quantily);
   cart.products[check]['quantily'] = Number( quantily );
   send_cart(cart.products);
   cart_total();

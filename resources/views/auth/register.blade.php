@@ -17,6 +17,9 @@
                                 <div class="col-lg-8 col-centered">
                                     <div class="basic-login">
                                         <form class="form-light" id="form_register_account">
+                                            @if( isset( $_GET['redirect_url'] ) )
+                                                <input type="hidden" name="redirect_url" value="{{ $_GET['redirect_url'] }}">
+                                            @endif
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
@@ -150,7 +153,7 @@
                                             <button type="button" onclick="form_register(this)" data-url="{{ url('register') }}" class="btn btn-unipro form-control">Submit registration</button>
                                             <input type="hidden" name="action" value="{{ url('/register') }}" data-title="Action" data-required="false">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}" data-title="Token" data-required="false">
-                                            <a href="{{ url('login') }}" class="btn btn-purple mt-3 "><i class="fa fa-lock"></i> Already have an account? Log in</a>
+                                            <a href="{{ (isset($_GET['redirect_url']))?url('login?redirect_url='.$_GET['redirect_url']):url('register')  }}" class="btn btn-purple mt-3 "><i class="fa fa-lock"></i> Already have an account? Log in</a>
                                         </form>
                                     </div>
                                 </div>

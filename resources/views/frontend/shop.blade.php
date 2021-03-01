@@ -13,7 +13,11 @@
             <div class="row" style="background-image:url('{{ asset('images/products/categories.png') }}');">
                 <div class="col-md-6">
                     <div class="breadcrumb_iner">
-                       Shop
+                        @if($type && isset($product_departments[$type]))
+                            {{ $product_departments[$type] }}
+                        @else
+                            Shop
+                        @endif
                     </div>
                 </div>
                 <div class="col-md-6"></div>
@@ -26,9 +30,6 @@
                 <div class="col-md-12">
                     <div class="breadcrumb-page">
                         <a href="{{ url('/') }}">Home</a>/<a href="{{ url('products') }}">Products</a>
-                        @if($type && isset($product_departments[$type]))
-                            /<a> {{ $product_departments[$type] }}</a>
-                        @endif
                         @if( $search )
                             /Search:<span> {{ $_GET['search'] }}</span>
                         @endif
