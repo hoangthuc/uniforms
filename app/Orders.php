@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Mail;
 
 class Orders extends Model
 {
@@ -13,13 +14,14 @@ class Orders extends Model
         $status = (isset($_GET['status']))?$_GET['status']:'';
         $date_from  = (isset($_GET['date_from']))?$_GET['date_from']:date('Y-m-d H:i',strtotime('-100 days'));
         $date_to  = (isset($_GET['date_to']))?$_GET['date_to']:'';
-        $orders = DB::table('product_orders')
-            ->join('users', 'users.id','product_orders.user_id')
-            ->select('product_orders.*')
+        $orders = DB::table( 'product_orders')
+            ->join('product_order_meta', 'product_order_meta.order_id','product_orders.id')
+            ->select(DB::raw("product_orders.*, JSON_EXTRACT(meta_value,'$') as info"))
+            ->where('product_order_meta.meta_key','payment')
             ->where( function($select) use ($search){
                 $select->orwhere('product_orders.id','LIKE',"%{$search}%");
-                $select->orwhere('users.name','LIKE',"%{$search}%");
-                $select->orwhere('users.email','LIKE',"%{$search}%");
+                $select->orwhere(DB::raw( "JSON_EXTRACT(meta_value,'$.name')" ),'LIKE',"%{$search}%");
+                $select->orwhere(DB::raw( "JSON_EXTRACT(meta_value,'$.email')" ),'LIKE',"%{$search}%");
             } )
             ->where( function($select) use ($status){
                 if($status)$select->where('product_orders.status',$status);
@@ -163,6 +165,15 @@ class Orders extends Model
           //  ->groupBy('order_id')
             ->get();
         return $orders;
+    }
+
+    public static function email_template($id,$email){
+        Mail::send(array('html'=>'admin.order.view-order-template'), array('order_id'=>$id), function($message) use ($id,$email){
+            $message->to($email, 'Visitor')
+                ->cc(env('MAIL_TO_CC'), 'Admin')
+                ->subject('You have an Order #'.$id);
+        });
+
     }
 
 }

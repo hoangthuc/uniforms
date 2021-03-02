@@ -163,10 +163,13 @@ Route::group(['prefix' => 'admin','as'=>'admin.','middleware' => ['auth','role:a
         return view('admin.order.orders');
     })->name('orders');
 
-    // edit product
+    // view order
     Route::get('order/{id}/view', function ($id) {
         return view('admin.order.view-order',['order_id'=>$id]);
     })->name('view-order');
+
+    // view order template
+    Route::get('order/{id}/view-template', 'ControllerOrders@email_template');
 
     // edit new orders
     Route::get('order/{id}/edit', function ($id) {
@@ -304,7 +307,7 @@ Route::get('/checkout', function(){
     $cart = Request::session()->get('cart');
     if(!$cart)return redirect('/products');
     return view('frontend.checkout',['slug'=>'checkout']);
-})->name('checkout')->middleware('auth');
+})->name('checkout');
 
 // Order
 Route::get('/order/{id}', function($id){

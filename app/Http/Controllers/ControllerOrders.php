@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Orders;
+use Mail;
 
 class ControllerOrders extends Controller
 {
@@ -43,4 +44,12 @@ class ControllerOrders extends Controller
 
         echo \GuzzleHttp\json_encode($resulf);
     }
+    public function email_template($id,$email){
+        Mail::send(array('html'=>'admin.order.view-order-template'), array('order_id'=>$id), function($message){
+            $message->to('kennydeveloper2020@gmail.com', 'Visitor')->subject('You have an Order!');
+        });
+
+    }
+
+
 }

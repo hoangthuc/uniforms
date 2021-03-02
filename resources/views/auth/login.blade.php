@@ -5,7 +5,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6 bg-white pt-5 mt-5 ">
                     <div class="section_tittle text-center">
-                        <h2 class="teal">Log on to your account</h2>
+                        <h2 class="teal">Log in to your account</h2>
                     </div>
                     <div class="section_description text-center">Please log in for access to convenient features and quick checkout.</div>
                 </div>
@@ -36,12 +36,12 @@
                                             </div>
 
                                             <div class="input-group mt-3">
-                                                <button type="button" onclick="javascript:sign_in();" class="btn btn-unipro btn-login-site form-control">Log on to proceed</button>
+                                                <button type="button" onclick="javascript:sign_in();" class="btn btn-unipro btn-login-site form-control">Log in to proceed</button>
                                             </div>
 
                                             <div class="form-group text-center mt-3">
                                                 <a href="{{ (isset($_GET['redirect_url']))?url('register?redirect_url='.$_GET['redirect_url']):url('register') }}" class="forgot-password d-inline-block ml-3 font-weight-bold" >Don't have account? Register. </a>
-                                                <a href="#" class="forgot-password d-inline-block" >Forgot password?</a>
+                                                <a href="#" class="forgot-password d-none d-inline-blocks" >Forgot password?</a>
                                             </div>
                                         </div>
                                     </div>

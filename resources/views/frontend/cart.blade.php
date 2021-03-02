@@ -119,7 +119,7 @@
                                             <div class="cart_total_price ml-auto"><span id="shopping-cart-total">$35.85</span></div>
                                         </li>
                                     </ul>
-                                    <a href="{{Auth::check()?url('checkout'):url('login?redirect_url='.url('checkout') ) }}" id="btnCheckout" class="cart_total_button1 btn btn-unipro text-uppercase btn-block push-top-25">Proceed To Checkout <i class="fa fa-arrow-right"></i></a>
+                                    <a href="{{ url('checkout')  }}" id="btnCheckout" class="cart_total_button1 btn btn-unipro text-uppercase btn-block push-top-25">Proceed To Checkout <i class="fa fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>

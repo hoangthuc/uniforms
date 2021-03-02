@@ -32,9 +32,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <h3 class="billing-title mt-20 mb-10"><i class="far fa-address-card"></i> Billing Details</h3>
+                                    @if(!Auth::check())
+                                    <div class="row">
+                                        <div class="alert alert-info alert-dismissible fade show ml-3" role="alert">
+                                            <a href="{{ url('login?redirect_url='.url('checkout') ) }}" class="alert-link">Log in </a> if you have an account or continue as a new customer.
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endif
                                     <div class="row" id="billing-form">
                                         <div class="col-sm-12 col-xs-12">
-                                            <input type="text" id="billing_name" name="name" value="{{ $user_data->name }}" placeholder="Name" class="form-control common-input">
+                                            <input type="text" id="billing_name" name="name" value="{{ ($user_data)?$user_data->name:'' }}" placeholder="Name" class="form-control common-input">
                                         </div>
                                         <div class="col-12">
                                             <input type="text" id="billing_address_1" name="address" value="{{ get_user_meta($user_id,'address') }}" placeholder="Address" class="form-control common-input">
@@ -49,7 +59,7 @@
                                             <input type="number" id="billing_zip" name="zipcode"  value="{{ get_user_meta($user_id,'zipcode') }}" placeholder="Zipcode" class="form-control common-input">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="email" id="billing_email" name="email" value="{{ $user_data->email }}" placeholder="Email Address" class="form-control common-input">
+                                            <input type="email" id="billing_email" name="email" value="{{ ($user_data)?$user_data->email:'' }}" placeholder="Email Address" class="form-control common-input">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
                                             <input type="text" id="billing_phone" name="phone"  value="{{ get_user_meta($user_id,'phone') }}" placeholder="Phone Number" class="form-control common-input">
@@ -232,7 +242,7 @@
                                     <div class="mt-4">
                                         <div class="col">
                                             <div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
-                                                <a class="button_continue_shopping ml-md-auto text-uppercase" href="{{ route('shops') }}">Continue Shopping <i class="fa fa-arrow-right"></i></a>
+                                                <a class="btn btn-unipro button_continue_shopping ml-md-auto text-uppercase" href="{{ route('shops') }}">Continue Shopping <i class="fa fa-arrow-right"></i></a>
                                             </div>
                                         </div>
                                     </div>

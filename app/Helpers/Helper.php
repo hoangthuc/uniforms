@@ -308,14 +308,14 @@ if (! function_exists('display_product_in_order')) {
             $total = 0;
             foreach($data as $value): $total += $value->subtotal * $value->quantily;
              $detail_product  =    \App\Product::get_product($value->product_id);
-             $title = (isset($detail_product))?'<a href="'.url('admin/product/'.$detail_product->id.'/edit').'">'.$detail_product->name.'</a>':$value->title;
+             $title = (isset($detail_product))?'<a href="'.url('product/'.$detail_product->slug).'" target="_blank">'.$detail_product->name.'</a>':$value->title;
             ?>
                 <tr>
-                    <td><?php _e($value->quantily) ?></td>
-                    <td><?php _e($title) ?></td>
-                    <td><?php _e($value->attributes) ?></td>
-                    <td><?php _e( format_currency( $value->subtotal,2,'$') ) ?></td>
-                    <td><?php _e( format_currency( $value->subtotal * $value->quantily,2,'$') ) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e($value->quantily) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e($title) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e($value->attributes) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e( format_currency( $value->subtotal,2,'$') ) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e( format_currency( $value->subtotal * $value->quantily,2,'$') ) ?></td>
                 </tr>
           <?php  endforeach;
             $resulf['subtotal'] =  $total;

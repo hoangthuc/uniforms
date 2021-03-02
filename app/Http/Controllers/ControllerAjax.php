@@ -382,6 +382,7 @@ class ControllerAjax extends Controller
                 Orders::update_meta_product_order($order_id,'total',  json_encode($data['total']));
                 $resulf['success'] = url('/order/'.$order_id);
                 session()->forget('cart');
+                Orders::email_template($order_id,$payment['email']);
             }
 
 

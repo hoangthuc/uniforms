@@ -81,7 +81,7 @@
                                     @foreach ($orders as $order)
                                         <tr>
                                             <td>#{{ $order->id }}</td>
-                                            <td>{{  App\User::getUserByID($order->user_id)->name }}</td>
+                                            <td>{{  ($order->info)?json_decode($order->info)->name:'' }}</td>
                                             <td>{{ format_currency($order->total,2,'$') }}</td>
                                             <td>{{ $payment_type[$order->payment_type]  }}</td>
                                             <td>{{ $order_status[$order->status] }}</td>

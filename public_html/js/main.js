@@ -510,6 +510,7 @@ function payment_order(){
     $('#billing-form [name]').each(function(){
         var k = $(this).attr('name');
         var v = $(this).val();
+        v = v.trim();
         if(!v){
             $(this).addClass('error');
             error += k+' is invalid';
@@ -554,6 +555,7 @@ function payment_order(){
 
 }
 function send_order(data){
+    document.querySelector('#loadingpage').className = 'loading';
     $.ajax({
         url:setting.ajax_url,
         type:'post',
@@ -567,6 +569,7 @@ function send_order(data){
 
                 }
             }
+            document.querySelector('#loadingpage').className = 'd-none';
         }
     })
 }

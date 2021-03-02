@@ -220,11 +220,11 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
                     </div>
                     <label class="mt-5">Follows us on</label>
                     <ul class="social">
-                        <li><a href="{{ get_field_option('facebook') }}" class="social-facebook"><i
+                        <li><a href="{{ get_field_option('facebook') }}" target="_blank" class="social-facebook"><i
                                         class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="{{ get_field_option('twitter') }}" class="social-twitter"><i
+                        <li><a href="{{ get_field_option('twitter') }}" target="_blank" class="social-twitter"><i
                                         class="fab fa-twitter"></i></a></li>
-                        <li><a href="{{ get_field_option('instagram') }}" class="social-instagram"><i
+                        <li><a href="{{ get_field_option('instagram') }}" target="_blank" class="social-instagram"><i
                                         class="fab fa-instagram"></i></a></li>
                     </ul>
                 </div>
