@@ -520,15 +520,20 @@ if( !function_exists('showItemProduct') ){
                 'product_id'=>$product['product_id'],
                 'quantily'=>1,
                 'subtotal'=>$product['price'],
-                'thumbnail'=>$product['image'],
+                'thumbnail'=>null,
         ];
         if(!empty($colors)){
             $colors_default = end($colors);
-            $data['attributes'] ='Color: '.$colors_default['name'];
             $data['key'] =$data['key'].'_'.$colors_default['id'];
-            $data['Color'] =$colors_default['name'];
-            $data['thumbnail'] =(isset($colors_default['img']))?$colors_default['img']:asset('images/products/default.jpg');
+            $data['thumbnail'] =(isset($colors_default['img']))?$colors_default['img']:null;
+            $data = array_merge($data,$colors_default['data_default']);
+            unset($colors_default['data_default']['thumbnail']);
+            $data['attributes'] = str_replace('=',': ', http_build_query($colors_default['data_default'],'',', '));
+            if($data['attributes'])unset($colors_default['data_default']['Color']);
+            $data['data_default'] =str_replace('=',': ', http_build_query($colors_default['data_default'],'',', '));;
         }
+        if($data['thumbnail'])$product['image'] = $data['thumbnail'];
+
         ?>
         <div class="thumbnail-product" data-color='<?= json_encode($colors) ?>' >
             <span class="SKU">SKU: <?= $product['sku']  ?></span>
@@ -909,7 +914,7 @@ if(!function_exists('display_resulf_ajax_search') ){
             </div>
         <?php
         endforeach;
-        else: echo '<div class="item-product-aj">Not found product.</div>';
+        else: echo '<div class="item-product-aj">Please contact our customer support for this item email.</div>';
         endif;
         $resulf = ob_get_contents();
         ob_end_clean();
@@ -1587,17 +1592,19 @@ function show_color_list_product($product_id){
     $data = json_decode($data);
     $select = json_decode($select);
     $color=[];
+    $default_all = [];
+    $default = [];
     if($select)foreach ($select as $key => $item){
         $attributes = App\Product::get_product_attributes_detail($key);
         if($attributes && !$attributes->type){
             foreach ($item->value as $value){
                 if($value){
                     if(!$attributes->type && !isset($color[$value->value]) ){
-                        $attributes = App\Product::get_product_attributes_detail($value->value);
+                        $attributes2 = App\Product::get_product_attributes_detail($value->value);
                         $color[$value->value]=[
                             'id'=>$value->value,
                             'name'=>$value->title,
-                            'data_type'=>$attributes->data_type
+                            'data_type'=>$attributes2->data_type
                         ];
                     }
                 }
@@ -1605,13 +1612,34 @@ function show_color_list_product($product_id){
             }
         }
 
+        foreach ($item->value as $value) {
+            if (isset($attributes->name)) $default_all[$value->value] = ['name' => $value->title, 'type' => $attributes->name];
+        }
+
+
     }
+    if($data)foreach ($data as $item){
+        if( isset($item->default) ){
+            foreach ($item->select as $id){
+                if( isset($default_all[$id]) )$default[$default_all[$id]['type']] = $default_all[$id]['name'];
+                if(isset($item->img))$default['thumbnail'] = \App\Media::get_url_media($item->img);
+            }
+        }
+
+    }
+    if(empty($default)){
+        foreach ($default_all as $d){
+            $default[$d['type']] =   $d['name'];
+        }
+    }
+
     if($data)foreach ($data as $item){
         foreach ($item->select as $id){
             if(isset($color[$id]) && !isset($color[$id]['img']) ){
                 $attributes = App\Product::get_product_attributes_detail($id);
                 $color[$id]['img'] = \App\Media::get_url_media($item->img);
                 $color[$id]['data_type'] = $attributes->data_type;
+                $color[$id]['data_default'] = $default;
             }
         }
 

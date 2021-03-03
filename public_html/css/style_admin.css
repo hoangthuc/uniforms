@@ -437,6 +437,18 @@ td.category_product a:hover{
     color: red;
     margin-bottom: 5px;
 }
+[Data-Check-Default]{
+    margin-right: 10px;
+    cursor: pointer;
+}
+[Data-Check-Default] i{
+    color: #17a2b8;
+    font-size: 26px;
+}
+.active[Data-Check-Default] .far.fa-star,
+.none[Data-Check-Default] .fas.fa-star{
+   display: none;
+}
 /*Loading page*/
 #loadingpage{
     display: block;

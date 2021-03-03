@@ -24,9 +24,7 @@
     $product_variations = App\Product::get_meta_product($product->id,'product_variations');
     if($product_variations)$product_variations= json_decode($product_variations);
     $select_variations = (array)display_attribute_product($product->id,'all_attributes');
-
     $data = \App\Product::insert_best_sell_product($product_id,'top_sell_month');
-
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -176,6 +174,10 @@
                                     @foreach($product_variations as $key => $item)
                                 <div class="item-product-varition mb-3 pb-3 border-bottom">
                                     <div class="form-inline mb-3">
+                                        <div Data-Check-Default class="{{ (isset($item->default))?'active':'none'  }}" onclick="add_product_varition_default(this)" data-select="{{ $key }}">
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
                                         @if($select_variations)
                                             <?php $sort = 0; $select = $item->select; ?>
                                             @foreach( $select_variations as $name => $option )

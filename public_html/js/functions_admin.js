@@ -990,13 +990,21 @@ data = JSON.parse(data);
 varitions.push(data);
 let id = varitions.length;
     setup_variations(data,id);
+    add_product_varition_default(null);
 }
 
 async function setup_variations(data,id){
+    let def  =  document.createElement('div');
+    def.className = 'none';
+    def.setAttribute('data-check-default','');
+    def.setAttribute('onclick','add_product_varition_default(this)');
+    def.setAttribute('data-select',id);
+    def.innerHTML = '<i class="fas fa-star"></i><i class="far fa-star"></i>';
     let div  =  document.createElement('div');
     div.className = 'item-product-varition mb-3 pb-3 border-bottom'
     let inc = document.createElement('div');
     inc.className = 'form-inline mb-3';
+    inc.appendChild(def);
     for(var va in data){
         if(data[va].display){
         let se =  document.createElement('select');
@@ -1109,6 +1117,9 @@ document.querySelectorAll('[data-product-variations] .item-product-varition').fo
     item.querySelectorAll('img').forEach(i=>{
         data['img']= i.getAttribute('data-id');
     });
+    if(item.querySelector('[data-check-default]').className == 'active'){
+        data['default'] = true;
+    };
     attributes_optional.push(data);
 });
     let attributes = $('[data-add-variation]').attr('data-json');
@@ -1624,5 +1635,17 @@ function save_list_product(form,dom,action){
             }
         })
     }
-
 }
+
+async function add_product_varition_default(event){
+   document.querySelectorAll('[data-check-default]').forEach(el=>{
+       let id = el.getAttribute('data-select');
+       if(el.className !='active')el.className=  'none';
+       el.addEventListener('click', function(){
+           var disable = document.querySelector('[data-check-default].active');
+           if(disable)disable.className = 'none';
+           el.className = 'active';
+       });
+   });
+}
+add_product_varition_default(null);

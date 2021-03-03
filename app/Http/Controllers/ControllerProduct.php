@@ -165,7 +165,6 @@ class ControllerProduct extends Controller
             $price = (isset($data['price'])) ? $data['price'] : null;
             $sku = (isset($data['sku'])) ? $data['sku'] : null;
             $additional_information = (isset($data['additional_information'])) ? \GuzzleHttp\json_encode($data['additional_information']) : null;
-
             unset($data['action']);
             unset($data['files']);
             unset($data['_token']);
@@ -174,6 +173,7 @@ class ControllerProduct extends Controller
             unset($data['sku']);
             unset($data['button_gallery']);
             unset($data['additional_information']);
+            unset($data['default_variant']);
             // save category
             if (isset($data['product_category'])) {
                 Relationships::delete_relationship($data['id'],'product_category');

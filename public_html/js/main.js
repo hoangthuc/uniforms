@@ -610,7 +610,6 @@ function search_key_product(event) {
     if(request && !request.status){
         request.abort();
     }
-
     request =  $.ajax({
             url: setting.ajax_url,
             type: 'post',
@@ -1025,7 +1024,7 @@ function change_color_img_product(event){
     var button = document.querySelector('.price-product [data-product="'+product_id+'"]');
     var json = JSON.parse(button.getAttribute('data-json'));
     json.thumbnail = img;
-    json.attributes = 'Color: '+color;
+    json.attributes = 'Color: '+color+', '+json.data_default;
     json.key = product_id+'_'+color_id;
     json['Color'] = color;
     button.setAttribute('data-json',JSON.stringify(json));
