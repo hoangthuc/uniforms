@@ -380,7 +380,7 @@ class ControllerAjax extends Controller
                 if(isset($data['order']))Orders::update_meta_product_order($order_id,'orders',  json_encode($data['order']));
                 Orders::update_meta_product_order($order_id,'payment',  json_encode($payment));
                 Orders::update_meta_product_order($order_id,'total',  json_encode($data['total']));
-                $resulf['success'] = url('/order/'.$order_id);
+                $resulf['success'] = url('/order/'.$order_id.'?order_key='.md5($order_id));
                 session()->forget('cart');
                 Orders::email_template($order_id,$payment['email']);
             }

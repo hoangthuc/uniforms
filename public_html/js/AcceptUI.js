@@ -39,7 +39,7 @@
     }
 
     function o() {
-        return "https://jstest.authorize.net"
+        return "https://js.authorize.net"
     }
 
     function y(t) {
@@ -82,7 +82,7 @@
     }
 
     function g(t) {
-        if ("https://jstest.authorize.net" === t.origin && t.data && "object" == typeof t.data && t.data.verifyOrigin && "AcceptMain" === t.data.verifyOrigin) switch (t.data.type) {
+        if ("https://js.authorize.net" === t.origin && t.data && "object" == typeof t.data && t.data.verifyOrigin && "AcceptMain" === t.data.verifyOrigin) switch (t.data.type) {
             case "ACK":
                 clearInterval(void 0),
                     function(t, e) {
@@ -130,7 +130,7 @@
             return e
         },
         b = function(t) {
-            return "https://jstest.authorize.net/v3/acceptMain/acceptMain.html"
+            return "https://js.authorize.net/v3/acceptMain/acceptMain.html"
         },
         I = ((f = function() {
             return f.any
@@ -175,7 +175,7 @@ function responseHandler(response) {
             redirect: 'follow'
         };
 
-        fetch("https://apitest.authorize.net/xml/v1/request.api", requestOptions)
+        fetch("https://api.authorize.net/xml/v1/request.api", requestOptions)
             .then(response => response.text())
             .then(result =>{
             var data = JSON.parse(result);

@@ -44,10 +44,12 @@ class ControllerOrders extends Controller
 
         echo \GuzzleHttp\json_encode($resulf);
     }
-    public function email_template($id,$email){
-        Mail::send(array('html'=>'admin.order.view-order-template'), array('order_id'=>$id), function($message){
-            $message->to('kennydeveloper2020@gmail.com', 'Visitor')->subject('You have an Order!');
-        });
+    public function email_template($id){
+//        Mail::send(array('html'=>'admin.order.view-order-template'), array('order_id'=>$id), function($message){
+//            $message->to('kennydeveloper2020@gmail.com', 'Visitor')->subject('You have an Order!');
+//        });
+
+        return view('admin.order.view-order-template',['order_id'=>$id]);
 
     }
 

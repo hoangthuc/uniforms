@@ -24,7 +24,7 @@
                         <input type="hidden" id="cart_tax_rate" name="cart_tax_rate" value="0.08">
                         <input type="hidden" id="cart_shipping" name="cart_shipping" value="30.00">
                         <input type="hidden" id="cart_total" name="cart_total" value="35.85">
-                        <div class="cart-head pt-3 mb-3">
+                        <div class="cart-head pt-3 mb-3 d-none d-sm-none d-md-block">
                             <div class="row cart-title">
                                 <div class="col-md-5">
                                     <h6 class="font-weight-bold">Product</h6>
@@ -58,18 +58,18 @@
                                                     </h6>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-6">
+                                            <div class="col-md-2 col-4">
                                                 <div class="price">{{ format_currency( floatval($item['subtotal']),2,'$')  }}</div>
                                             </div>
-                                            <div class="col-md-2 col-6">
+                                            <div class="col-md-2 col-4">
                                                 <div class="quantity-container d-flex align-items-center mt-15">
                                                     <input type="number" min="1" id="qty-2" name="quantily" data-product-id="{{ $item['key'] }}" class="quantity form-control input-product-qty" onchange="change_quantily(this)" value="{{ $item['quantily'] }}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-6">
+                                            <div class="col-md-2 d-none d-sm-none d-md-block">
                                                 <div class="total-price price">{{ format_currency( floatval($item['subtotal'])*$item['quantily'] ,2,'$')  }}</div>
                                             </div>
-                                            <div class="col-md-1 col-12">
+                                            <div class="col-md-1 col-4 text-right">
                                                 <button type="button" class="btn btn-link btn-lg btn-remove-product" onclick="remove_product(this)" data-product-id="{{ $item['key'] }}"><i class="fa fa-trash"></i></button>
                                             </div>
                                         </div>
@@ -83,7 +83,7 @@
 
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col mb-3">
                                 <div class="cart_control_bar d-flex flex-md-row flex-column align-items-start justify-content-start">
                                     <a class="btn btn-unipro button_continue_shopping ml-md-auto text-uppercase" href="{{ route('shops') }}">Continue Shopping <i class="fa fa-arrow-right"></i></a>
                                 </div>
@@ -91,7 +91,7 @@
                         </div>
                         @if( isset($cart['products']))
                         <div class="row cart_extra">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 mb-3">
                                 <div class="cart_coupon">
                                     <div class="cart_title pb-2">Got a Coupon?</div>
                                     <input disabled="" readonly="" type="text" class="form-control" placeholder="Coupon Code">

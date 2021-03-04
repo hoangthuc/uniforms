@@ -526,11 +526,11 @@ if( !function_exists('showItemProduct') ){
             $colors_default = end($colors);
             $data['key'] =$data['key'].'_'.$colors_default['id'];
             $data['thumbnail'] =(isset($colors_default['img']))?$colors_default['img']:null;
-            $data = array_merge($data,$colors_default['data_default']);
+            if(isset($colors_default['data_default']))$data = array_merge($data,$colors_default['data_default']);
             unset($colors_default['data_default']['thumbnail']);
-            $data['attributes'] = str_replace('=',': ', http_build_query($colors_default['data_default'],'',', '));
+            if(isset($colors_default['data_default']))$data['attributes'] = http_build_query_not_enc_type($colors_default['data_default'],':',', ');
             if($data['attributes'])unset($colors_default['data_default']['Color']);
-            $data['data_default'] =str_replace('=',': ', http_build_query($colors_default['data_default'],'',', '));;
+            if(isset($colors_default['data_default']))$data['data_default'] =http_build_query_not_enc_type($colors_default['data_default'],':',', ');
         }
         if($data['thumbnail'])$product['image'] = $data['thumbnail'];
 
@@ -1698,4 +1698,13 @@ function list_compare_cat(){
             $table[$product->id]['product'] = (array)$product;
     }
 return $table;
+}
+
+function http_build_query_not_enc_type($array,$numeric_prefix = '', $arg_separator = ''){
+    if(empty($array))return '';
+    $resulf = [];
+    foreach ($array as $key => $value){
+        $resulf[]=$key.$numeric_prefix.$value;
+    }
+    return implode($arg_separator,$resulf);
 }

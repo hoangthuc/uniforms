@@ -312,7 +312,7 @@
     <div id="ListMyOrder" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-body">
+                <div class="modal-body table-responsive">
                     <table class="table table-striped">
                         <thead class="thead-dark">
                         <tr>
@@ -327,7 +327,7 @@
                             @foreach($myorders as $order)
                         <tr>
                             <th scope="row">{!! date("m/d/Y H:i A",strtotime( $order->created_at ) )  !!}</th>
-                            <td><a href="{{ url('order/'.$order->id) }}">Order #{{ $order->id }}</a></td>
+                            <td><a href="{{ url('order/'.$order->id.'?order_key='.md5($order->id)) }}">Order #{{ $order->id }}</a></td>
                             <td><span class="status badge badge-{{ $order->status == 3?'success':'dark' }}">{{ $order_status[$order->status] }}</span></td>
                             <td>{{ format_currency($order->total,2,'$') }}</td>
                         </tr>

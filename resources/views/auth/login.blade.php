@@ -41,7 +41,7 @@
 
                                             <div class="form-group text-center mt-3">
                                                 <a href="{{ (isset($_GET['redirect_url']))?url('register?redirect_url='.$_GET['redirect_url']):url('register') }}" class="forgot-password d-inline-block ml-3 font-weight-bold" >Don't have account? Register. </a>
-                                                <a href="#" class="forgot-password d-none d-inline-blocks" >Forgot password?</a>
+                                                <a href="{{ url('forgot-password') }}" class="forgot-password d-inline-blocks" >Forgot password?</a>
                                             </div>
                                         </div>
                                     </div>

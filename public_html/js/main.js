@@ -204,7 +204,7 @@ function send_cart(data){
         resulf = JSON.parse(resulf);
         console.log(resulf);
         if( resulf['success'] ){
-          $('#mini-cart').text( cart.products ? cart.products.length: 0 );
+          $('.mini-cart').text( cart.products ? cart.products.length: 0 );
         }
       }
     }
@@ -221,7 +221,7 @@ function update_cart(data){
                 resulf = JSON.parse(resulf);
                 console.log(resulf);
                 if( resulf['success'] ){
-                    $('#mini-cart').text( cart.products ? cart.products.length: 0 );
+                    $('.mini-cart').text( cart.products ? cart.products.length: 0 );
                     location.href = setting.cart;
                 }
             }

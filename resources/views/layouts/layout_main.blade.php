@@ -121,7 +121,10 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
                                         <span>{{ $de }}</span></a>
                                 </div>
                                 <div class="parent_cattegories {{ $cat_d =='department'?'row':'d-flex'  }} m-0 p-3 pb-3">
-                                    @foreach($product_categories = list_menu_categories($cat_d) as $category)
+                                    <?php
+                                    $product_categories = list_menu_categories($cat_d);
+                                    $product_categories_mobile[$cat_d] = $product_categories; ?>
+                                    @foreach($product_categories as $category)
                                         <div class="col-category {{ $cat_d =='department'?'col-md-3':''  }} mb-1">
                                             <a class="category_main font-weight-bold"
                                                data-parent="{{ $category['id'] }}"
@@ -163,7 +166,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
                 <button type="button" data-toggle="modal" data-target="#FormSearchMobile"><i class="fas fa-search"></i>
                 </button>
                 <div class="cart"><a href="{{ url('cart') }}"><i class="fas fa-shopping-cart"></i><span id="mini-cart"
-                                                                                                        class="badge badge-dark badge-shopping-cart">0</span></a>
+                                                                                                        class="mini-cart badge badge-dark badge-shopping-cart">0</span></a>
                 </div>
             </div>
         </div>
@@ -186,18 +189,30 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
                 @foreach($product_departments as $value_department => $department)
                     <div class="Parent-category">
                         <div class="category-header">
-                            <a href="#" class="category-title">{{ $department }}</a>
+                            <a href="{{ url('products?type='.$value_department) }}" class="category-title">{{ $department }}</a>
                             <span class="btn-tool" data-card-widget="collapse" data-show="">
                                   <i class="fas fa-plus"></i>
                               </span>
                         </div>
                         <div class="category-body collapse" style="">
-                            @foreach($childs = \App\Product::get_product_categories_byType($value_department) as $category_child)
-                                <div class="category-child">
-                                    <a href="{{ url('product_categories/'.$category_child->slug) }}">{{ $category_child->name }}</a>
-                                </div>
-                            @endforeach
+                            @foreach($product_categories_mobile[$value_department] as $category)
+                                    <div class="category-child parent_cat">
+                                        <a class="font-weight-bold" href="{{ url('product_categories/'.$category['slug']) }}">{{ $category['name'] }}</a>
+                                    </div>
 
+                                    @if( isset($category['child']) )
+                                        @foreach($category['child'] as $category_child)
+                                            <div class="category-child">
+                                                <a href="{{ url('product_categories/'.$category_child['slug']) }}">{{ $category_child['name'] }}</a>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                            @endforeach
+                                @if($value_department =='ppe' || $value_department == 'specials')
+                                    <div class="category-child parent_cat">
+                                        <a class="category_main font-weight-bold" href="#" style="color: #ed2d0d"><i class="fas fa-globe" style="font-size: 20px;"></i> Coming soon</a>
+                                    </div>
+                                @endif
                         </div>
                     </div>
                 @endforeach

@@ -29,6 +29,9 @@ Route::get('/admin', function(){
 Route::get('/home', function(){
     return view('home');
 });
+Route::get('/forgot-password', function () {
+    return view('auth.passwords.email');
+})->middleware('guest')->name('password.request');
 //Login
 Route::post('loginsite','HomeController@check');
 
@@ -311,5 +314,8 @@ Route::get('/checkout', function(){
 
 // Order
 Route::get('/order/{id}', function($id){
-    return view('frontend.order_detail',['slug'=>'order','order_id'=>$id]);
+    $check  = md5($id);
+    $order_key  = isset($_GET['order_key'])?$_GET['order_key']:md5('00');
+    if($check == $order_key)return view('frontend.order_detail',['slug'=>'order','order_id'=>$id]);
+    return redirect('/products');
 })->name('order_detail');

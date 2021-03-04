@@ -31,6 +31,11 @@
         }
         $list_reviews['html_pagition'] = DisplayPagitionReview($pagition);
         $id_color = \App\Product::get_product_attributes_bylug('color');
+        $default_p = show_color_list_product($product->id);
+       if($default_p){
+           $default_p = end($default_p)['data_default'];
+           unset($default_p['thumbnail']);
+       }
     }
 
     ?>
@@ -89,7 +94,7 @@
                                 <div class="action_view">
                                     <a class="zoom" data-image="{{ get_url_media($product->featured_image) }}"
                                        onclick="showZoomImage(this)"><i class="fas fa-search-plus"></i></a>
-                                    <a href="javascript:View360();" class="view360 ml-2"><i
+                                    <a href="javascript:View360();" class="view360 ml-2 d-none"><i
                                                 class="fab fa-unity"></i></a>
                                 </div>
                             @else
@@ -97,7 +102,7 @@
                                 <div class="action_view">
                                     <a class="zoom" data-image="{{ asset('images/image-coming-soon.jpg') }}"
                                        onclick="showZoomImage(this)"><i class="fas fa-search-plus"></i></a>
-                                    <a href="javascript:View360();" class="view360 ml-2"><i
+                                    <a href="javascript:View360();" class="view360 ml-2 d-none"><i
                                                 class="fab fa-unity"></i></a>
                                 </div>
                             @endif
@@ -135,8 +140,8 @@
                                         <div class="item-attribute {{ $item_attribute['select_variant'] =='true'?'select_variant':'' }}" Attribute-P{{ $item_attribute['id'] }}>
                                             <label>{{ $item_attribute['name'] }}</label> <span class="ml-1">({{ $item_attribute['display'] }})</span>
                                             <div class="list">
-                                                @foreach ($item_attribute['list'] as $key=> $attribute)
-                                                    <div class="item-attribute-list d-inline-block {{ $key<1?'active':'' }} mb-1"
+                                              @if(isset($item_attribute['list']))  @foreach ($item_attribute['list'] as $key=> $attribute)
+                                                    <div class="item-attribute-list d-inline-block {{ ( isset($default_p[$item_attribute['name']]) && $default_p[$item_attribute['name']] == $attribute->name)  ?'active':'' }} mb-1"
                                                          Attribute-Type="{{ $item_attribute['type'] }}"
                                                          data-name-parent="{{ $item_attribute['name'] }}"
                                                          data-parent="{{ $item_attribute['id'] }}"
@@ -146,6 +151,7 @@
                                                         {!! DisplayAttributeType($attribute->type,$attribute->data_type) !!}
                                                     </div>
                                                 @endforeach
+                                              @endif
                                             </div>
                                         </div>
                                     @endforeach
@@ -226,7 +232,7 @@
                                                 <i class="{{ ($analytic['star'] > ($i - 0.51) &&  $analytic['star'] < $i )?'fas fa-star-half-alt':'' }} {{ ($analytic['star'] >= $i)?'fas fa-star':'far fa-star'  }}"></i>
                                             @endfor
                                           </span>
-                                        <span class="rating_process">
+                                        <span class="rating_process d-none d-sm-block">
                                          <span class="progress-bar" style="width: {{ $analytic['rating'] }}"></span>
                                     </span>
                                         <span class="count_review_type font-weight-bold">{{ $analytic['subtotal'] }}</span>
@@ -368,7 +374,13 @@
 @section('footer_layout')
     <script>
         var choose_attr = document.querySelector('.item-attribute-list.active[attribute-type="color"]');
-        if(choose_attr)choose_attr.click();
+        if(choose_attr){
+            choose_attr.click();
+        }else{
+            document.querySelectorAll('.item-attribute-list').forEach(el=>{
+                el.click();
+            });
+        }
     </script>
 @endsection
 

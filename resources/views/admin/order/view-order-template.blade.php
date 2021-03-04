@@ -25,7 +25,7 @@
         }
     </style>
     <!-- Main content -->
-    <section>
+    <section style="max-width: 1200px; margin: 0 auto; border: 2px solid #dee2e6; padding: 15px;">
         <div style="">
             <div>
                 <div style="max-width: 100%;">
@@ -35,7 +35,7 @@
                         <div>
                             <div style="display: block">
                                 <h4 style="display: flex;">
-                                    <img src="{{ asset('images/unipro_stars_logo.png') }}" style="width: 100px;" />
+                                    <a href="{{ url('/') }}"><img src="{{ asset('images/unipro_stars_logo.png') }}" style="width: 100px;" /></a>
                                     <small style="width: 100%; text-align: right;    font-size: 16px;">Date: {{ date('m/d/Y') }}</small>
                                 </h4>
                             </div>
@@ -94,37 +94,45 @@
                         </div>
                         <!-- /.row -->
 
-                        <div>
+                        <div style="display: flex;margin-top: 30px;">
                             <!-- /.col -->
-                            <div class="col-6">
+                            <div class="col-6" style="width: 45%;border-right: 2px solid #19437f66; padding-right: 20px;">
                                 <strong style="font-size: 16px">Order total </strong>
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table" style="width: 100%; border-spacing: 0; margin-top: 10px;">
                                         <tr>
-                                            <th style="width:50%">Subtotal:</th>
-                                            <td>{{  format_currency( $products['subtotal'] ,2,'$') }}</td>
+                                            <th style="width:50%; text-align: left; padding: .75rem; border-top: 1px solid #dee2e6;">Subtotal:</th>
+                                            <td style="border-top: 1px solid #dee2e6;">{{  format_currency( $products['subtotal'] ,2,'$') }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Tax ({{ $order->tax.'%' }})</th>
-                                            <td>{{ $order->tax ? format_currency( ($order->tax / 100 ) * $products['subtotal']  ,2,'$') : '0' }}</td>
+                                            <th style="width:50%; text-align: left; padding: .75rem; border-top: 1px solid #dee2e6;">Tax ({{ $order->tax.'%' }})</th>
+                                            <td style="border-top: 1px solid #dee2e6;">{{ $order->tax ? format_currency( ($order->tax / 100 ) * $products['subtotal']  ,2,'$') : '0' }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Shipping:</th>
-                                            <td>{{ $order->shipping ? format_currency($order->shipping,2,'$') : '0' }}</td>
+                                            <th style="width:50%; text-align: left; padding: .75rem; border-top: 1px solid #dee2e6;">Shipping:</th>
+                                            <td style="border-top: 1px solid #dee2e6;">{{ $order->shipping ? format_currency($order->shipping,2,'$') : '0' }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Total:</th>
-                                            <td>{{ format_currency($products['total'],2,'$') }}</td>
+                                            <th style="width:50%; text-align: left; padding: .75rem; border-top: 1px solid #dee2e6;">Total:</th>
+                                            <td style="border-top: 1px solid #dee2e6;">{{ format_currency($products['total'],2,'$') }}</td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
                             <!-- /.col -->
+                            <div class="col-6" style="width: 50%;padding: 0 20px;">
+                                <div class="lead"> <strong style="font-size: 16px">Note:  </strong></div>
+                                <div class="content">{!! nl2br($order->note)  !!}</div>
+                            </div>
                         </div>
                         <!-- /.row -->
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #dee2e6; text-align: center;font-size: 15px;">
+                            <p>If you have any questions or need advice, please contact us via Email: <a href="mailto:info@uniprouniforms.com">info@uniprouniforms.com<a> or Toll free: <a href="tel:(888) 691-6200">(888) 691-6200</a></p>
+                        </div>
 
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
