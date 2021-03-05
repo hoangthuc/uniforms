@@ -83,7 +83,7 @@ class HomeController extends Controller
             ]);
             if( isset($user->id)){
                 foreach ($data as $meta_key=>$meta_value){
-                    User::add_user_meta($user->id,$meta_key,$meta_value);
+                    if($meta_value)User::add_user_meta($user->id,$meta_key,$meta_value);
                 }
                 Auth::attempt(
                     array(

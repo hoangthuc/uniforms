@@ -5,7 +5,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6 bg-white pt-5 mt-5 ">
                     <div class="section_tittle text-center">
-                        <h2 class="teal">Log in to your account</h2>
+                        <h2 class="teal">Log in</h2>
                     </div>
                     <div class="section_description text-center">Please log in for access to convenient features and quick checkout.</div>
                 </div>

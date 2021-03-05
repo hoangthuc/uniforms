@@ -18,7 +18,9 @@
                                     <div class="basic-login">
                                         <form class="form-light" id="form_register_account">
                                             @if( isset( $_GET['redirect_url'] ) )
+                                                <div class="row">
                                                 <input type="hidden" name="redirect_url" value="{{ $_GET['redirect_url'] }}">
+                                                </div>
                                             @endif
                                             <div class="row">
                                                 <div class="col-md-12">

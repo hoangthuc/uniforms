@@ -41,7 +41,7 @@ class Orders extends Model
     }
     // get orders by user
     public static function get_ordersBy_user($user){
-        $orders = DB::table('product_orders')->where('user_id',$user)->orderByDesc('updated_at')->paginate(12);
+        $orders = DB::table('product_orders')->where('user_id',$user)->orderByDesc('updated_at')->get();
         return $orders;
     }
 

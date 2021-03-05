@@ -18,9 +18,11 @@ Route::get('/', function () {
 });
 Auth::routes();
 Route::get('login', function(){
+    if(Auth::check())return redirect('/');
     return view('auth.login',['slug'=>'login']);
 })->name('login');
 Route::get('register', function(){
+    if(Auth::check())return redirect('/');
     return view('auth.register',['slug'=>'register']);
 })->name('register');
 Route::get('/admin', function(){

@@ -42,7 +42,7 @@
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
-                                    <b>Orders</b> <a class="float-right">{{ $myorders->total() }}</a>
+                                    <b>Orders</b> <a class="float-right">{{ count($myorders) }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Cart</b> <a class="float-right mini-cart">0</a>
@@ -206,7 +206,6 @@
                                             <div class="form-group">
                                                 <label>Gender</label>
                                                 <select id="gender" name="gender" class="form-control" data-type="meta">
-                                                    <option value="0" selected="selected">Gender</option>
                                                     <option value="1">Male</option>
                                                     <option value="2">Female</option>
                                                 </select>

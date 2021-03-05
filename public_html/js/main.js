@@ -318,6 +318,7 @@ function sign_in() {
     })
 }
 function logout(){
+    document.querySelector('#loadingpage').className = 'loading';
     $.ajax({
         url:setting.logout,
         type:'post',
@@ -325,7 +326,7 @@ function logout(){
         success: function(resulf){
            location.reload();
         }
-    })
+    });
 }
 
 document.querySelectorAll('[data-card-widget="collapse"]').forEach(event=>{
@@ -635,6 +636,7 @@ $('#form_register_account [name]').each(function(){
     let r = $(this).data('required');
     $(this).next().addClass('d-none').text('');
     register.push( {name:k,value:v,title:t,required:r});
+    v= v.trim();
     if( r && !v){
         $(this).next().removeClass('d-none').text(t+' is required.');
         error.push(k);

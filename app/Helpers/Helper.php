@@ -547,7 +547,7 @@ if( !function_exists('showItemProduct') ){
         <div class="category"><?= $product['category']  ?></div>
         <div class="title-product"><a href="<?= $product['url'] ?>"><?= $product['title']  ?></a></div>
         <div class="price-product pb-2 d-flex">
-         <span>$<?= number_format($product['price'], 2, ',', ' '); ?></span>
+         <span>$<?= number_format($product['price'], 2, '.', ','); ?></span>
             <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' onclick="add_to_cart(this)">Add to cart <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
         </div>
     <?php
@@ -1087,7 +1087,8 @@ if(!function_exists('display_menu_account')){
    function display_menu_account(){
        ob_start();
        $user = Auth::user();
-       $avata = \App\Media::get_url_media(get_user_meta($user->id,'avata'));
+       $avata = get_user_meta($user->id,'avata');
+       $avata = ($avata)?\App\Media::get_url_media($avata):asset('uploads/users/user.png');
         ?>
        <span><?= $user->name ?></span> <a href="<?=  url('my-account') ?>"><span class="avatar" style="background-image: url(<?= ($avata)?$avata: url('uploads/users/user.png')   ?>)"></span></a>
        <div class="control-account text-left">
