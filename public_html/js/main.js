@@ -399,7 +399,7 @@ async function start_filter_product(page=1){
         data:{_token:setting.token, action:'filter_product_page', data:data,colume:col,sort:sort,product:categories, attribute:attributes, slug:slug},
         success: function(resulf){
             if(resulf){
-                setTimeout(function(){document.querySelector('#loadingpage').className = 'd-none';},500);
+                setTimeout(function(){document.querySelector('#loadingpage').className = 'd-none';},100);
                 resulf= JSON.parse(resulf);
                 console.log(resulf);
                 document.querySelector('[data-products-resulf] .row').innerHTML = resulf.data;

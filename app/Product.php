@@ -484,6 +484,27 @@ class Product extends Model
         return $products;
     }
 
+    // get product by categories
+    public static function get_product_byTax_array($cats=[],$type='product_category'){
+        $cat_return = [];
+        $products = DB::table('relationships')
+            ->join('products','products.id','=', 'relationships.object_id')
+            ->select(DB::raw('term_id, Count(object_id) as products'))
+            ->where(function ($select) use ($cats,$type){
+                if( !empty($cats) )foreach ($cats as $term_id){
+                    if($term_id)$select->orwhere('type',$type.'_'.$term_id);
+                }
+
+            })
+            ->where('status',2)
+            ->groupBy('term_id')
+            ->get();
+        foreach($products as $cat){
+            $cat_return[$cat->term_id] = $cat->products;
+        }
+        return $cat_return;
+    }
+
     // get count product by categories & attribute
     public static function get_product_byTax_cat($term_id,$cats=[]){
         $products = DB::table('relationships')
@@ -503,6 +524,39 @@ class Product extends Model
             ->groupBy('relationships.object_id')
             ->get();
         return $products;
+    }
+
+    // get count product by categories & attribute
+    public static function get_product_byTax_cat_array($attrs=[],$cats=[]){
+        $attr_return = [];
+        $products = DB::table('relationships')
+            ->join('products','products.id','=', 'relationships.object_id')
+            ->join('relationships as cat','products.id','=', 'cat.object_id')
+            ->select(DB::raw('relationships.term_id, Count(relationships.object_id) as products'))
+            ->where(function($select) use ($attrs){
+                if(count($attrs)>0){
+                    foreach ($attrs as $term_id){
+                        $select->orwhere('relationships.type','product_attribute_'.$term_id);
+                    }
+                }
+            } )
+            ->where(function($select) use ($cats){
+                if(count($cats)>0){
+                    foreach ($cats as $cat){
+                        $select->orwhere('cat.type','product_category_'.$cat);
+                    }
+                }else{
+                    $select->where( DB::raw('1=2'));
+                }
+            })
+            ->where('status',2)
+            ->groupBy('relationships.term_id')
+            ->limit(10)
+            ->get();
+        foreach($products as $attr){
+            $attr_return[$attr->term_id] = $attr->products;
+        }
+        return $attr_return;
     }
 
 

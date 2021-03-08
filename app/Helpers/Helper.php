@@ -666,15 +666,15 @@ if( !function_exists('DisplayAttributeType') ){
 if( !function_exists('get_filter_product') ){
     function get_filter_product($query=[]){
         $filter = [];
-        $list_cat = [];
         $product_categories =  App\Product::get_product_categories_all($query);
+        $list_cat = list_ob_to_array($product_categories);
         if($product_categories){
+            $data_count =  App\Product::get_product_byTax_array(list_ob_to_array($product_categories));
             $product_categories =  App\Product::get_sort_categories($product_categories);
             $data = [];
             $count = 0;
             foreach ($product_categories as $key=>$item){
-                $count = getNumberProductbyTax($item['id'],'product_category');
-                $list_cat[] = $item['id'];
+                $count = ( isset($data_count[$item['id']]) )?$data_count[$item['id']]:0;
                 $data[] = [
                         'title'=>$item['name'],
                         'value'=>$item['id'],
@@ -686,8 +686,7 @@ if( !function_exists('get_filter_product') ){
                 ];
                 if(isset($item['child'])){
                     foreach ($item['child'] as $item){
-                        $count = getNumberProductbyTax($item['id'],'product_category');
-                        $list_cat[] = $item['id'];
+                        $count = ( isset($data_count[$item['id']]) )?$data_count[$item['id']]:0;
                         $data[] = [
                             'title'=>$item['name'],
                             'value'=>$item['id'],
@@ -711,15 +710,21 @@ if( !function_exists('get_filter_product') ){
         }
 
         $product_attributes =  App\Product::get_product_attributes();
+
         if($product_attributes){
             foreach ($product_attributes as $attribute){
                 $count = 0;
                 $attribute_detail =  App\Product::get_product_attributes_detail_filter($attribute->id);
+                $list_attr =  list_ob_to_array($attribute_detail);
+                $count_att =   App\Product::get_product_byTax_cat_array($list_attr,$list_cat);
+                var_dump($count_att);
                 if( isset( $attribute_detail->child ) && $attribute->loop){
                     $attribute_detail =   $attribute_detail->child;
                     $data = [];
+
                     foreach ($attribute_detail as $item_attribute){
-                        $count_att =   get_product_byTax_cat($item_attribute->id,$list_cat);
+                        $count_att =  0;
+                      //  $count_att =   get_product_byTax_cat($item_attribute->id,$list_cat);
                         if($count_att)$data[] = [
                             'title'=>$item_attribute->name,
                             'value'=>$item_attribute->id,
@@ -1548,10 +1553,11 @@ function check_array_search($value,$array){
 }
 
 function list_ob_to_array($data){
+    $data_array = [];
     foreach ($data as $key=> $item){
-        $data[$key]= $item->id;
+        if(isset($item->id))$data_array[$key]= $item->id;
     }
-    return $data;
+    return $data_array;
 }
 
 
