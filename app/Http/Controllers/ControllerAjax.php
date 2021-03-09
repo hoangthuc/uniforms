@@ -331,7 +331,7 @@ class ControllerAjax extends Controller
                     $resulf['data'] .= '<div class="'.$colume.'" Data-Item-Product> <div class="item-content bg-white">'.showItemProduct($item).'</div></div>';
                 }
             }else{
-                $resulf['data'] = '<div class="content col-md-12"><div class="alert alert-primary" role="alert">Not found product!</div></div>';
+                $resulf['data'] = '<div class="content col-md-12"><div class="alert alert-primary" role="alert">Please contact our customer support for this item email.</div></div>';
             }
             echo ($resulf)?json_encode($resulf):'';
         }

@@ -522,6 +522,7 @@ if( !function_exists('showItemProduct') ){
                 'subtotal'=>$product['price'],
                 'thumbnail'=>null,
         ];
+        $colume_color = '';
         if(!empty($colors)){
             $colors_default = end($colors);
             $data['key'] =$data['key'].'_'.$colors_default['id'];
@@ -531,6 +532,14 @@ if( !function_exists('showItemProduct') ){
             if(isset($colors_default['data_default']))$data['attributes'] = http_build_query_not_enc_type($colors_default['data_default'],':',', ');
             if($data['attributes'])unset($colors_default['data_default']['Color']);
             if(isset($colors_default['data_default']))$data['data_default'] =http_build_query_not_enc_type($colors_default['data_default'],':',', ');
+            if(count($colors)> 20){
+                $colume_color = 'show-colume-3';
+            }elseif(count($colors)> 12){
+                $colume_color = 'show-colume-2';
+            }else{
+                $colume_color = '';
+            }
+
         }
         if($data['thumbnail'])$product['image'] = $data['thumbnail'];
 
@@ -538,7 +547,7 @@ if( !function_exists('showItemProduct') ){
         <div class="thumbnail-product" data-color='<?= json_encode($colors) ?>' >
             <span class="SKU">SKU: <?= $product['sku']  ?></span>
             <a href="<?= $product['url'] ?>" style="background-image: url(<?= $product['image']?$product['image']:asset('images/products/default.jpg')  ?>)"><img src="<?= $product['image']  ?>"></a>
-            <div class="<?php echo (count($colors)> 12)?'show-colume-2':''; ?> list-color-product ">
+            <div class="<?php echo $colume_color; ?> list-color-product ">
             <?php foreach($colors as $color): ?>
             <span class="item_color" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style="background-color: <?= (isset($color['data_type']))?$color['data_type']:'' ?>"></span>
             <?php endforeach;  ?>
@@ -715,15 +724,13 @@ if( !function_exists('get_filter_product') ){
             foreach ($product_attributes as $attribute){
                 $count = 0;
                 $attribute_detail =  App\Product::get_product_attributes_detail_filter($attribute->id);
-                $list_attr =  list_ob_to_array($attribute_detail);
-                $count_att =   App\Product::get_product_byTax_cat_array($list_attr,$list_cat);
-                var_dump($count_att);
                 if( isset( $attribute_detail->child ) && $attribute->loop){
                     $attribute_detail =   $attribute_detail->child;
                     $data = [];
-
+                    $list_attr =  list_ob_to_array($attribute_detail);
+                    $data_count_att =   App\Product::get_product_byTax_cat_array($list_attr,$list_cat);
                     foreach ($attribute_detail as $item_attribute){
-                        $count_att =  0;
+                        $count_att =  (isset($data_count_att[$item_attribute->id]))?$data_count_att[$item_attribute->id]:0;
                       //  $count_att =   get_product_byTax_cat($item_attribute->id,$list_cat);
                         if($count_att)$data[] = [
                             'title'=>$item_attribute->name,
@@ -911,7 +918,7 @@ if(!function_exists('display_resulf_ajax_search') ){
                         <div class="price">
                             <label>SKU: </label> <strong><?= $item_product->sku ?></strong>
                             <label>Price: </label> <strong><?= format_currency( App\Product::get_meta_product($item_product->id,'price'),2,'$') ?></strong>
-                            <label>Categories:</label> <strong class="d-categories"><?= display_list_category_product($item_product->id) ?></strong>
+<!--                            <label>Categories:</label> <strong class="d-categories">--><?//= // display_list_category_product($item_product->id) ?><!--</strong>-->
                         </div>
                     </div>
                 </div>
@@ -1555,7 +1562,7 @@ function check_array_search($value,$array){
 function list_ob_to_array($data){
     $data_array = [];
     foreach ($data as $key=> $item){
-        if(isset($item->id))$data_array[$key]= $item->id;
+        if(isset($item->id))$data_array[$item->id]= $item->id;
     }
     return $data_array;
 }

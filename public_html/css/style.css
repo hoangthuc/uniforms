@@ -1626,10 +1626,19 @@ display: inline-block;
 .show-colume-2.list-color-product{
     width: 46px;
 }
+.show-colume-3.list-color-product{
+    width: 70px;
+}
 .show-colume-2.list-color-product .item_color{
     /*display: inline-block;*/
 }
 
 [datasearchproduct] .title_product .d-categories{
     font-size: 15px;
+}
+
+a.sort-product{
+    font-size: 22px;
+    font-weight: bold;
+    color: #0c1b40;
 }

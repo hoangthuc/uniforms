@@ -532,7 +532,7 @@ class Product extends Model
         $products = DB::table('relationships')
             ->join('products','products.id','=', 'relationships.object_id')
             ->join('relationships as cat','products.id','=', 'cat.object_id')
-            ->select(DB::raw('relationships.term_id, Count(relationships.object_id) as products'))
+            ->select(DB::raw('relationships.*'))
             ->where(function($select) use ($attrs){
                 if(count($attrs)>0){
                     foreach ($attrs as $term_id){
@@ -550,11 +550,15 @@ class Product extends Model
                 }
             })
             ->where('status',2)
-            ->groupBy('relationships.term_id')
-            ->limit(10)
+            ->groupBy('relationships.re_id')
+            ->limit(1000)
             ->get();
         foreach($products as $attr){
-            $attr_return[$attr->term_id] = $attr->products;
+            if(isset($attr_return[$attr->term_id])){
+                $attr_return[$attr->term_id]++;
+            }else{
+                $attr_return[$attr->term_id] = 1;
+            }
         }
         return $attr_return;
     }

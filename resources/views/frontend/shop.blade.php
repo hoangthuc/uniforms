@@ -7,8 +7,6 @@
     $query = ['sort'=>'sku','product'=>$cat,'product_attribute'=>[],'search'=>$search];
     $filter_products = getProductFilterPage($query);
     $product_departments = \App\Product::product_departments();
-
-//   $products = get_filter_product(['type'=>$type]);
     ?>
     <section class="products-page">
         <div class="container">
@@ -42,10 +40,10 @@
                 <div class="col-md-3">
                     <div class="filter-products">
                         <a href="javascript:hide_filter_product(this);" data-display="true" class="display-control"><i class="fas fa-chevron-left"></i> <span>Show Filter</span></a>
-                        <a class="sort-product float-right">Sort by: </a>
                     </div>
                 </div>
                 <div class="col-md-9">
+                    <a class="sort-product">Sort by: </a>
                     <select name="sort_by" onchange="start_filter_product()" class="sort-filter">
                         <option value="sku" selected>Item Number / SKU</option>
                         <option value="newest">Newest</option>
@@ -56,7 +54,7 @@
                         <option value="top_sell_year">Best sell in year</option>
                     </select>
                     <span Data-Resulfs-Count>{{ format_currency($filter_products['pagition']['total']).' Results' }}</span>
-                    <div class="pagition-product float-right">{!! DisplayPagition($filter_products['pagition']) !!}</div>
+                    <div class="pagition-product float-right mt-2 mt-sm-0">{!! DisplayPagition($filter_products['pagition']) !!}</div>
                 </div>
             </div>
 

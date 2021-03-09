@@ -85,7 +85,7 @@
                         <div class="form-group row">
                             <div class="col-sm-4 col-md-3"><label>Phone #:</label></div>
                             <div class="col-sm-8 col-md-9">
-                                <input type="tel" name="phone" class="form-control" placeholder="(123) 456-7890 or 123-456-7890" data-title="Phone number">
+                                <input type="text" name="phone" class="form-control" placeholder="(123) 456-7890 or 123-456-7890" data-title="Phone number">
                                 <div class="error"></div>
                             </div>
                         </div>
