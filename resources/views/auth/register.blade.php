@@ -153,8 +153,10 @@
                                                 </div>
                                             </div>
                                             <button type="button" onclick="form_register(this)" data-url="{{ url('register') }}" class="btn btn-unipro form-control">Submit registration</button>
-                                            <input type="hidden" name="action" value="{{ url('/register') }}" data-title="Action" data-required="false">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}" data-title="Token" data-required="false">
+                                           <div class="row">
+                                               <input type="hidden" name="action" value="{{ url('/register') }}" data-title="Action" data-required="false">
+                                               <input type="hidden" name="_token" value="{{ csrf_token() }}" data-title="Token" data-required="false">
+                                           </div>
                                             <a href="{{ (isset($_GET['redirect_url']))?url('login?redirect_url='.$_GET['redirect_url']):url('register')  }}" class="btn btn-purple mt-3 "><i class="fa fa-lock"></i> Already have an account? Log in</a>
                                         </form>
                                     </div>

@@ -698,7 +698,8 @@ if( !function_exists('get_filter_product') ){
         $product_categories =  App\Product::get_product_categories_all($query);
         $list_cat = list_ob_to_array($product_categories);
         if($product_categories){
-            $data_count =  App\Product::get_product_byTax_array(list_ob_to_array($product_categories));
+            $query['cat'] = $list_cat;
+            $data_count =  App\Product::get_product_byTax_array($query);
             $product_categories =  App\Product::get_sort_categories($product_categories);
             $data = [];
             $count = 0;
@@ -748,7 +749,8 @@ if( !function_exists('get_filter_product') ){
                     $attribute_detail =   $attribute_detail->child;
                     $data = [];
                     $list_attr =  list_ob_to_array($attribute_detail);
-                    $data_count_att =   App\Product::get_product_byTax_cat_array($list_attr,$list_cat);
+                    $query['attr'] = $list_attr;
+                    $data_count_att =   App\Product::get_product_byTax_cat_array($query);
                     foreach ($attribute_detail as $item_attribute){
                         $count_att =  (isset($data_count_att[$item_attribute->id]))?$data_count_att[$item_attribute->id]:0;
                       //  $count_att =   get_product_byTax_cat($item_attribute->id,$list_cat);

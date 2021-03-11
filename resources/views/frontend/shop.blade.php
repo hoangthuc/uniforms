@@ -93,7 +93,7 @@
 @section('footer_layout')
     <script>
         var cat_default = {!! json_encode( list_ob_to_array($cat) ) !!};
-        var query_filter = {!! json_encode( ['type'=>$type] ) !!};
+        var query_filter = {!! json_encode( ['type'=>$type,'search'=>$search] ) !!};
         display_filter_product();
     </script>
 @endsection

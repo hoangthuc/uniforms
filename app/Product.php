@@ -485,17 +485,20 @@ class Product extends Model
     }
 
     // get product by categories
-    public static function get_product_byTax_array($cats=[],$type='product_category'){
+    public static function get_product_byTax_array($query=[],$type='product_category'){
         $cat_return = [];
+        $query['cat'] = isset($query['cat'])?$query['cat']:[];
+        $query['search'] = isset($query['search'])?$query['search']:'';
         $products = DB::table('relationships')
             ->join('products','products.id','=', 'relationships.object_id')
             ->select(DB::raw('term_id, Count(object_id) as products'))
-            ->where(function ($select) use ($cats,$type){
-                if( !empty($cats) )foreach ($cats as $term_id){
+            ->where(function ($select) use ($query,$type){
+                if( !empty($query['cat']) )foreach ($query['cat'] as $term_id){
                     if($term_id)$select->orwhere('type',$type.'_'.$term_id);
                 }
 
             })
+            ->where('name','LIKE', "%{$query['search']}%")
             ->where('status',2)
             ->groupBy('term_id')
             ->get();
@@ -527,22 +530,25 @@ class Product extends Model
     }
 
     // get count product by categories & attribute
-    public static function get_product_byTax_cat_array($attrs=[],$cats=[]){
+    public static function get_product_byTax_cat_array($query=[]){
         $attr_return = [];
+        $query['cat'] = isset($query['cat'])?$query['cat']:[];
+        $query['attr'] = isset($query['attr'])?$query['attr']:[];
+        $query['search'] = isset($query['search'])?$query['search']:'';
         $products = DB::table('relationships')
             ->join('products','products.id','=', 'relationships.object_id')
             ->join('relationships as cat','products.id','=', 'cat.object_id')
             ->select(DB::raw('relationships.*'))
-            ->where(function($select) use ($attrs){
-                if(count($attrs)>0){
-                    foreach ($attrs as $term_id){
+            ->where(function($select) use ($query){
+                if(count($query['attr'])>0){
+                    foreach ($query['attr'] as $term_id){
                         $select->orwhere('relationships.type','product_attribute_'.$term_id);
                     }
                 }
             } )
-            ->where(function($select) use ($cats){
-                if(count($cats)>0){
-                    foreach ($cats as $cat){
+            ->where(function($select) use ($query){
+                if(count($query['cat'])>0){
+                    foreach ($query['cat'] as $cat){
                         $select->orwhere('cat.type','product_category_'.$cat);
                     }
                 }else{
@@ -550,6 +556,7 @@ class Product extends Model
                 }
             })
             ->where('status',2)
+            ->where('name','LIKE', "%{$query['search']}%")
             ->groupBy('relationships.re_id')
             ->limit(1000)
             ->get();
