@@ -145,47 +145,52 @@
         });
         $('[name="UploadMedia"]').on('change',function(){
             var type = $(this).data('type');
-            var media = $(this)[0].files[0];
-            var formData = new FormData();
-            formData.append('UploadMedia', media);
-            formData.append('_token', setting.token);
-            $.ajax({
-                url : setting.ajax_url,
-                type : 'POST',
-                data : formData,
-                processData: false,  // tell jQuery not to process the data
-                contentType: false,  // tell jQuery not to set contentType
-                success : function(resulf) {
-                    if(resulf){
+            var medias = $(this)[0].files;
+            if(medias){
+                for (media of medias){
+                    var formData = new FormData();
+                    formData.append('UploadMedia', media);
+                    formData.append('_token', setting.token);
+                    $.ajax({
+                        url : setting.ajax_url,
+                        type : 'POST',
+                        data : formData,
+                        processData: false,  // tell jQuery not to process the data
+                        contentType: false,  // tell jQuery not to set contentType
+                        success : function(resulf) {
+                            if(resulf){
 
-                        resulf = JSON.parse(resulf);
-                        console.log(resulf);
-                        if(resulf['success']){
-                            if(type=='list'){
-                                var div = create_media_list(resulf);
-                                var parent =  document.getElementById('list-medias');
-                            }else{
-                                var div = create_media(resulf);
-                                var parent =  document.getElementById('grid-medias');
+                                resulf = JSON.parse(resulf);
+                                console.log(resulf);
+                                if(resulf['success']){
+                                    if(type=='list'){
+                                        var div = create_media_list(resulf);
+                                        var parent =  document.getElementById('list-medias');
+                                    }else{
+                                        var div = create_media(resulf);
+                                        var parent =  document.getElementById('grid-medias');
+                                    }
+
+                                    parent.insertBefore(div, parent.childNodes[0]);
+                                    $('[name="UploadMedia"]').val('');
+                                    const Toast = Swal.mixin({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });Toast.fire({
+                                        icon: 'success',
+                                        title: 'Upload media successfully.'
+                                    })
+                                }
+
                             }
 
-                            parent.insertBefore(div, parent.childNodes[0]);
-                            $('[name="UploadMedia"]').val('');
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });Toast.fire({
-                                icon: 'success',
-                                title: 'Upload media successfully.'
-                            })
                         }
-
-                    }
-
+                    })
                 }
-            })
+            }
+
         });
 
 

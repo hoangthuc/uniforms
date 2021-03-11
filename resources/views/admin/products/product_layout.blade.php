@@ -105,6 +105,9 @@ $product_categories =  App\Product::get_product_categories();
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tabs-library" role="tabpanel" aria-labelledby="tabs-library">
+                                <div class="filter_media_keyword text-right mb-2">
+                                    <input type="text" name="search_media" class="d-inline-block" placeholder="Enter keyword" oninput="search_media(this)">
+                                </div>
                                 <div id="grid-medias">
 
                                 </div>

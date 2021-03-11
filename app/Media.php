@@ -21,6 +21,7 @@ class Media extends Model
             ->where( function($select) use ($search){
                 $select->orwhere('title','LIKE', "%{$search}%");
                 $select->orwhere('description','LIKE', "%{$search}%");
+                $select->orwhere('path','LIKE', "%{$search}%");
             } )
             ->orderBy('id', 'desc')->paginate(12,['*'],'page',$page);
         return $medias;
@@ -60,6 +61,22 @@ class Media extends Model
         $media_id = DB::table('media')->insertGetId($media);
         return $media_id;
     }
-        
+
+
+    public static function get_media_first($query=[],$page=1){
+        $type = isset($query['type'])?$query['type']:'';
+        $search = isset($query['search'])?$query['search']:'';
+        $medias = DB::table('media')
+            ->where( function($select) use ($type){
+                $select->where('type','LIKE', $type.'%');
+            } )
+            ->where( function($select) use ($search){
+                $select->orwhere('title','LIKE', "%{$search}%");
+                $select->orwhere('description','LIKE', "%{$search}%");
+                $select->orwhere('path','LIKE', "%{$search}%");
+            } )
+            ->orderBy('id', 'desc')->first();
+        return $medias;
+    }
                
 }

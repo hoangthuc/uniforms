@@ -49,7 +49,7 @@
                                 <div id="form-upload-media" class="collapse mb-5 mt-2">
                                     <form action="{{ url('admin/upload') }}" enctype="multipart/form-data" method="POST">
                                         {{ csrf_field() }}
-                                        <input type="file" name="UploadMedia" required="true">
+                                        <input type="file" name="UploadMedia" required="true" multiple>
                                         <br/>
                                         <button type="button" class="btn-button-upload">Upload Media</button>
                                     </form>

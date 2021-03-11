@@ -4,6 +4,24 @@
     $products =  App\Product::get_products();
     $product_status = App\Product::product_status();
 
+//    $xlsx = \App\SimpleXLSX::parse( public_path('imports/extra/get_image.xlsx') );
+//    $body = [];
+//    foreach ( $xlsx->rows() as $r => $row ) {
+//        $media = \App\Media::get_media_first([ 'search'=>format_text_cell($row[4])]);
+//        $product_id = \App\Product::check_product_bysku($row[0]);
+//        if($r>0 && $row[4] && $media && $product_id){
+//            $body[$row[0]]['sku'] = format_text_cell($row[0]);
+//            $body[$row[0]]['img'] = format_text_cell($row[4]);
+//            $body[$row[0]]['product_id'] = $product_id;
+//            $body[$row[0]]['media_id'] = $media->id;
+//            $data['featured_image'] = $media->id;
+//            DB::table('products')->where('id',$product_id)->update($data);
+//        }
+//
+//    }
+//    var_dump($body);
+
+
 //    $info = ['images'=>0];
 //    $xlsx = \App\SimpleXLSX::parse( public_path('imports/2021/03/unipro/import_product.xlsx') );
 //    $header = [];

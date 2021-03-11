@@ -1083,7 +1083,7 @@ async function loading_medias(event){
 // loading media in modal popup perpage 12 in page
 async function loading_more_medias(){
  let medias = document.querySelectorAll('#grid-medias .item-media');
- let number  = Math.round(medias.length/12 ) + 1;
+    let number  = Math.round(medias.length/12 ) + 1;
  let pause = medias.length%12;
 if(!pause){
     let ftype = $('#tabs-upload-media .upload-file input').attr('ftype');
@@ -1647,5 +1647,25 @@ async function add_product_varition_default(event){
            el.className = 'active';
        });
    });
+}
+function search_media(event){
+    var ftype = $('#tabs-upload-media .upload-file input').attr('ftype');
+    var keyword = $(event).val();
+    var loading = '<div class="text-center">\n' +
+        '  <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">\n' +
+        '    <span class="visually-hidden"></span>\n' +
+        '  </div>\n' +
+        '</div>';
+    document.querySelector('#grid-medias').innerHTML = loading;
+    $.ajax({
+        url: setting.ajax_url,
+        type: "POST",
+        data: {action:'get_medias',_token: setting.token,type:ftype,search:keyword},
+        success: function(resulf){
+            if(resulf){
+                document.querySelector('#grid-medias').innerHTML = resulf;
+            }
+        }
+    });
 }
 add_product_varition_default(null);

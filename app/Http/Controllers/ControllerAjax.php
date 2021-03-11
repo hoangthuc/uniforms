@@ -67,7 +67,9 @@ class ControllerAjax extends Controller
         // get media
         if(isset($request['action']) && $request['action']=='get_medias'){
             $page = $request['page']?$request['page']:1;
-            $resulf =  Media::get_media($request['type'],$page);
+            $query['type'] = $request['type'];
+            $query['search'] = isset($request['search'])? strtolower($request['search']) :'';
+            $resulf =  Media::get_media($query,$page);
             $html = display_media_modal($resulf);
             echo $html;
         }
