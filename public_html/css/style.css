@@ -862,6 +862,7 @@ color: #7f7f7f;
     outline: none;
     box-shadow: none;
     max-width: 80px;
+    background-color: #fff;
 }
 .attributes .item-attribute label{
     font-size: 26px;
@@ -1620,8 +1621,8 @@ display: inline-block;
     height: 20px;
     margin-bottom: 5px;
     border-radius: 3px;
-    box-shadow: 0px 0px 2px #00000040;
     cursor: pointer;
+    border: 1px solid #fff;
 }
 .show-colume-2.list-color-product{
     width: 46px;

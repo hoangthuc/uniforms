@@ -541,24 +541,45 @@ if( !function_exists('showItemProduct') ){
             }
 
         }else{
+            $selects = App\Product::get_meta_product($product['product_id'],'all_attributes');
             $datas = App\Product::get_meta_product($product['product_id'],'product_variations');
             $datas = json_decode($datas);
+            $selects = json_decode($selects);
             $list_key = [$product['product_id']];
+            $default_all = [];
             if($datas)foreach ($datas as $item){
                 if( isset($item->default) ){
                     foreach ($item->select as $id){
                         if($id){
-                            $list_key[] = $id;
+                            $list_key[$id] = $id;
                         }
                     }
                 }
 
             }
             if( count($list_key)<2 )foreach ($datas as $item){
-                if($item->select)$list_key = array_merge($list_key,$item->select);
+                if(isset($item->select)){
+                    foreach ($item->select as $id){
+                        if($id){
+                            $list_key[$id] = $id;
+                        }
+                    }
+                }
+
+            }
+            if($selects)foreach ($selects as $key => $item){
+                $attributes = App\Product::get_product_attributes_detail($key);
+                foreach ($item->value as $value) {
+                    if($attributes->name){
+                        $default_all[$value->value] = $attributes->name.': '.$value->title;
+                    }
+
+                }
 
             }
             $data['key'] = implode('_',$list_key);
+            $data['attributes'] = implode(', ',$default_all);
+            if(!$data['thumbnail'])$data['thumbnail'] = $product['image'];
         }
 
         if($data['thumbnail'])$product['image'] = $data['thumbnail'];
@@ -940,7 +961,6 @@ if(!function_exists('display_resulf_ajax_search') ){
                         <div class="price">
                             <label>SKU: </label> <strong><?= $item_product->sku ?></strong>
                             <label>Price: </label> <strong><?= format_currency( App\Product::get_meta_product($item_product->id,'price'),2,'$') ?></strong>
-<!--                            <label>Categories:</label> <strong class="d-categories">--><?//= // display_list_category_product($item_product->id) ?><!--</strong>-->
                         </div>
                     </div>
                 </div>

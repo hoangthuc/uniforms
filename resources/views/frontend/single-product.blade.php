@@ -129,7 +129,7 @@
                                 <div class="amount col-md-6 d-flex">
                                     <span class="btn btn-minus" onclick="change_amount(-1)"><i class="fas fa-minus"></i></span>
                                     <input type="number" class="form-control text-center" name="amount" min="1"
-                                           value="1"/>
+                                           value="1" readonly/>
                                     <span class="btn btn-minus" onclick="change_amount(1)"><i
                                                 class="fas fa-plus"></i></span>
                                 </div>

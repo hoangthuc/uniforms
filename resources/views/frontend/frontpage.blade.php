@@ -29,7 +29,7 @@ $partners = [
                                <li><span>Transportation</span></li>
                                <li><span>Work & industrial</span></li>
                             </ul>
-                            <a class="btn-button">Shop now</a>
+                            <a href="{{ url('products') }}" class="btn-button">Shop now</a>
                         </div>
                         <div class="border-content"></div>
                     </dic>
@@ -48,7 +48,7 @@ $partners = [
                                 <li><span>Transportation</span></li>
                                 <li><span>Work & industrial</span></li>
                             </ul>
-                            <a class="btn-button">Shop now</a>
+                            <a href="{{ url('products') }}" class="btn-button">Shop now</a>
                         </div>
                         <div class="border-content"></div>
                     </dic>

@@ -103,20 +103,20 @@
                                     <div class="order-wrapper mt-50">
                                         <h3 class="billing-title mb-10"><i class="fa fa-shopping-cart fa-right-5"></i> Your Order</h3>
                                         <div class="order-list">
-                                            <div class="list-row d-flex card-head font-weight-bold">
-                                                <div class="col-9">Product</div>
-                                                <div class="col-1">Qty</div>
-                                                <div class="col-2 text-right">Total</div>
+                                            <div class="list-row d-none d-md-flex card-head font-weight-bold">
+                                                <div class="col-7">Product</div>
+                                                <div class="col-2 text-center">Qty</div>
+                                                <div class="col-3 text-right">Total</div>
                                             </div>
                                             @if($cart['products'])
                                                 @foreach($cart['products'] as $key => $item)
-                                            <div class="item-product d-flex border-bottom mt-2 pb-2">
-                                                <div class="col-9">
+                                            <div class="item-product d-md-flex border-bottom mt-2 pb-2">
+                                                <div class="col-md-7">
                                                     <a href="{{ $item['link'] }}">{{ $item['title'] }}</a>
                                                    <span>{{ $item['attributes'] }}</span>
                                                 </div>
-                                                <div class="col-1 amount text-center">{{ $item['quantily'] }}</div>
-                                                <div class="col-2 price text-right">{{ format_currency( floatval($item['subtotal'])*$item['quantily'] ,2,'$')  }}</div>
+                                                <div class="col-md-2 p-md-0 amount text-md-center text-truncate"><label class="font-weight-bold d-inline-block d-md-none">Quantity: </label> {{ $item['quantily'] }}</div>
+                                                <div class="col-md-3 p-md-0 price text-md-right text-truncate"><label class="font-weight-bold d-inline-block d-md-none">Total: </label> {{ format_currency( floatval($item['subtotal'])*$item['quantily'] ,2,'$')  }}</div>
                                             </div>
                                                 @endforeach
                                             @endif

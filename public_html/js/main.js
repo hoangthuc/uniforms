@@ -246,10 +246,12 @@ function change_quantily(button){
   var key = $(button).data('product-id');
   let check = in_cart(key,cart.products);
   let quantily = $(button).val();
-  if(!quantily || Number( quantily )<1){
+  quantily = parseInt( quantily );
+  if(!quantily || Number(quantily) < 1){
       quantily=1;
       $(button).val(quantily);
   }
+    $(button).val(quantily);
   document.querySelector('.cart-single-item[data-item-id="'+key+'"] .total-price').textContent = format_currency(cart.products[check]['subtotal'] * quantily,'$');
   console.log(cart.products[check]['subtotal'] * quantily);
   cart.products[check]['quantily'] = Number( quantily );
