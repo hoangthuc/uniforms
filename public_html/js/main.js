@@ -374,11 +374,6 @@ async function start_filter_product(page=1){
         let id = el.value;
         if(el.checked){
             categories.push(el.value);
-            $('.category-parent-'+id).addClass('active');
-        }else{
-            $('.category-parent-'+id).removeClass('active');
-         let child =  document.querySelector('.category-parent-'+id+' > input ');
-         if(child)child.checked = false;
         }
     })
     if(!categories.length)categories = cat_default;

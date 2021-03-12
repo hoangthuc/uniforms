@@ -22,19 +22,44 @@
 //    var_dump($body);
 
 
-//    $info = ['images'=>0];
-//    $xlsx = \App\SimpleXLSX::parse( public_path('imports/2021/03/unipro/import_product.xlsx') );
-//    $header = [];
-//    $body = [];
-//    foreach ( $xlsx->rows() as $r => $row ) {
-//        if(empty($row[6]) || !file_exists( 'imports/2021/03/unipro/'.format_text_cell($row[6]) )){
-//            $body[$row[1]]['sku'] = format_text_cell($row[1]);
-//            $body[$row[1]]['name'] = format_text_cell($row[2]);
-//            $body[$row[1]]['featured_image'] = format_text_cell($row[6]);
-//        }
-//
-//    }
-//
+    $xlsx = \App\SimpleXLSX::parse( public_path('imports/2021/03/unipro/import_product.xlsx') );
+    $header = [];
+    $body = [];
+    foreach ( $xlsx->rows(1) as $r => $row ) {
+        if($r<1)$header = $row;
+        if($r>0){
+            foreach ($row as $stt => $item){
+                if($item)$body[$r][ $header[$stt]  ]= $item;
+            }
+        }
+
+    }
+foreach ($body as $r=>$item){
+    foreach ($body[$r] as $key_attr => $value){
+        $id = \App\Product::get_product_attributes_bylug($key_attr);
+        if($id){
+            $body[$r]['attribute'][]=$id;
+            $array_attr = explode(',',$value);
+            foreach ($array_attr as $attr_item){
+               $attr =  \App\Product::get_product_attributes_by_datatype(strtolower($attr_item),$id);
+                if($attr) {
+                    $item_child['value'] = $attr->id;
+                    $item_child['title'] = $attr->name;
+                    $body[$r]['all_attribute'][$id]['value'][]=$item_child;
+                }
+
+            }
+            $body[$r]['all_attribute'][$id]['display'] = true;
+
+        }
+    }
+
+    $body[$r]['product_id'] =   \App\Product::check_product_bysku($body[$r][ 'sku'  ]);
+    $body[$r]['attribute'] =   \GuzzleHttp\json_encode($body[$r]['attribute'] );
+    $body[$r]['all_attribute'] =   \GuzzleHttp\json_encode($body[$r]['all_attribute'] );
+}
+
+var_dump($body);
 //    // set variants
 //    $header_var = [];
 //    $body_var = [];

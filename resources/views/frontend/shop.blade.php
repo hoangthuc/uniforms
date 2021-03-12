@@ -7,6 +7,7 @@
     $query = ['sort'=>'sku','product'=>$cat,'product_attribute'=>[],'search'=>$search];
     $filter_products = getProductFilterPage($query);
     $product_departments = \App\Product::product_departments();
+   /// $filters = get_filter_product( ['type'=>$type,'search'=>$search] );
     ?>
     <section class="products-page">
         <div class="container">

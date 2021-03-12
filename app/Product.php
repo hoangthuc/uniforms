@@ -491,14 +491,18 @@ class Product extends Model
         $query['search'] = isset($query['search'])?$query['search']:'';
         $products = DB::table('relationships')
             ->join('products','products.id','=', 'relationships.object_id')
+            ->join('product_meta','products.id','=', 'product_meta.product_id')
             ->select(DB::raw('term_id, Count(object_id) as products'))
+            ->where('meta_key','sku')
             ->where(function ($select) use ($query,$type){
                 if( !empty($query['cat']) )foreach ($query['cat'] as $term_id){
                     if($term_id)$select->orwhere('type',$type.'_'.$term_id);
                 }
-
             })
-            ->where('name','LIKE', "%{$query['search']}%")
+            ->where(function ($select) use($query){
+                $select->orwhere('name','LIKE', "%{$query['search']}%");
+                $select->orwhere('product_meta.meta_value','LIKE', "%{$query['search']}%");
+                })
             ->where('status',2)
             ->groupBy('term_id')
             ->get();
@@ -538,7 +542,9 @@ class Product extends Model
         $products = DB::table('relationships')
             ->join('products','products.id','=', 'relationships.object_id')
             ->join('relationships as cat','products.id','=', 'cat.object_id')
+            ->join('product_meta','products.id','=', 'product_meta.product_id')
             ->select(DB::raw('relationships.*'))
+            ->where('meta_key','sku')
             ->where(function($select) use ($query){
                 if(count($query['attr'])>0){
                     foreach ($query['attr'] as $term_id){
@@ -556,7 +562,10 @@ class Product extends Model
                 }
             })
             ->where('status',2)
-            ->where('name','LIKE', "%{$query['search']}%")
+            ->where(function ($select) use($query){
+                $select->orwhere('name','LIKE', "%{$query['search']}%");
+                $select->orwhere('product_meta.meta_value','LIKE', "%{$query['search']}%");
+            })
             ->groupBy('relationships.re_id')
             ->limit(1000)
             ->get();

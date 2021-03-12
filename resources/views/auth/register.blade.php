@@ -157,7 +157,7 @@
                                                <input type="hidden" name="action" value="{{ url('/register') }}" data-title="Action" data-required="false">
                                                <input type="hidden" name="_token" value="{{ csrf_token() }}" data-title="Token" data-required="false">
                                            </div>
-                                            <a href="{{ (isset($_GET['redirect_url']))?url('login?redirect_url='.$_GET['redirect_url']):url('register')  }}" class="btn btn-purple mt-3 "><i class="fa fa-lock"></i> Already have an account? Log in</a>
+                                            <a href="{{ (isset($_GET['redirect_url']))?url('login?redirect_url='.$_GET['redirect_url']):url('login')  }}" class="btn btn-purple mt-3 "><i class="fa fa-lock"></i> Already have an account? Log in</a>
                                         </form>
                                     </div>
                                 </div>

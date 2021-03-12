@@ -442,7 +442,16 @@ a.btn-button:hover {
     font-weight: 400;
     color: #ed2d0d;
     margin: 10px 0;
-    height: 20px;
+    height: 40px;
+    overflow: hidden;
+}
+.item-product .category a{
+    font-size: 15px;
+    font-weight: 400;
+    color: #ed2d0d;
+}
+.item-product .category a:hover{
+    color: #0c1b41;
 }
 .item-product .title-product a {
     display: block;
@@ -687,7 +696,6 @@ color: #7f7f7f;
 }
 .item-filter .item-body .has-parent{
     margin-left: 20px;
-    display: none;
 }
 .item-filter .item-body .has-parent.active{
     display: block;

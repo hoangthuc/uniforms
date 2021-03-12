@@ -738,7 +738,7 @@ if( !function_exists('get_filter_product') ){
                 if(isset($item['child'])){
                     foreach ($item['child'] as $item){
                         $count = ( isset($data_count[$item['id']]) )?$data_count[$item['id']]:0;
-                        $data[] = [
+                        if($count)$data[] = [
                             'title'=>$item['name'],
                             'value'=>$item['id'],
                             'slug'=>$item['slug'],
@@ -821,7 +821,7 @@ if( !function_exists('getProductFilterPage') ){
                 $filter_products['data'][] = [
                     'sku'=> App\Product::get_meta_product($item->id,'sku'),
                     'title'=> $item->name,
-                    'category'=> display_category_product($item->id),
+                    'category'=> display_list_category_product($item->id),
                     'price'=>App\Product::get_meta_product($item->id,'price'),
                     'image'=> App\Media::get_url_media($item->featured_image),
                     'url'=> url('product/'.$item->slug),
