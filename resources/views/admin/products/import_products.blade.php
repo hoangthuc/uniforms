@@ -21,45 +21,86 @@
 //    }
 //    var_dump($body);
 
-
-    $xlsx = \App\SimpleXLSX::parse( public_path('imports/2021/03/unipro/import_product.xlsx') );
-    $header = [];
-    $body = [];
-    foreach ( $xlsx->rows(1) as $r => $row ) {
-        if($r<1)$header = $row;
-        if($r>0){
-            foreach ($row as $stt => $item){
-                if($item)$body[$r][ $header[$stt]  ]= $item;
-            }
-        }
-
-    }
-foreach ($body as $r=>$item){
-    foreach ($body[$r] as $key_attr => $value){
-        $id = \App\Product::get_product_attributes_bylug($key_attr);
-        if($id){
-            $body[$r]['attribute'][]=$id;
-            $array_attr = explode(',',$value);
-            foreach ($array_attr as $attr_item){
-               $attr =  \App\Product::get_product_attributes_by_datatype(strtolower($attr_item),$id);
-                if($attr) {
-                    $item_child['value'] = $attr->id;
-                    $item_child['title'] = $attr->name;
-                    $body[$r]['all_attribute'][$id]['value'][]=$item_child;
-                }
-
-            }
-            $body[$r]['all_attribute'][$id]['display'] = true;
-
-        }
-    }
-
-    $body[$r]['product_id'] =   \App\Product::check_product_bysku($body[$r][ 'sku'  ]);
-    $body[$r]['attribute'] =   \GuzzleHttp\json_encode($body[$r]['attribute'] );
-    $body[$r]['all_attribute'] =   \GuzzleHttp\json_encode($body[$r]['all_attribute'] );
-}
-
-var_dump($body);
+//
+//    $xlsx = \App\SimpleXLSX::parse( public_path('imports/2021/03/unipro/import_product.xlsx') );
+//    $header = [];
+//    $attr_data = [];
+//    $body = [];
+//    $attribute = [];
+//    foreach ( $xlsx->rows(1) as $r => $row ) {
+//        if($r<1){
+//            $header = $row;
+//            foreach ($row as $stt => $item){
+//                $id = \App\Product::get_product_attributes_bylug($item);
+//                if($id){
+//                    foreach (App\Product::get_product_attributes_detail_man($id,1000)->child as $item_attr){
+//                        $attr_data[$item][$item_attr->data_type] =  ['title'=>$item_attr->name,'value'=>$item_attr->id];
+//                    }
+//                }
+//            }
+//        }
+//        if($r>0){
+//            foreach ($row as $stt => $item){
+//                if($item)$body[$r][ $header[$stt]  ]= $item;
+//            }
+//        }
+//
+//    }
+//    foreach ( $xlsx->rows(2) as $r => $row ) {
+//        if($r>0){
+//            $attribute[$row[0]][]= $row[7];
+//        }
+//
+//    }
+//foreach ($body as $r=>$item){
+//    foreach ($body[$r] as $key_attr => $value){
+//        $id = \App\Product::get_product_attributes_bylug($key_attr);
+//        if($id){
+//            $body[$r]['attributes'][]=$id;
+//            $array_attr = explode(',',$value);
+//            foreach ($array_attr as $attr_item){
+//                if(isset($attr_data[$key_attr][$attr_item])) {
+//                    $body[$r]['all_attributes'][$id]['value'][]=$attr_data[$key_attr][$attr_item];
+//                }
+//
+//            }
+//            $body[$r]['all_attributes'][$id]['display'] = true;
+//
+//        }
+//
+//    }
+//
+//    $body[$r]['product_id'] =   \App\Product::check_product_bysku($body[$r][ 'sku'  ]);
+//    $body[$r]['attributes'] =   \GuzzleHttp\json_encode($body[$r]['attributes'] );
+//    $body[$r]['all_attributes'] =   \GuzzleHttp\json_encode($body[$r]['all_attributes'] );
+//    $body[$r]['length_attr'] = ( isset($attribute[ $body[$r]['sku'] ]) )?$attribute[ $body[$r]['sku'] ]:[];
+//}
+//
+//foreach ($body as $r=>$item){
+//    $product_variant = \App\Product::get_meta_product($body[$r]['product_id'],'product_variations');
+//    $product_variant = ($product_variant)?\GuzzleHttp\json_decode($product_variant):[];
+//    foreach ($product_variant as $stt=> $attr_item){
+//        if(isset($body[$r]['length_attr'][$stt])){
+//            $length_attr =  $body[$r]['length_attr'][$stt];
+//           if(isset($attr_data['length'][$length_attr]['value']) && !array_search($attr_data['length'][$length_attr]['value'],$product_variant[$stt]->select))$product_variant[$stt]->select[]=$attr_data['length'][$length_attr]['value'];
+//        }
+//        //$product_variant[$stt]->select  = array_merge($product_variant[$stt]->select,[ $body[$r]['length_attr'][$stt] ]);
+//    }
+//    $body[$r]['product_variations']  = \GuzzleHttp\json_encode($product_variant);
+//    }
+//
+//    foreach ($body as $r=>$item){
+//        var_dump($body[$r]['product_id']);
+//        var_dump($body[$r]['sku']);
+//        var_dump($body[$r]['attributes']);
+//        var_dump($body[$r]['all_attributes']);
+//        var_dump($body[$r]['product_variations']);
+//        \App\Product::update_meta_product($body[$r]['product_id'],'attributes',$body[$r]['attributes']);
+//        \App\Product::update_meta_product($body[$r]['product_id'],'all_attributes',$body[$r]['all_attributes']);
+//        \App\Product::update_meta_product($body[$r]['product_id'],'product_variations',$body[$r]['product_variations']);
+////        \App\Product::delete_meta_product($body[$r]['product_id'],'attribute');
+////        \App\Product::delete_meta_product($body[$r]['product_id'],'all_attribute');
+//    }
 //    // set variants
 //    $header_var = [];
 //    $body_var = [];

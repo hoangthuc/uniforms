@@ -238,7 +238,7 @@ class Product extends Model
     }
 
     // get attributes detail pagition
-    public static function get_product_attributes_detail_man($id){
+    public static function get_product_attributes_detail_man($id,$limit=20){
         $search = isset($_GET['search'])?$_GET['search']:'';
         $detail = DB::table('product_attributes')->where('id',$id)->first();
         $list_attributes = DB::table('product_attributes')
@@ -247,7 +247,7 @@ class Product extends Model
                 $select->orwhere('name','LIKE',"%{$search}%");
                 $select->orwhere('data_type','LIKE',"%{$search}%");
             } )
-            ->paginate(20);
+            ->paginate($limit);
         $detail->child = $list_attributes;
         return $detail;
     }
@@ -382,6 +382,14 @@ class Product extends Model
             return $meta_id;
         }
         return false;
+    }
+    // delete meta product
+    public static function delete_meta_product($product_id,$meta_key,$meta_value=''){
+        $product_meta = self::get_meta_product($product_id,$meta_key);
+        if($product_meta != null){
+            DB::table('product_meta')->where('product_id',$product_id)->where('meta_key',$meta_key)->delete();
+        }
+        return $product_meta;
     }
 
     // get all product

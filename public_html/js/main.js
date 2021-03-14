@@ -1020,11 +1020,12 @@ function change_color_img_product(event){
     var product_id = $(event).data('product_id');
     var color_id = $(event).data('color_id');
     var color = $(event).data('color');
+    var data_key = $(event).attr('data-key');
     var button = document.querySelector('.price-product [data-product="'+product_id+'"]');
     var json = JSON.parse(button.getAttribute('data-json'));
     json.thumbnail = img;
     json.attributes = 'Color: '+color+', '+json.data_default;
-    json.key = product_id+'_'+color_id;
+    json.key = data_key;
     json['Color'] = color;
     button.setAttribute('data-json',JSON.stringify(json));
     $(event).parent().prev().attr('style','background-image: url('+img+')');

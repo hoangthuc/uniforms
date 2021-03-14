@@ -256,7 +256,7 @@ if (! function_exists('display_item_attribute_product')) {
         $meta_value = App\Product::get_meta_product($id,'all_attributes');
         if($meta_value)$meta_value =  json_decode($meta_value);
         $meta_value =  (array)$meta_value;
-        if(isset($meta_value[$name])){
+        if(isset($meta_value[$name]->value)){
             foreach ((array)$meta_value[$name]->value as $item){
                 $resulf[] = $item->value;
             }
@@ -590,7 +590,7 @@ if( !function_exists('showItemProduct') ){
             <a href="<?= $product['url'] ?>" style="background-image: url(<?= $product['image']?$product['image']:asset('images/products/default.jpg')  ?>)"><img src="<?= $product['image']  ?>"></a>
             <div class="<?php echo $colume_color; ?> list-color-product ">
             <?php foreach($colors as $color): ?>
-            <span class="item_color" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style="background-color: <?= (isset($color['data_type']))?$color['data_type']:'' ?>"></span>
+            <span class="item_color" data-key="<?= $color['data_key'] ?>" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style="background-color: <?= (isset($color['data_type']))?$color['data_type']:'' ?>"></span>
             <?php endforeach;  ?>
             </div>
         </div>
@@ -1662,14 +1662,14 @@ function show_color_list_product($product_id){
                             'id'=>$value->value,
                             'name'=>$value->title,
                             'data_type'=>$attributes2->data_type,
-                            'data_key'=>implode('_',$list_key)
+                            'data_key'=>implode('_',$list_key),
                         ];
                     }
                 }
 
             }
         }
-        foreach ($item->value as $value) {
+        if(isset($item->value))foreach ($item->value as $value) {
             if (isset($attributes->name)){
                 $default_all[$value->value] = ['name' => $value->title, 'type' => $attributes->name];
             }
@@ -1681,7 +1681,7 @@ function show_color_list_product($product_id){
     if($data)foreach ($data as $item){
         if( isset($item->default) ){
             foreach ($item->select as $id){
-                $list_key[] = $id;
+                $list_key[$default_all[$id]['type']] = $id;
                 if( isset($default_all[$id]) )$default[$default_all[$id]['type']] = $default_all[$id]['name'];
                 if(isset($item->img))$default['thumbnail'] = \App\Media::get_url_media($item->img);
             }
@@ -1700,10 +1700,12 @@ function show_color_list_product($product_id){
         foreach ($item->select as $id){
             if(isset($color[$id]) && !isset($color[$id]['img']) ){
                 $attributes = App\Product::get_product_attributes_detail($id);
+                if(isset($list_key['Color']))$list_key['color'] = $id;
                 $color[$id]['img'] = \App\Media::get_url_media($item->img);
                 $color[$id]['data_type'] = $attributes->data_type;
                 $color[$id]['data_default'] = $default;
                 $color[$id]['data_key'] =  implode('_',$list_key);
+                $color[$id]['data_key2'] =  $list_key;
             }
         }
 

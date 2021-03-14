@@ -182,12 +182,14 @@
                                             <?php $sort = 0; $select = $item->select; ?>
                                             @foreach( $select_variations as $name => $option )
                                         <select class="form-control mr-2" name="{{ $name }}" >
-                                            @foreach($option->value as $value_option )
+                                            @if(isset($option->value))
+                                                @foreach($option->value as $value_option )
                                             <option {{ $sort }} value="{{ $value_option->value }}"
-                                                    {{ $value_option->value == $select[$sort]?'selected':'' }} >
+                                                    {{ (isset($select[$sort]) && $value_option->value == $select[$sort])?'selected':'' }} >
                                                 {{ $value_option->title }}
                                             </option>
-                                            @endforeach
+                                                @endforeach
+                                            @endif
                                         </select>
                                                 <?php $sort++; ?>
                                             @endforeach
