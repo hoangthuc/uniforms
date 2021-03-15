@@ -32,8 +32,9 @@
         $list_reviews['html_pagition'] = DisplayPagitionReview($pagition);
         $id_color = \App\Product::get_product_attributes_bylug('color');
         $default_p = show_color_list_product($product->id);
-       if($default_p){
-           $default_p = end($default_p)['data_default'];
+       if(isset($default_p)){
+           $default_p = end($default_p);
+           if(isset($default_p['data_default']))$default_p = $default_p['data_default'];
            unset($default_p['thumbnail']);
        }
     }

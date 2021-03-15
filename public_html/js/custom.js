@@ -214,6 +214,7 @@ function get_parameters(key){
        let data =  item.split("=");
         if(data[0] == key){
             resulf = data[1];
+            resulf.replace('+',' ');
             return resulf;
         }
     });

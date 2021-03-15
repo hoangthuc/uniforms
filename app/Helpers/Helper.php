@@ -293,7 +293,7 @@ if (! function_exists('check_search_array')) {
 // format currency
 if (! function_exists('format_currency')) {
     function format_currency($input, $decimal=0, $cur=''){
-        if(!$input)return $cur.'0';
+        if($input < 0 )return $cur.'0';
         $currency = number_format($input, $decimal, '.', ',');
         return $cur.$currency;
     }
@@ -597,7 +597,7 @@ if( !function_exists('showItemProduct') ){
         <div class="category"><?= $product['category']  ?></div>
         <div class="title-product"><a href="<?= $product['url'] ?>"><?= $product['title']  ?></a></div>
         <div class="price-product pb-2 d-flex">
-         <span>$<?= number_format($product['price'], 2, '.', ','); ?></span>
+         <span>$<?= format_currency($product['price'],2); ?></span>
             <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' onclick="add_to_cart(this)">Add to cart <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
         </div>
     <?php
@@ -1681,7 +1681,7 @@ function show_color_list_product($product_id){
     if($data)foreach ($data as $item){
         if( isset($item->default) ){
             foreach ($item->select as $id){
-                $list_key[$default_all[$id]['type']] = $id;
+                if(isset( $default_all[$id]['type'] ))$list_key[$default_all[$id]['type']] = $id;
                 if( isset($default_all[$id]) )$default[$default_all[$id]['type']] = $default_all[$id]['name'];
                 if(isset($item->img))$default['thumbnail'] = \App\Media::get_url_media($item->img);
             }

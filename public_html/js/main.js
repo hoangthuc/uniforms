@@ -368,7 +368,7 @@ async function start_filter_product(page=1){
     var data = [];
     let categories = [];
     let attributes = {};
-    data.push( {name:'search',value:get_parameters('search')});
+    if(query_filter.search)data.push( {name:'search',value:query_filter.search});
     document.querySelector('#loadingpage').className = 'loading';
     document.querySelectorAll('.filter_product_categories').forEach(el=>{
         let id = el.value;
@@ -1030,6 +1030,38 @@ function change_color_img_product(event){
     button.setAttribute('data-json',JSON.stringify(json));
     $(event).parent().prev().attr('style','background-image: url('+img+')');
 }
+document.querySelectorAll('.coming_soon').forEach(el=>{
+    el.addEventListener('click',function(event){
+        event.preventDefault;
+        let timerInterval
+        Swal.fire({
+            title: 'Comming Soon!',
+            html: 'I will close in <b></b> milliseconds.',
+            timer: 2000,
+            timerProgressBar: true,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    const content = Swal.getContent()
+                    if (content) {
+                        const b = content.querySelector('b')
+                        if (b) {
+                            b.textContent = Swal.getTimerLeft()
+                        }
+                    }
+                }, 100)
+            },
+            onClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+    })
+})
 
 window.clickOutSide = (element, clickOutside, clickInside) => {
     document.addEventListener('click', (event) => {

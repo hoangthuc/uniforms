@@ -92,7 +92,7 @@
                         @if( isset($cart['products']))
                         <div class="row cart_extra">
                             <div class="col-lg-6 mb-3">
-                                <div class="cart_coupon">
+                                <div class="cart_coupon d-none">
                                     <div class="cart_title pb-2">Got a Coupon?</div>
                                     <input disabled="" readonly="" type="text" class="form-control" placeholder="Coupon Code">
                                     <button disabled="" type="button" class="button_clear btn btn-unipro text-uppercase mt-2"><i class="fa fa-usd"></i> Apply Coupon</button>

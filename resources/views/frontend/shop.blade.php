@@ -54,7 +54,7 @@
                         <option value="top_sell_month" >Best sell in month</option>
                         <option value="top_sell_year">Best sell in year</option>
                     </select>
-                    <span Data-Resulfs-Count>{{ format_currency($filter_products['pagition']['total']).' Results' }}</span>
+                    <span Data-Resulfs-Count>{{ format_currency($filter_products['pagition']['total'],0).' results' }}</span>
                     <div class="pagition-product float-right mt-2 mt-sm-0">{!! DisplayPagition($filter_products['pagition']) !!}</div>
                 </div>
             </div>

@@ -84,7 +84,6 @@
 //            $length_attr =  $body[$r]['length_attr'][$stt];
 //           if(isset($attr_data['length'][$length_attr]['value']) && !array_search($attr_data['length'][$length_attr]['value'],$product_variant[$stt]->select))$product_variant[$stt]->select[]=$attr_data['length'][$length_attr]['value'];
 //        }
-//        //$product_variant[$stt]->select  = array_merge($product_variant[$stt]->select,[ $body[$r]['length_attr'][$stt] ]);
 //    }
 //    $body[$r]['product_variations']  = \GuzzleHttp\json_encode($product_variant);
 //    }
