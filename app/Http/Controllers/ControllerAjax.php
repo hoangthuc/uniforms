@@ -700,6 +700,21 @@ class ControllerAjax extends Controller
         }
 
 
+         //Get Attribute product
+        if(isset($request['action']) && $request['action']=='get_attribute_ajax_view'){
+            $id_attr = $request['id_attr'];
+            $item = $request['item_data'];
+            $detail_attribute = \App\Product::get_product_attributes_detail_single($id_attr);
+            $price_attribute = isset($request['product_id'])?Product::get_meta_product($request['product_id'],'price_attribute'):'';
+            $price_attribute = ($price_attribute)?(array)\GuzzleHttp\json_decode($price_attribute):[];
+            $default_attribute = isset($request['product_id'])?Product::get_meta_product($request['product_id'],'default_attribute'):'';
+            $default_attribute = ($default_attribute)?(array)\GuzzleHttp\json_decode($default_attribute):[];
+
+            return view('admin.products.template_attribute_ajax_view', compact('detail_attribute','item','price_attribute','default_attribute'));
+        }
+
+
+
 
 
 

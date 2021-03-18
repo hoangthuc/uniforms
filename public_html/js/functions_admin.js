@@ -206,6 +206,14 @@ async function save_product(){
 
     });
 
+    document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
+        price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
+    })
+
+    document.querySelectorAll('.active[data-check-default]').forEach(d_attr=>{
+        default_attr[d_attr.getAttribute('data-select')] = {id:d_attr.getAttribute('data-select'),value:d_attr.getAttribute('data-value'),title:d_attr.getAttribute('data-title')};
+    })
+
     if(products){
         for (var i in products){
             if(products[i].required & !products[i].value){
@@ -245,7 +253,7 @@ async function save_product(){
             jQuery.ajax({
                 url: products['action']['value'],
                 type: 'post',
-                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute()},
+                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute(),price_attribute:price_attr,default_attribute:default_attr},
                 success: function(resulf){
                     if(resulf){
                         jQuery('#button-save-product span').addClass('d-none');
@@ -949,7 +957,8 @@ async function change_attribute(event,name=''){
             document.querySelector( '[data-attribute="'+el+'"]' ).className='form-group item-attribute selected';
         }
     }
-    $('[name="product_type"]').change();
+    // $('[name="product_type"]').change();
+    change_product_type(null);
 }
 async function change_product_type(event){
     let attribute = $('[name="attributes"]');
@@ -982,6 +991,8 @@ async function change_product_type(event){
     }else{
         $('[name="product_type"]').next().addClass('d-none');
     }
+    $Attribute.data = data;
+    $Attribute.render();
 }
 // add variations
 async function add_variation(event){
@@ -1230,7 +1241,7 @@ function load_data_money(event){
     let price = $(event).val();
     price = format_currency(price);
     if(price =='$0.00')price='';
-    document.querySelector('[DataCurrency]').textContent = price;
+    $(event).prev().text(price);
 }
 
 function upload_import_product(){
@@ -1638,15 +1649,12 @@ function save_list_product(form,dom,action){
 }
 
 async function add_product_varition_default(event){
-   document.querySelectorAll('[data-check-default]').forEach(el=>{
-       let id = el.getAttribute('data-select');
-       if(el.className !='active')el.className=  'none';
-       el.addEventListener('click', function(){
-           var disable = document.querySelector('[data-check-default].active');
-           if(disable)disable.className = 'none';
-           el.className = 'active';
-       });
+    var id  = $(event).attr('data-check-default');
+    console.log(id);
+   document.querySelectorAll('[data-check-default="'+id+'"]').forEach(el=>{
+        el.className=  'none';
    });
+    $(event).attr('class','active');
 }
 function search_media(event){
     var ftype = $('#tabs-upload-media .upload-file input').attr('ftype');

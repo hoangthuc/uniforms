@@ -291,3 +291,25 @@
     </section>
     <!-- /.content -->
 @endsection
+@section('footer')
+    <script>
+        var $Attribute = {
+          data:{},
+          setup: function(dom){
+              for(item in this.data){
+                  var data = {
+                      'action': 'my_action',
+                      'data': this.data
+                  };
+                  $.post(setting.ajax_url, data, function(response) {
+                      console.log(response);
+                  });
+              }
+
+            },
+          render: function(){
+
+          }
+        };
+    </script>
+@endsection

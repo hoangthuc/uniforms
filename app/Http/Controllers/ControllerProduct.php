@@ -212,6 +212,9 @@ class ControllerProduct extends Controller
                     }
                     Product::update_meta_product($product_id, 'attributes', \GuzzleHttp\json_encode($attributes));
                 }
+
+                Product::update_meta_product($product_id, 'price_attribute', \GuzzleHttp\json_encode($request['price_attribute']));
+                Product::update_meta_product($product_id, 'default_attribute', \GuzzleHttp\json_encode($request['default_attribute']));
             }
             // end save attributes
 

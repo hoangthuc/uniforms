@@ -594,7 +594,6 @@ if( !function_exists('showItemProduct') ){
             <?php endforeach;  ?>
             </div>
         </div>
-        <div class="category"><?= $product['category']  ?></div>
         <div class="title-product"><a href="<?= $product['url'] ?>"><?= $product['title']  ?></a></div>
         <div class="price-product pb-2 d-flex">
          <span>$<?= format_currency($product['price'],2); ?></span>
@@ -622,7 +621,7 @@ if( !function_exists('getProductHomePage') ){
                 $top_products[] = [
                     'sku'=> App\Product::get_meta_product($item->id,'sku'),
                     'title'=> $item->name,
-                    'category'=> display_category_product($item->id),
+                    'category'=> '',
                     'price'=>App\Product::get_meta_product($item->id,'price'),
                     'image'=> ($item->featured_image)?App\Media::get_url_media($item->featured_image):asset('images/products/default.jpg'),
                     'url'=> url('product/'.$item->slug),
@@ -821,7 +820,7 @@ if( !function_exists('getProductFilterPage') ){
                 $filter_products['data'][] = [
                     'sku'=> App\Product::get_meta_product($item->id,'sku'),
                     'title'=> $item->name,
-                    'category'=> display_list_category_product($item->id),
+                    'category'=> '',
                     'price'=>App\Product::get_meta_product($item->id,'price'),
                     'image'=> App\Media::get_url_media($item->featured_image),
                     'url'=> url('product/'.$item->slug),

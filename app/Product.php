@@ -224,6 +224,12 @@ class Product extends Model
         return $detail;
     }
 
+    // get attributes detail single
+    public static function get_product_attributes_detail_single($id=''){
+        $detail = DB::table('product_attributes')->where('id',$id)->first();
+        return $detail;
+    }
+
     // get attributes detail all of id
     public static function get_product_attributes_detail_filter($id){
         $detail = DB::table('product_attributes')->where('id',$id)->first();

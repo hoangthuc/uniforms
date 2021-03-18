@@ -21,10 +21,12 @@
     if($gallery)$galleries = \GuzzleHttp\json_decode($gallery);
     $additional_information = App\Product::get_meta_product($product->id,'additional_information');
     if($additional_information)$additional_informations = \GuzzleHttp\json_decode($additional_information);
-    $product_variations = App\Product::get_meta_product($product->id,'product_variations');
-    if($product_variations)$product_variations= json_decode($product_variations);
+  //  $product_variations = App\Product::get_meta_product($product->id,'product_variations');
+  //  if($product_variations)$product_variations= json_decode($product_variations);
     $select_variations = (array)display_attribute_product($product->id,'all_attributes');
     $data = \App\Product::insert_best_sell_product($product_id,'top_sell_month');
+
+    $display_data_attribute = \App\Product::get_meta_product($product->id,'all_attributes');
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -166,11 +168,15 @@
                                 <button type="button" data-id="{{ $product->id }}" onclick="save_variation()" data-Save-Variation class="btn btn-primary">Save Variations</button>
                             </div>
 
+                            <!--Show variations product render control-->
+                            <div class="form-group pt-3 border-top" display_attribute_render_control>
+                            </div>
+
 
 
                             <!--Show variations product from attribute-->
                             <div class="form-group pt-3 border-top" data-Product-Variations>
-                                @if($product_variations && \App\Product::get_meta_product( $product->id,'product_type' ) ==1)
+                                @if(isset($product_variations) && \App\Product::get_meta_product( $product->id,'product_type' ) ==1)
                                     @foreach($product_variations as $key => $item)
                                 <div class="item-product-varition mb-3 pb-3 border-bottom">
                                     <div class="form-inline mb-3">
@@ -376,4 +382,41 @@
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+@endsection
+@section('footer')
+    <script>
+        var product_id = {{ $product_id }};
+        var price_attr = {};
+        var default_attr = {};
+        var $Attribute = {
+            data:{!! ($display_data_attribute)?$display_data_attribute:'{}' !!},
+            setup: function(dom){
+                dom.innerHTML = '';
+                for(item in this.data){
+                    var data = {
+                        'action': 'get_attribute_ajax_view',
+                        '_token': setting.token,
+                        'item_data': this.data[item],
+                        'id_attr': item,
+                        'product_id': product_id,
+                    };
+                    $.post(setting.ajax_url, data, function(response) {
+                        let data = document.createElement('div');
+                        data.innerHTML = response;
+                        dom.appendChild(data);
+                    });
+
+
+                }
+
+            },
+            render: function(){
+                if(this.data){
+                    var html = document.querySelector('[display_attribute_render_control]');
+                    this.setup(html);
+                }
+            }
+        };
+        $Attribute.render();
+    </script>
 @endsection

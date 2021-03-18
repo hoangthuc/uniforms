@@ -20,7 +20,7 @@ $partners = [
                     <dic class="content-slider">
                         <div class="dataContent">
                             <h2>Dual east & west coast</h2>
-                            <label>Distribution centers</label>
+                            <label>Warehouse & Distribution centers</label>
                             <ul>
                                <li><span>Law enforcement & security</span></li>
                                <li><span>Aviation & parking</span></li>
@@ -39,7 +39,7 @@ $partners = [
                     <dic class="content-slider">
                         <div class="dataContent">
                             <h2>Dual east & west coast</h2>
-                            <label>Distribution centers</label>
+                            <label>Warehouse & Distribution centers</label>
                             <ul>
                                 <li><span>Law enforcement & security</span></li>
                                 <li><span>Aviation & parking</span></li>

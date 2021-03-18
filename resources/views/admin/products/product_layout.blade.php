@@ -655,6 +655,7 @@ var Categories = [];
         var t = $(event).parent().remove();
     }
 </script>
+@yield('footer');
 </body>
 
 </html>
