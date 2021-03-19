@@ -463,7 +463,60 @@ td.category_product a:hover{
 [data-check-default]{
     display: inline-block;
 }
-/*Loading page*/
+[Display-Attribute-Product] span.badge{
+    font-size: 18px;
+}
+.display-media-attribute > .btn{
+    position: relative;
+}
+.display-media-attribute .button_upload_media_i{
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+.display-media-attribute .btn > div{
+    width: 100px;
+}
+.display-media-attribute .btn button{
+    display: none;
+}
+.display-media-attribute .btn:hover button{
+    display: block;
+    border: 0;
+    font-size: 11px;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #00000070;
+    color: #fff;
+    margin: 0 !important;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+.display-media-attribute .btn div img{
+    width: 60px;
+}
+[Display-Attribute-Product] .title-attribute{
+    min-width: 100px;
+}
+[data_thumbnail_color_min]{
+    padding: 3px;
+}
+[data_thumbnail_color_min] > div{
+    width: 30px !important;
+}
+[data_thumbnail_color_min] > button{
+    min-width: auto !important;
+    font-size: 0 !important;
+}
+[data_thumbnail_color_min] img{
+    width: 30px !important;
+}
+[Data_Thumbnail_Product]{
+    margin-left: 20px;
+}
+    /*Loading page*/
 #loadingpage{
     display: block;
     position: fixed;

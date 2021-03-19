@@ -707,11 +707,25 @@ class ControllerAjax extends Controller
             $detail_attribute = \App\Product::get_product_attributes_detail_single($id_attr);
             $price_attribute = isset($request['product_id'])?Product::get_meta_product($request['product_id'],'price_attribute'):'';
             $price_attribute = ($price_attribute)?(array)\GuzzleHttp\json_decode($price_attribute):[];
+
             $default_attribute = isset($request['product_id'])?Product::get_meta_product($request['product_id'],'default_attribute'):'';
             $default_attribute = ($default_attribute)?(array)\GuzzleHttp\json_decode($default_attribute):[];
 
-            return view('admin.products.template_attribute_ajax_view', compact('detail_attribute','item','price_attribute','default_attribute'));
+            $thumbnail_color = isset($request['product_id'])?Product::get_meta_product($request['product_id'],'thumbnail_color'):'';
+            $thumbnail_color = ($thumbnail_color)?(array)\GuzzleHttp\json_decode($thumbnail_color):[];
+
+            $thumbnail_attribute = isset($request['product_id'])?Product::get_meta_product($request['product_id'],'thumbnail_attribute'):'';
+            $thumbnail_attribute = ($thumbnail_attribute)?(array)\GuzzleHttp\json_decode($thumbnail_attribute):[];
+
+            return view('admin.products.template_attribute_ajax_view', compact('detail_attribute','item','price_attribute','default_attribute','thumbnail_color','thumbnail_attribute'));
         }
+
+        ///update_field_atrribute_product
+         if(isset($request['action']) && $request['action']=='update_field_atrribute_product'){
+             $data =  $request['data'];
+            Product::update_meta_product($request['product_id'],$request['name'],json_encode($request['data']));
+            return \GuzzleHttp\json_encode($data);
+         }
 
 
 

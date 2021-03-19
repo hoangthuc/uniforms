@@ -147,27 +147,6 @@
                             @endforeach
                         @endif
 
-                        <!--Type product-->
-                            <div class="form-group">
-                                <label>Product type</label>
-                                <select class="form-control" name="product_type" onchange="change_product_type(this)">
-                                    @if($product_type)
-                                        @foreach($product_type as $key=> $value)
-                                            <option value="{{ $key }}" {{ $key == \App\Product::get_meta_product( $product->id,'product_type' )?'selected':'' }}>{{ $value }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <div class="alert alert-warning mt-2 d-none" role="alert">Attributes is invalid.</div>
-                            </div>
-
-                            <!--Show variations product-->
-                            <div class="form-group form-inline">
-                                <div class="mr-3 {{ \App\Product::get_meta_product( $product->id,'product_type' ) ==0?'d-none':''  }}" data-Attribute-Variations>
-                                    <button type="button" data-json="{{ \App\Product::get_meta_product($product->id,'all_attributes') }}" onclick="add_variation(this)" data-Add-Variation class="btn btn-primary">Add Variations</button>
-                                </div>
-                                <button type="button" data-id="{{ $product->id }}" onclick="save_variation()" data-Save-Variation class="btn btn-primary">Save Variations</button>
-                            </div>
-
                             <!--Show variations product render control-->
                             <div class="form-group pt-3 border-top" display_attribute_render_control>
                             </div>
@@ -386,10 +365,16 @@
 @section('footer')
     <script>
         var product_id = {{ $product_id }};
-        var price_attr = {};
-        var default_attr = {};
+        // var price_attr = {};
+        // var default_attr = {};
+        // var thumbnail_attr = {};
+        // var thumbnail_color = {};
         var $Attribute = {
             data:{!! ($display_data_attribute)?$display_data_attribute:'{}' !!},
+            price_attr:{},
+            default_attr:{},
+            thumbnail_attr:{},
+            thumbnail_color:{},
             setup: function(dom){
                 dom.innerHTML = '';
                 for(item in this.data){
@@ -405,16 +390,49 @@
                         data.innerHTML = response;
                         dom.appendChild(data);
                     });
-
-
                 }
-
             },
             render: function(){
                 if(this.data){
                     var html = document.querySelector('[display_attribute_render_control]');
                     this.setup(html);
                 }
+            },
+            update: function (){
+                document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
+                    this.price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
+                });
+// full image
+                document.querySelectorAll('[data_thumbnail_product]').forEach(t_attr=>{
+                    let thumbnail =  t_attr.querySelector('img');
+                    if(thumbnail){
+                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ] = thumbnail.getAttribute('data-id');
+                    }
+                });
+                // thumbnail color
+                document.querySelectorAll('[data_thumbnail_color_min]').forEach(t_attr=>{
+                    let thumbnail =  t_attr.querySelector('img');
+                    if(thumbnail){
+                        this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = thumbnail.getAttribute('data-id');
+                    }
+                });
+
+                document.querySelectorAll('.active[data-check-default]').forEach(d_attr=>{
+                    this.default_attr[d_attr.getAttribute('data-select')] = {id:d_attr.getAttribute('data-select'),value:d_attr.getAttribute('data-value'),title:d_attr.getAttribute('data-title')};
+                });
+
+            },
+            send:function(data,name){
+                var data = {
+                    'action': 'update_field_atrribute_product',
+                    '_token': setting.token,
+                    'data': data,
+                    'name': name,
+                    'product_id': product_id,
+                };
+                $.post(setting.ajax_url, data, function(response) {
+                    console.log(response);
+                });
             }
         };
         $Attribute.render();

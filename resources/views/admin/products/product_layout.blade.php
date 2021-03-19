@@ -638,7 +638,7 @@ var Categories = [];
 
     $.fn.select_media = function(data){
         var data = JSON.parse(data);
-        $('#grid-medias .link').removeClass('active');
+        $('#grid-medias .link').removeClass('active');insert_media_modal
         $(this).addClass('active');
         $('#insert_media_modal').attr('data-json',JSON.stringify(data));
     }
