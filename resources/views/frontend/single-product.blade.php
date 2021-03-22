@@ -11,8 +11,6 @@
         $category = App\Relationships::get_relationships($product->id, 'product_category');
         $price = App\Product::get_meta_product($product->id, 'price');
         $shipping = App\Product::get_meta_product($product->id, 'shipping');
-        $gallery = App\Product::get_meta_product($product->id, 'gallery');
-        if ($gallery) $galleries = \GuzzleHttp\json_decode($gallery);
         $sku = App\Product::get_meta_product($product->id, 'sku');
         $attributes = DisplayAttributeProductSimple($product->id);
         $relation_product = ($category) ? getProductRelation($product->id, $category->id) : [];
@@ -58,34 +56,16 @@
                     <!---slick slider Vertical-->
                     <div class="slider_slick_thumbnail col-md-2 {{ !isset($variantions)?'d-none':'' }}"
                          id="slider-thumbnail">
-                        @if(isset($galleries) && 1==2)
-                            @foreach($galleries as $thumbnail)
-                                <div>
-                                    <a class="mb-2"><img onclick="javascript:selectImageThumbnail(this);"
-                                                         src="{{ get_url_media($thumbnail->id) }}"/></a>
-                                </div>
-                            @endforeach
-                        @endif
-                        @foreach($variantions as $thumbnail)
-                            @if($thumbnail->img)
-                            <div class="slide" data-fiter-color="{{ $product->id.'_'.get_id_child_attribute('color',$thumbnail->select ) }}">
+                        @if( isset($variantions['thumbnail_attribute']) )
+                            @foreach($variantions['thumbnail_attribute'] as $color_id => $thumbnail)
+                            <div class="slide" data-fiter-color="{{ $product->id.'_'.$color_id }}">
                                 <a class="mb-2"><img onclick="javascript:selectImageThumbnail(this);"
-                                                     data-price="{{ $thumbnail->price }}"
-                                                     data-variantion="{{ $product->id.'_'.implode("_",$thumbnail->select) }}"
-                                                     data-color="{{ $product->id.'_'.get_id_child_attribute('color',$thumbnail->select ) }}"
-                                                     src="{{ get_url_media($thumbnail->img) }}"/></a>
+                                                     data-color="{{ $product->id.'_'.$color_id }}"
+                                                     src="{{ get_url_media($thumbnail) }}"/></a>
                             </div>
-                            @endif
-                        @endforeach
+                            @endforeach
+                       @endif
                     </div>
-                    <!--Data show price-->
-                    @foreach($variantions as $thumbnail)
-                        @if(!$thumbnail->img)
-                            <div class="d-none">
-                                <a data-price="{{ $thumbnail->price }}" data-variantion="{{ $product->id.'_'.implode("_",$thumbnail->select) }}"></a>
-                            </div>
-                        @endif
-                    @endforeach
                 <!--End Data show price-->
                     <div class="{{ isset($variantions)?'col-md-6':'col-md-8' }}" id="display-images">
                         <div class="show-imgage"

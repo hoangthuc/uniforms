@@ -1205,10 +1205,14 @@ if(!function_exists('get_attribute_from_inmport')){
 // get product variantions
 if(!function_exists('get_product_variantions')){
     function get_product_variantions($product_id){
-        $product_type = \App\Product::get_meta_product($product_id,'product_type');
-     $variantions =    App\Product::get_meta_product($product_id,'product_variations');
-     if($product_type && $variantions )return \GuzzleHttp\json_decode($variantions);
-     return [];
+        $variantions= [];
+        $thumbnail_attribute = \App\Product::get_meta_product($product_id,'thumbnail_attribute');
+        $price_attribute = \App\Product::get_meta_product($product_id,'price_attribute');
+        $default_attribute =    App\Product::get_meta_product($product_id,'default_attribute');
+        $variantions['thumbnail_attribute']  = ($thumbnail_attribute)?json_decode($thumbnail_attribute):[];
+        $variantions['price_attribute'] = ($price_attribute)?json_decode($price_attribute):[];
+        $variantions['default_attribute']  = ($default_attribute)?json_decode($default_attribute):[];
+     return $variantions;
     }
 }
 
