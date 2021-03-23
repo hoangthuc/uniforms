@@ -4,7 +4,7 @@
     <div class="border p-3">
         @if( isset($item['value'])) @foreach( $item['value'] as $attr )
             <div class="row mb-3 pb-3 border-bottom">
-                <div class="{{ $detail_attribute->type?'col-md-2':'col-md-6' }} title">
+                <div class="{{ $detail_attribute->type?'col-md-2':'col-md-4' }} title">
                     <div data-check-default="{{ $detail_attribute->id }}"
                          class="{{ isset($default_attribute[$attr['value']])?'active':'none' }}"
                          onclick="add_product_varition_default(this)" data-select="{{ $attr['value'] }}"
@@ -19,8 +19,10 @@
                         <div class="display-media-attribute d-inline-block ml-2"
                              data-attribute-id="{{ $attr['value'] }}" Data-Thumbnail-Attribute>
                             @if( isset($thumbnail_color[$attr['value']]) )
-                                <div class="btn button_upload_media_i ml-2" data-attribute-id="{{ $attr['value'] }}" data-html-button='<i class="fas fa-image" style="font-size: 20px;">'
-                                     data-media="varition_featured_image_thumbnail_{{ $attr['value'] }}" data-ftype="image"
+                                <div class="btn button_upload_media_i ml-2" data-attribute-id="{{ $attr['value'] }}"
+                                     data-html-button='<i class="fas fa-image" style="font-size: 20px;">'
+                                     data-media="varition_featured_image_thumbnail_{{ $attr['value'] }}"
+                                     data-ftype="image"
                                      data-type="image/*" data-toggle="modals" data-target="#MediaModal"
                                      data-required="false" onclick="loading_medias(this)" Data_Thumbnail_Color_Min>
                                     <div>
@@ -33,33 +35,14 @@
                                     </button>
                                 </div>
                             @else
-                            <div class="btn btn-primary btn-sm button_upload_media" data-attribute-id="{{ $attr['value'] }}" data-html-button='<i class="fas fa-image" style="font-size: 20px;">'
-                                 data-media="varition_featured_image_thumbnail_{{ $attr['value'] }}" data-ftype="image"
-                                 data-type="image/*" data-toggle="modal" data-target="#MediaModal"
-                                 data-required="false" onclick="loading_medias(this)" Data_Thumbnail_Color_Min><i class="fas fa-image" style="font-size: 20px;"></i>
-                            </div>
-                            @endif
-
-                            <!---Image full-->
-                            @if( isset($thumbnail_attribute[$attr['value']]) )
-                                <div class="btn button_upload_media_i" data-attribute-id="{{ $attr['value'] }}"
-                                     data-media="varition_featured_image_{{ $attr['value'] }}" data-ftype="image"
-                                     data-type="image/*" data-toggle="modals" data-target="#MediaModal"
-                                     data-required="false" onclick="loading_medias(this)" Data_Thumbnail_Product>
-                                    <div>
-                                        <img src="{{ \App\Media::get_url_media($thumbnail_attribute[$attr['value']]) }}"
-                                             data-id="{{ $thumbnail_attribute[$attr['value']] }}">
-                                    </div>
-                                    <button class="btn btn-app mt-3"
-                                            onclick='remove_media_attribute(`[data-media="varition_featured_image_{{ $attr['value'] }}"]`)'>
-                                        <i class="far fa-trash-alt" style="font-size: 20px;"></i> Remove
-                                    </button>
-                                </div>
-                            @else
-                                <div class="btn btn-primary btn-sm button_upload_media" data-attribute-id="{{ $attr['value'] }}"
-                                     data-media="varition_featured_image_{{ $attr['value'] }}" data-ftype="image"
+                                <div class="btn btn-primary btn-sm button_upload_media"
+                                     data-attribute-id="{{ $attr['value'] }}"
+                                     data-html-button='<i class="fas fa-image" style="font-size: 20px;">'
+                                     data-media="varition_featured_image_thumbnail_{{ $attr['value'] }}"
+                                     data-ftype="image"
                                      data-type="image/*" data-toggle="modal" data-target="#MediaModal"
-                                     data-required="false" onclick="loading_medias(this)" Data_Thumbnail_Product>Upload image
+                                     data-required="false" onclick="loading_medias(this)" Data_Thumbnail_Color_Min><i
+                                            class="fas fa-image" style="font-size: 20px;"></i>
                                 </div>
                             @endif
                         </div>
@@ -79,6 +62,29 @@
                     </div>
                 </div>
             </div>
+            @if(!$detail_attribute->type)
+                <div class="color-gallery mb-3">
+                    <div class="d-inline-block mb-3" data-gallery="button_gallery_{{ $attr['value'] }}"
+                         data-attribute-id="{{ $attr['value'] }}">
+                        @if( isset($thumbnail_attribute[$attr['value']]))
+                            @foreach($thumbnail_attribute[$attr['value']] as $image)
+                            <div class="d-inline-block item-gallery item_button_gallery_{{ $attr['value'].$image }}">
+                                <img src="{{ \App\Media::get_url_media($image) }}" data-attribute-id="{{ $attr['value'] }}" data-id="{{ $image }}" data_thumbnail_product>
+                                <button class="btn-item-gallery"
+                                        onclick="remove_media_gallery( '{{ $attr['value'] }}','{{ $image }}','button_gallery_{{ $attr['value'] }}')">
+                                    <i class="far fa-trash-alt" style="font-size: 20px;"></i>
+                                </button>
+                            </div>
+                            @endforeach
+                        @endif
+                    </div>
+                    <div type="button" class="d-inline-block add_gallery_media" onclick="add_gallery_media(this)"
+                         data-media="button_gallery_{{ $attr['value'] }}" data-ftype="image" data-type="image/*"
+                         data-toggle="modal" data-target="#MediaModal" data-required="false" data-insert="gallery">
+                        Add image
+                    </div>
+                </div>
+            @endif
         @endforeach
         @endif
     </div>

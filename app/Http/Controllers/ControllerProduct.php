@@ -158,9 +158,8 @@ class ControllerProduct extends Controller
                 $data[$value['name']] = $value['value'];
             }
             //apply for new product
-            // $data['slug'] = check_field_table($data['name'],'slug','products');
             $data['updated_at'] = date('Y-m-d H:i:s');
-            $data['featured_image'] = (isset($data['button_featured_image'])) ? $data['button_featured_image'] : '';
+            $data['featured_image'] = (isset($data['button_featured_image'])) ? $data['button_featured_image'] : null;
             $gallery = (isset($data['button_gallery'])) ? \GuzzleHttp\json_encode($data['button_gallery']) : null;
             $price = (isset($data['price'])) ? $data['price'] : null;
             $sku = (isset($data['sku'])) ? $data['sku'] : null;
@@ -189,7 +188,6 @@ class ControllerProduct extends Controller
             if ($gallery) Product::update_meta_product($data['id'], 'gallery', $gallery);
             if ($additional_information) Product::update_meta_product($data['id'], 'additional_information', $additional_information);
 
-            if (!$data['featured_image']) unset($data['featured_image']);
             DB::table('products')->where('id', $data['id'])->update($data);
 
             // save attributes

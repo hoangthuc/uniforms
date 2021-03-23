@@ -516,7 +516,33 @@ td.category_product a:hover{
 [Data_Thumbnail_Product]{
     margin-left: 20px;
 }
-    /*Loading page*/
+.color-gallery .item-gallery{
+    position: relative;
+    height: 150px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin: 0px 5px;
+    border-radius: 3px;
+}
+.color-gallery .item-gallery img{
+    height: 140px;
+}
+.color-gallery .item-gallery button{
+    display: none;
+}
+.color-gallery .item-gallery:hover button{
+    display: block;
+}
+.add_gallery_media{
+    padding: 62px 15px;
+    border: 2px dashed #000;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+
+/*Loading page*/
 #loadingpage{
     display: block;
     position: fixed;

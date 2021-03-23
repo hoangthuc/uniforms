@@ -17,12 +17,8 @@
     $shipping = App\Product::get_meta_product($product->id,'shipping');
     $sku = App\Product::get_meta_product($product->id,'sku');
     $weight = App\Product::get_meta_product($product->id,'weight');
-    $gallery = App\Product::get_meta_product($product->id,'gallery');
-    if($gallery)$galleries = \GuzzleHttp\json_decode($gallery);
     $additional_information = App\Product::get_meta_product($product->id,'additional_information');
     if($additional_information)$additional_informations = \GuzzleHttp\json_decode($additional_information);
-  //  $product_variations = App\Product::get_meta_product($product->id,'product_variations');
-  //  if($product_variations)$product_variations= json_decode($product_variations);
     $select_variations = (array)display_attribute_product($product->id,'all_attributes');
     $data = \App\Product::insert_best_sell_product($product_id,'top_sell_month');
 
@@ -153,60 +149,6 @@
 
 
 
-                            <!--Show variations product from attribute-->
-                            <div class="form-group pt-3 border-top" data-Product-Variations>
-                                @if(isset($product_variations) && \App\Product::get_meta_product( $product->id,'product_type' ) ==1)
-                                    @foreach($product_variations as $key => $item)
-                                <div class="item-product-varition mb-3 pb-3 border-bottom">
-                                    <div class="form-inline mb-3">
-                                        <div Data-Check-Default class="{{ (isset($item->default))?'active':'none'  }}" onclick="add_product_varition_default(this)" data-select="{{ $key }}">
-                                            <i class="fas fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        </div>
-                                        @if($select_variations)
-                                            <?php $sort = 0; $select = $item->select; ?>
-                                            @foreach( $select_variations as $name => $option )
-                                        <select class="form-control mr-2" name="{{ $name }}" >
-                                            @if(isset($option->value))
-                                                @foreach($option->value as $value_option )
-                                            <option {{ $sort }} value="{{ $value_option->value }}"
-                                                    {{ (isset($select[$sort]) && $value_option->value == $select[$sort])?'selected':'' }} >
-                                                {{ $value_option->title }}
-                                            </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                                <?php $sort++; ?>
-                                            @endforeach
-                                        @endif
-                                        <span class="delete_attribute fas fa-trash-alt" onclick="delete_variation(this,{{ $key+1 }})"></span>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="display-media"></div>
-                                            <div class="btn button_upload_media {{ isset($item->img)?'':'btn-primary' }}" data-media="varition_featured_image{{ $key+1 }}" data-ftype="image" data-type="image/*" data-toggle="modal" data-target="#MediaModal" data-required="false" onclick="loading_medias(this)">
-                                                @if( isset($item->img) )
-                                                <div>
-                                                    <img src="{{ App\Media::get_media_detail($item->img)->link }}" data-id="{{ $item->img }}">
-                                                </div>
-                                                <button class="btn btn-app mt-3" onclick='remove_media_attribute(`[data-media="varition_featured_image{{ $key+1 }}"]`)'>
-                                                    <i class="far fa-trash-alt" style="font-size: 20px;"></i> Remove</button>
-                                                @else
-                                                    Upload Image
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input class="form-control" type="number" name="price" placeholder="Price" value="{{ $item->price }}">
-                                            <textarea class="form-control mt-3" name="description" placeholder="Description">{!!  $item->description  !!}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                        @endforeach
-                                    @endif
-                            </div>
-
-
                         </div>
 
                     </div>
@@ -309,7 +251,7 @@
 
                                 </div>
                                 <!-- Button trigger modal -->
-                                <div type="button" class="btn {{ (isset($featured_image))?'':'btn-primary' }} button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="{{ (isset($featured_image))?'modal2':'modal' }}" data-target="#MediaModal" data-required=false>
+                                <div type="button" onclick="single_upload_media(this)" class="btn {{ (isset($featured_image))?'':'btn-primary' }} button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="{{ (isset($featured_image))?'modal2':'modal' }}" data-target="#MediaModal" data-insert="single_image" data-required=false>
                                     @if( isset($featured_image))
                                         <div><img src="{{ url( $featured_image->path ) }}"></div>
                                         <button class="btn btn-app mt-3" onclick='remove_media(`[data-media="button_featured_image"]`)'><i class="far fa-trash-alt" style="font-size: 20px;"></i> Remove</button>
@@ -324,37 +266,6 @@
 
                     </div>
 
-                    {{--gallery Image--}}
-                    <div class="card card-primary">
-                        <!-- /.card-header -->
-                        <div class="card-header">
-                            <h3 class="card-title">Gallery</h3>
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-body">
-                            <div  class="form-group">
-                                <div class="display-gallery mb-3" data-gallery="button_gallery">
-                                    @if(isset($galleries))
-                                        @foreach($galleries as $value)
-                                            @if( isset($value->id) )
-                                            <div class="item-gallery item_button_gallery{{ $value->id }}">
-                                                <img src="{{  \App\Media::get_url_media($value->id) }}">
-                                                <button class="btn btn-app" onclick="remove_item_gallery('{{ $value->id }}','button_gallery')"><i class="far fa-trash-alt" style="font-size: 20px;"></i></button>
-                                            </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <!-- Button trigger modal -->
-                                <div type="button" class="btn btn-primary add_gallery_media" data-media="button_gallery" data-ftype="image" data-type="image/*" data-toggle="modal" data-target="#MediaModal" data-required="false">
-                                    Upload image
-                                </div>
-                            </div>
-                        </div>
-                        <!-- form start -->
-
-                    </div>
-                    <!-- /.card -->
                 </div>
             </div>
             <!-- /.row -->
@@ -383,7 +294,7 @@
                         '_token': setting.token,
                         'item_data': this.data[item],
                         'id_attr': item,
-                        'product_id': product_id,
+                        'product_id': product_id,remove_media_attribute
                     };
                     $.post(setting.ajax_url, data, function(response) {
                         let data = document.createElement('div');
@@ -406,7 +317,7 @@
                 document.querySelectorAll('[data_thumbnail_product]').forEach(t_attr=>{
                     let thumbnail =  t_attr.querySelector('img');
                     if(thumbnail){
-                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ] = thumbnail.getAttribute('data-id');
+                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ][thumbnail.getAttribute('data-id')] = thumbnail.getAttribute('data-id');
                     }
                 });
                 // thumbnail color

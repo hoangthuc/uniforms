@@ -1,3 +1,10 @@
+var stringToBoolean = function(string){
+    switch(string.toLowerCase().trim()){
+        case "true": case "yes": case "1": return true;
+        case "false": case "no": case "0": case null: return false;
+        default: return Boolean(string);
+    }
+}
 // check username & email to register
 async function save_post(){
     jQuery('.create_new_story [name]').each( function(){
@@ -1057,6 +1064,7 @@ async function loading_medias(event){
     var ftype = $(event).data('ftype');
     $('#tabs-upload-media .upload-file input').attr('accept',type);
     $('#tabs-upload-media .upload-file input').attr('ftype',ftype);
+    $('#tabs-upload-media .upload-file input').attr('data-insert','single_image');
     $.ajax({
         url: setting.ajax_url,
         type: "POST",
@@ -1192,11 +1200,10 @@ if(!error.length){
 // remove media button
 function remove_media_attribute(id){
     var media = document.querySelector(id);
+    if(media){
     var name = media.getAttribute('data-media');
     var required = media.getAttribute('data-required');
     var html = media.getAttribute('data-html-button');
-    console.log(media);
-    console.log(html);
     if(html){
         media.innerHTML = html;
     }else{
@@ -1204,6 +1211,8 @@ function remove_media_attribute(id){
     }
     media.className = "btn btn-primary button_upload_media";
     media.setAttribute('data-toggle','modal');
+    media.setAttribute('data-insert','single_image');
+    }
 }
 // Format Currency
 function format_currency(money){
@@ -1660,4 +1669,85 @@ function search_media(event){
             }
         }
     });
+}
+
+// show manage media to updaload
+function add_gallery_media(event){
+    var id = $(event).data('media');
+    var type = $(event).data('type');
+    var ftype = $(event).data('ftype');
+    $('#tabs-upload-media .upload-file input').attr('accept',type);
+    $('#tabs-upload-media .upload-file input').attr('ftype',ftype);
+    $('#tabs-upload-media .upload-file input').attr('data-insert','gallery');
+    $.ajax({
+        url: setting.ajax_url,
+        type: "POST",
+        data: {action:'get_medias',_token: setting.token,type:ftype},
+        success: function(resulf){
+            if(resulf){
+                document.querySelector('#grid-medias').innerHTML = resulf;
+            }
+        }
+    });
+    $('[name="UploadMedia"]').attr('data-media',id);
+}
+// show manage media to updaload
+function single_upload_media(event){
+    var id = $(event).data('media');
+    var type = $(event).data('type');
+    var ftype = $(event).data('ftype');
+    $('#tabs-upload-media .upload-file input').attr('accept',type);
+    $('#tabs-upload-media .upload-file input').attr('ftype',ftype);
+    $('#tabs-upload-media .upload-file input').attr('data-insert','single_image');
+    $.ajax({
+        url: setting.ajax_url,
+        type: "POST",
+        data: {action:'get_medias',_token: setting.token,type:ftype},
+        success: function(resulf){
+            if(resulf){
+                document.querySelector('#grid-medias').innerHTML = resulf;
+            }
+        }
+    });
+    $('[name="UploadMedia"]').attr('data-media',id);
+}
+// setup media gallery product
+async function setup_media_gallery(data,id){
+    var media = document.querySelector(id);
+    media.className = "d-inline-block mb-3";
+    media.setAttribute('data-toggle','modals');
+    var name = media.getAttribute('data-gallery');
+    var color_id = media.getAttribute('data-attribute-id');
+    // set content media file
+    var div  = document.createElement('div');
+    div.className = 'd-inline-block item-gallery item_'+name+data.id;
+        var content  = document.createElement('img');
+        content.src = setting.url + data.path;
+        content.setAttribute('data_thumbnail_product','');
+        content.setAttribute('data-attribute-id',color_id);
+        content.setAttribute('data-id',data.id);
+
+    var r = document.createElement('button');
+    r.innerHTML = '<i class="far fa-trash-alt" style="font-size: 20px;"></i>';
+    r.className ='btn-item-gallery';
+    r.setAttribute('onClick',"remove_media_gallery('"+color_id+"','"+data.id+"','"+name+"')");
+    div.appendChild(content);
+    div.appendChild(r);
+    media.appendChild(div);
+    if($Attribute.thumbnail_attr[color_id]){
+        $Attribute.thumbnail_attr[color_id][data.id]=data.id;
+    }else{
+        let img = {};
+        img[data.id] = data.id;
+        $Attribute.thumbnail_attr[color_id]= img;
+    }
+    $('#MediaModal').modal('hide');
+}
+
+// remove media gallery button
+function remove_media_gallery(color_id,img_id,name){
+    var media = document.querySelector('.item_'+name+img_id);
+    delete $Attribute.thumbnail_attr[color_id][img_id];
+    media.remove();
+    console.log($Attribute.thumbnail_attr);
 }

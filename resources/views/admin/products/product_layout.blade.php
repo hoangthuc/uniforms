@@ -172,14 +172,6 @@ $product_categories =  App\Product::get_product_categories();
         }
         ?>
      @endif
-    @if(isset($galleries))
-    products['button_gallery'] = {name: 'button_gallery',value:[],label:'Gallery', required: false };
-    @foreach($galleries as $value)
-        @if( isset($value->id) )
-        products['button_gallery'].value.push({ id: {{$value->id}}, link: '{{$value->link}}'});
-        @endif
-    @endforeach
-    @endif
     var setting = {
         'upload_ajax_url':'{{ url('admin/upload') }}',
         'ajax_url':'{{ url('admin/admin_ajax') }}',
@@ -426,45 +418,9 @@ var Categories = [];
         }
     }
 
-    // show manage media to updaload
-    $('.button_upload_media').on('click', function(){
-        var id = $(this).data('media');
-        var type = $(this).data('type');
-        var ftype = $(this).data('ftype');
-        $('#tabs-upload-media .upload-file input').attr('accept',type);
-        $('#tabs-upload-media .upload-file input').attr('ftype',ftype);
-        $.ajax({
-            url: setting.ajax_url,
-            type: "POST",
-            data: {action:'get_medias',_token: setting.token,type:ftype},
-            success: function(resulf){
-                if(resulf){
-                    document.querySelector('#grid-medias').innerHTML = resulf;
-                }
-            }
-        });
-        $('[name="UploadMedia"]').attr('data-media',id);
-    });
 
-    // show manage media to updaload
-    $('.add_gallery_media').on('click', function(){
-        var id = $(this).data('media');
-        var type = $(this).data('type');
-        var ftype = $(this).data('ftype');
-        $('#tabs-upload-media .upload-file input').attr('accept',type);
-        $('#tabs-upload-media .upload-file input').attr('ftype',ftype);
-        $.ajax({
-            url: setting.ajax_url,
-            type: "POST",
-            data: {action:'get_medias',_token: setting.token,type:ftype},
-            success: function(resulf){
-                if(resulf){
-                    document.querySelector('#grid-medias').innerHTML = resulf;
-                }
-            }
-        });
-        $('[name="UploadMedia"]').attr('data-media',id);
-    });
+
+
 
     // upload file media
     $('[name="UploadMedia"]').on('change',function(){
@@ -497,10 +453,10 @@ var Categories = [];
                             title: 'Upload media successfully.'
                         });
 
-                        if(id == 'button_gallery'){
-                            setup_media_gallery(resulf,'[data-gallery="'+id+'"]')
-                        }else{
+                        if(id == 'button_featured_image'){
                             setup_media(resulf,'[data-media="'+id+'"]');
+                        }else{
+                            setup_media_gallery(resulf,'[data-gallery="'+id+'"]')
                         }
 
                     }
@@ -515,16 +471,14 @@ var Categories = [];
     $('#insert_media_modal').on('click',function(){
         var data =  $(this).attr('data-json');
         var id =  $('[name="UploadMedia"]').attr('data-media');
+        var insert =  $('[name="UploadMedia"]').attr('data-insert');
         $('#grid-medias .link').removeClass('active');
         data = JSON.parse(data);
-        if(id == 'button_gallery'){
+        if(insert == 'gallery'){
             setup_media_gallery(data,'[data-gallery="'+id+'"]')
         }
-        else if(id=='button_featured_image' || id=='button_feature_thumbnail'){
+        else{
             setup_media(data,'[data-media="'+id+'"]');
-        }
-        else {
-            setup_media_attribute(data,'[data-media="'+id+'"]');
         }
 
 
@@ -544,6 +498,7 @@ var Categories = [];
         if(data.ftype == 'image'){
             var content  = document.createElement('img');
             content.src = setting.url +  data.path;
+            content.setAttribute('data-id',data.id);
         }else if(data.ftype == 'audio'){
             var content  = document.createElement('audio');
             var source  = document.createElement('source');
@@ -574,43 +529,11 @@ var Categories = [];
         div.appendChild(content);
         media.appendChild(div);
         media.appendChild(r);
-        products[name] = {name:name,value: data.id, label:data.ftype, required: true};
+        if(name == 'button_featured_image')products[name] = {name:name,value: data.id, label:data.ftype, required: true};
         $('#MediaModal').modal('hide');
     }
 
-    // edit media
-    async function setup_media_gallery(data,id){
-        var media = document.querySelector(id);
-        media.className = "display-gallery mb-3";
-        media.setAttribute('data-toggle','modals');
-        var name = media.getAttribute('data-gallery');
-        // set content media file
-        var div  = document.createElement('div');
-        div.className = 'item-gallery item_'+name+data.id;
-        // check type media
-        if(data.ftype == 'image'){
-            var content  = document.createElement('img');
-            content.src = setting.url + data.path;
-        }else{
-            var content  = document.createElement('img');
-            content.src = '{{ url('uploads/use/office.png') }}';
-        }
 
-        var r = document.createElement('button');
-        r.innerHTML = '<i class="far fa-trash-alt" style="font-size: 20px;"></i>';
-        r.className ='btn btn-app';
-        r.setAttribute('onClick',"remove_item_gallery('"+data.id+"','"+name+"')");
-        div.appendChild(content);
-        div.appendChild(r);
-        media.appendChild(div);
-
-        if(!products[name]){
-            products[name] = {name:name,value: [{ id: data.id, link: setting.url + data.path }], label:data.ftype, required: false};
-        }else{
-            products[name].value.push({ id: data.id, link: data.link});
-        }
-        $('#MediaModal').modal('hide');
-    }
     // remove media button
     function remove_media(id){
         var media = document.querySelector(id);
@@ -619,11 +542,14 @@ var Categories = [];
         media.innerHTML = "Upload";
         media.className = "btn btn-primary button_upload_media";
         media.setAttribute('data-toggle','modal');
-        if(!products[name]){
-            products[name] = {name:name,value:'', label:name, required: required};
+        if(name == 'button_featured_image'){
+            if(!products[name]){
+                products[name] = {name:name,value:'', label:name, required: required};
+            }
+            products[name].value ='';
+            products[name].required = stringToBoolean(required);
         }
-        products[name].value ='';
-        products[name].required = Boolean(required);
+
     }
 
     //remove media item in gallery
