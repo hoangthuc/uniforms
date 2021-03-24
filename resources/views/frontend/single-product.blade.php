@@ -12,6 +12,16 @@
         $price = App\Product::get_meta_product($product->id, 'price');
         $shipping = App\Product::get_meta_product($product->id, 'shipping');
         $sku = App\Product::get_meta_product($product->id, 'sku');
+
+        $thumbnail_color = App\Product::get_meta_product($product->id, 'thumbnail_color');
+        $thumbnail_color = ($thumbnail_color)?(array)json_decode($thumbnail_color):[];
+
+        $price_attribute = App\Product::get_meta_product($product->id, 'price_attribute');
+        $price_attribute = ($price_attribute)?(array)json_decode($price_attribute):[];
+
+        $default_attribute = App\Product::get_meta_product($product->id, 'default_attribute');
+        $default_attribute = ($default_attribute)?(array)json_decode($default_attribute):[];
+
         $attributes = DisplayAttributeProductSimple($product->id);
         $relation_product = ($category) ? getProductRelation($product->id, $category->id) : [];
         $variantions = get_product_variantions($product->id);
@@ -29,12 +39,6 @@
         }
         $list_reviews['html_pagition'] = DisplayPagitionReview($pagition);
         $id_color = \App\Product::get_product_attributes_bylug('color');
-        $default_p = show_color_list_product($product->id);
-       if(isset($default_p)){
-           $default_p = end($default_p);
-           if(isset($default_p['data_default']))$default_p = $default_p['data_default'];
-           unset($default_p['thumbnail']);
-       }
     }
 
     ?>
@@ -57,12 +61,16 @@
                     <div class="slider_slick_thumbnail col-md-2 {{ !isset($variantions)?'d-none':'' }}"
                          id="slider-thumbnail">
                         @if( isset($variantions['thumbnail_attribute']) )
-                            @foreach($variantions['thumbnail_attribute'] as $color_id => $thumbnail)
-                            <div class="slide" data-fiter-color="{{ $product->id.'_'.$color_id }}">
-                                <a class="mb-2"><img onclick="javascript:selectImageThumbnail(this);"
-                                                     data-color="{{ $product->id.'_'.$color_id }}"
-                                                     src="{{ get_url_media($thumbnail) }}"/></a>
-                            </div>
+                            @foreach($variantions['thumbnail_attribute'] as $color_id => $list_thumbnail)
+                                @if($list_thumbnail)
+                                    @foreach($list_thumbnail as $thumbnail)
+                                        <div class="slide" data-fiter-color="{{ $product->id.'_'.$color_id }}">
+                                            <a class="mb-2"><img onclick="javascript:selectImageThumbnail(this);"
+                                                                 data-color="{{ $product->id.'_'.$color_id }}"
+                                                                 src="{{ get_url_media($thumbnail) }}"/></a>
+                                        </div>
+                                    @endforeach
+                                @endif
                             @endforeach
                        @endif
                     </div>
@@ -122,14 +130,20 @@
                                             <label>{{ $item_attribute['name'] }}</label> <span class="ml-1">({{ $item_attribute['display'] }})</span>
                                             <div class="list">
                                               @if(isset($item_attribute['list']))  @foreach ($item_attribute['list'] as $key=> $attribute)
-                                                    <div class="item-attribute-list d-inline-block {{ ( isset($default_p[$item_attribute['name']]) && $default_p[$item_attribute['name']] == $attribute->name)  ?'active':'' }} mb-1"
+                                                    <div class="item-attribute-list d-inline-block {{ ( isset($default_attribute[$attribute->id]) )  ?'active':'' }} mb-1"
                                                          Attribute-Type="{{ $item_attribute['type'] }}"
                                                          data-name-parent="{{ $item_attribute['name'] }}"
                                                          data-parent="{{ $item_attribute['id'] }}"
                                                          data-id="{{ $attribute->id }}"
                                                          data-title="{{ $attribute->name }}"
+                                                         data-price="{{ isset($price_attribute[$attribute->id])?$price_attribute[$attribute->id]:0 }}"
                                                          onclick="select_attribute(this)" Data-Attribute-Product>
-                                                        {!! DisplayAttributeType($attribute->type,$attribute->data_type) !!}
+                                                        @if(isset($thumbnail_color[$attribute->id]))
+                                                            <span class="badge badge-secondary color attr_thumbnail" style="background-image: url('{{ \App\Media::get_url_media($thumbnail_color[$attribute->id]) }}'); font-size: 24px; text-transform: uppercase">{{ $attribute->name }}</span>
+                                                        @else
+                                                            {!! DisplayAttributeType($attribute->type,$attribute->data_type) !!}
+                                                        @endif
+
                                                     </div>
                                                 @endforeach
                                               @endif
@@ -354,14 +368,10 @@
 @endsection
 @section('footer_layout')
     <script>
-        var choose_attr = document.querySelector('.item-attribute-list.active[attribute-type="color"]');
-        if(choose_attr){
-            choose_attr.click();
-        }else{
-            document.querySelectorAll('.item-attribute-list').forEach(el=>{
-                el.click();
-            });
-        }
+        document.querySelectorAll('.item-attribute-list.active').forEach(el=>{
+            el.click();
+        });
+
     </script>
 @endsection
 

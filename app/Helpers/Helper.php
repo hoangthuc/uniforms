@@ -523,66 +523,14 @@ if( !function_exists('showItemProduct') ){
                 'thumbnail'=>null,
         ];
         $colume_color = '';
-        if(!empty($colors)){
-            $colors_default = end($colors);
-            $data['key'] =$colors_default['data_key'];
-            $data['thumbnail'] =(isset($colors_default['img']))?$colors_default['img']:null;
-            if(isset($colors_default['data_default']))$data = array_merge($data,$colors_default['data_default']);
-            unset($colors_default['data_default']['thumbnail']);
-            if(isset($colors_default['data_default']))$data['attributes'] = http_build_query_not_enc_type($colors_default['data_default'],':',', ');
-            if($data['attributes'])unset($colors_default['data_default']['Color']);
-            if(isset($colors_default['data_default']))$data['data_default'] =http_build_query_not_enc_type($colors_default['data_default'],':',', ');
-            if(count($colors)> 20){
-                $colume_color = 'show-colume-3';
-            }elseif(count($colors)> 12){
-                $colume_color = 'show-colume-2';
-            }else{
-                $colume_color = '';
-            }
-
-        }else{
-            $selects = App\Product::get_meta_product($product['product_id'],'all_attributes');
-            $datas = App\Product::get_meta_product($product['product_id'],'product_variations');
-            $datas = json_decode($datas);
-            $selects = json_decode($selects);
-            $list_key = [$product['product_id']];
-            $default_all = [];
-            if($datas)foreach ($datas as $item){
-                if( isset($item->default) ){
-                    foreach ($item->select as $id){
-                        if($id){
-                            $list_key[$id] = $id;
-                        }
-                    }
-                }
-
-            }
-            if( count($list_key)<2 )foreach ($datas as $item){
-                if(isset($item->select)){
-                    foreach ($item->select as $id){
-                        if($id){
-                            $list_key[$id] = $id;
-                        }
-                    }
-                }
-
-            }
-            if($selects)foreach ($selects as $key => $item){
-                $attributes = App\Product::get_product_attributes_detail($key);
-                foreach ($item->value as $value) {
-                    if($attributes->name){
-                        $default_all[$value->value] = $attributes->name.': '.$value->title;
-                    }
-
-                }
-
-            }
-            $data['key'] = implode('_',$list_key);
-            $data['attributes'] = implode(', ',$default_all);
-            if(!$data['thumbnail'])$data['thumbnail'] = $product['image'];
+        $default = end($colors);
+        if( isset($default['data_default']) )$default = $colors[$default['data_default']];
+        if( isset($default['img']) )$product['image'] = $data['thumbnail'] = $default['img'];
+        if( isset($default['attributes']) ){
+            $data['attributes'] = 'Color: '.$default['name'].', '.$default['attributes'];
+            $data['data_default'] = $default['attributes'];
         }
-
-        if($data['thumbnail'])$product['image'] = $data['thumbnail'];
+        if( isset($default['data_key']) )$data['key'] = $default['data_key'];
 
         ?>
         <div class="thumbnail-product" data-color='<?= json_encode($colors) ?>' >
@@ -590,7 +538,7 @@ if( !function_exists('showItemProduct') ){
             <a href="<?= $product['url'] ?>" style="background-image: url(<?= $product['image']?$product['image']:asset('images/products/default.jpg')  ?>)"><img src="<?= $product['image']  ?>"></a>
             <div class="<?php echo $colume_color; ?> list-color-product ">
             <?php foreach($colors as $color): ?>
-            <span class="item_color" data-key="<?= $color['data_key'] ?>" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style="background-color: <?= (isset($color['data_type']))?$color['data_type']:'' ?>"></span>
+            <span class="item_color" data-key="<?= $color['data_key'] ?>" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style=" <?= (isset($color['thumbnail']))?'background-image: url('.$color['thumbnail'].')':'background-color:'.$color['data_type'] ?>"></span>
             <?php endforeach;  ?>
             </div>
         </div>
@@ -704,6 +652,7 @@ if( !function_exists('DisplayAttributeType') ){
                 break;
             default:
                 echo '<span class="badge badge-secondary color" style="background-color: '.$data_type.';font-size: 24px; text-transform: uppercase">'.$data_type.'</span>';
+
                 break;
         }
         $resulf = ob_get_contents();
@@ -1646,72 +1595,46 @@ function display_filter_product_html($query=[]){
 
 
 function show_color_list_product($product_id){
-    $select = App\Product::get_meta_product($product_id,'all_attributes');
-    $data = App\Product::get_meta_product($product_id,'product_variations');
-    $data = json_decode($data);
-    $select = json_decode($select);
+    $thumbnail_attribute = App\Product::get_meta_product($product_id, 'thumbnail_attribute');
+    $thumbnail_attribute = ($thumbnail_attribute)?(array)json_decode($thumbnail_attribute):[];
+
+    $thumbnail_color = App\Product::get_meta_product($product_id, 'thumbnail_color');
+    $thumbnail_color = ($thumbnail_color)?(array)json_decode($thumbnail_color):[];
+
+    $price_attribute = App\Product::get_meta_product($product_id, 'price_attribute');
+    $price_attribute = ($price_attribute)?(array)json_decode($price_attribute):[];
+
+    $default_attribute = App\Product::get_meta_product($product_id, 'default_attribute');
+    $default_attribute = ($default_attribute)?(array)json_decode($default_attribute):[];
+
     $color=[];
-    $default_all = [];
+    $default_color = '';
     $default = [];
-    $list_key = [$product_id];
-    if($select)foreach ($select as $key => $item){
-        $attributes = App\Product::get_product_attributes_detail($key);
-        if($attributes && !$attributes->type){
-            foreach ($item->value as $value){
-                if($value){
-                    if(!$attributes->type && !isset($color[$value->value]) ){
-                        $attributes2 = App\Product::get_product_attributes_detail($value->value);
-                        $color[$value->value]=[
-                            'id'=>$value->value,
-                            'name'=>$value->title,
-                            'data_type'=>$attributes2->data_type,
-                            'data_key'=>implode('_',$list_key),
-                        ];
-                    }
-                }
+    $data_key= [];
 
-            }
-        }
-        if(isset($item->value))foreach ($item->value as $value) {
-            if (isset($attributes->name)){
-                $default_all[$value->value] = ['name' => $value->title, 'type' => $attributes->name];
-            }
-        }
-
-
-    }
-
-    if($data)foreach ($data as $item){
-        if( isset($item->default) ){
-            foreach ($item->select as $id){
-                if(isset( $default_all[$id]['type'] ))$list_key[$default_all[$id]['type']] = $id;
-                if( isset($default_all[$id]) )$default[$default_all[$id]['type']] = $default_all[$id]['name'];
-                if(isset($item->img))$default['thumbnail'] = \App\Media::get_url_media($item->img);
-            }
-        }
-
-    }
-    if(empty($default)){
-        foreach ($default_all as $key=> $d){
-            $list_key[$d['type']] = $key;
-            $default[$d['type']] =   $d['name'];
+    foreach ($default_attribute as $id => $item){
+        $data_color =  Product::get_product_attributes_detail_single($id);
+        if( $data_color->type){
+            $data_key[] = $id;
+            $default[] =  $item->title.': '.$item->value;
+        }else{
+            $default_color = $id;
         }
     }
 
 
-    if($data)foreach ($data as $item){
-        foreach ($item->select as $id){
-            if(isset($color[$id]) && !isset($color[$id]['img']) ){
-                $attributes = App\Product::get_product_attributes_detail($id);
-                if(isset($list_key['Color']))$list_key['color'] = $id;
-                $color[$id]['img'] = \App\Media::get_url_media($item->img);
-                $color[$id]['data_type'] = $attributes->data_type;
-                $color[$id]['data_default'] = $default;
-                $color[$id]['data_key'] =  implode('_',$list_key);
-                $color[$id]['data_key2'] =  $list_key;
-            }
-        }
-
+    if($thumbnail_color)foreach ($thumbnail_color as $id => $item){
+        $data_color =  Product::get_product_attributes_detail_single($id);
+        $img = $item;
+        if(isset($thumbnail_attribute[$id]) && count(  (array)$thumbnail_attribute[$id] ) )$img = end( $thumbnail_attribute[$id] );
+        $color[$id]['img'] = \App\Media::get_url_media($img);
+        if($item)$color[$id]['thumbnail'] = \App\Media::get_url_media($item);
+        $color[$id]['name'] = $data_color->name;
+        $color[$id]['data_type'] = $data_color->data_type;
+        $color[$id]['data_key'] = $id.'_'.implode('_',$data_key);
+        $color[$id]['attributes'] = implode(',',$default);
+        $color[$id]['data_default'] = $default_color;
+        $color[$id]['id'] = $id;
     }
     return $color;
 }

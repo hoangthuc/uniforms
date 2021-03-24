@@ -315,19 +315,25 @@
                 });
 // full image
                 document.querySelectorAll('[data_thumbnail_product]').forEach(t_attr=>{
-                    let thumbnail =  t_attr.querySelector('img');
-                    if(thumbnail){
-                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ][thumbnail.getAttribute('data-id')] = thumbnail.getAttribute('data-id');
+                    if(this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ]){
+                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ][t_attr.getAttribute('data-id')] = t_attr.getAttribute('data-id');
+                    }else{
+                        let img = {};
+                        img[t_attr.getAttribute('data-id')] = t_attr.getAttribute('data-id');
+                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ] = img;
                     }
+
                 });
                 // thumbnail color
                 document.querySelectorAll('[data_thumbnail_color_min]').forEach(t_attr=>{
                     let thumbnail =  t_attr.querySelector('img');
                     if(thumbnail){
                         this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = thumbnail.getAttribute('data-id');
+                    }else{
+                        this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = '';
                     }
                 });
-
+                this.default_attr = {};
                 document.querySelectorAll('.active[data-check-default]').forEach(d_attr=>{
                     this.default_attr[d_attr.getAttribute('data-select')] = {id:d_attr.getAttribute('data-select'),value:d_attr.getAttribute('data-value'),title:d_attr.getAttribute('data-title')};
                 });

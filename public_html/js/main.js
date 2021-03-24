@@ -454,12 +454,16 @@ async function change_amount(number){
 async function select_attribute(event){
   let parent = $(event).data('parent');
   let title = $(event).data('title');
+  let attr_price = $(event).data('price');
   let key_var,key_thumbnail;
     key_var = key_thumbnail = $('[name="product_id"]').val();
   document.querySelectorAll('[data-parent="'+parent+'"]').forEach(el=>{
       el.className = 'item-attribute-list d-inline-block mb-1';
-  })
-    document.querySelector('[attribute-p'+parent+'] > span').textContent = '('+title+')';
+  });
+
+    title = '('+title+')';
+    if(attr_price)title = title+' <b>+'+format_currency(attr_price)+'<b>';
+    document.querySelector('[attribute-p'+parent+'] > span').innerHTML = title;
     $(event).addClass('active');
  document.querySelectorAll('.select_variant .item-attribute-list.active').forEach(ac=>{
      key_var +='_'+ac.getAttribute('data-id');
@@ -471,20 +475,17 @@ async function select_attribute(event){
 
  $('.slider_slick_thumbnail').slick('slickUnfilter');
  $('.slider_slick_thumbnail').slick('slickFilter', '[data-fiter-color="'+key_thumbnail+'"]');
- let get_var = document.querySelector('[data-variantion="'+key_var+'"]');
+
  let get_img = document.querySelector('[data-color="'+key_thumbnail+'"]');
- console.log(key_var);
- if(get_var){
-     // set price if has variant product attribute
-     let price = get_var.getAttribute('data-price');
-     $('.price_amount .price').text( format_currency(price) );
-     $('#form-add-cart [name="subtotal"]').val(price)
- }else{
-/// set price default if variant not exist
-     let price = $('[name="price_default"]').val();
-     $('.price_amount .price').text( format_currency(price) );
-     $('#form-add-cart [name="subtotal"]').val(price)
- }
+ /// total price
+ let price = document.querySelector('#form-add-cart [name="price_default"]');
+ if(price)price = Number(price.value);
+ document.querySelectorAll('.item-attribute-list.active').forEach(el=>{
+     price += Number( el.getAttribute('data-price') );
+     console.log(price);
+    });
+$('.price_amount .price').text( format_currency(price) );
+$('#form-add-cart [name="subtotal"]').val(price)
  if(get_img){
      /// set image by color product
      get_img.click();
