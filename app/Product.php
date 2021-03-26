@@ -432,7 +432,7 @@ class Product extends Model
 
             default;
             $orderby['name'] = 'sku';
-            $orderby['value'] = 'DESC';
+            $orderby['value'] = 'ASC';
             break;
         }
         $Attribute_inner = "";

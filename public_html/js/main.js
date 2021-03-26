@@ -404,6 +404,8 @@ async function start_filter_product(page=1){
                     el.innerHTML = resulf.pagition;
                 })
                 document.querySelector('[Data-Resulfs-Count]').textContent = String(resulf.total);
+                toggle_tooltip();
+                scroll_to('header');
             }
         }
     })
@@ -1064,6 +1066,10 @@ document.querySelectorAll('.coming_soon').forEach(el=>{
     })
 })
 
+function toggle_tooltip(event){
+    $('[data-bs-toggle="tooltip"]').tooltip();
+}
+toggle_tooltip();
 window.clickOutSide = (element, clickOutside, clickInside) => {
     document.addEventListener('click', (event) => {
         if (!element.contains(event.target)) {

@@ -371,10 +371,11 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
     </div>
 </div>
 <script src="{{ asset('plugins/jQuery/v2.2.4/jquery-2.2.4.min.js') }}"></script>
+{{--<script src="{{ asset('plugins/jQuery-ui-1.11.4.custom/jquery-ui.min.js') }}"></script>--}}
 <script src="{{ asset('plugins/bootstrap-4.5.3/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('plugins/bootstrap-4.5.3/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('plugins/owlcarousel2-2.3.4/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('plugins/slick/slick.min.js') }}"></script>
-<script src="{{ asset('plugins/jQuery-ui-1.11.4.custom/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>

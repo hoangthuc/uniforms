@@ -538,7 +538,7 @@ if( !function_exists('showItemProduct') ){
             <a href="<?= $product['url'] ?>" style="background-image: url(<?= $product['image']?$product['image']:asset('images/products/default.jpg')  ?>)"><img src="<?= $product['image']  ?>"></a>
             <div class="<?php echo $colume_color; ?> list-color-product ">
             <?php foreach($colors as $color): ?>
-            <span class="item_color" data-key="<?= $color['data_key'] ?>" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style=" <?= (isset($color['thumbnail']))?'background-image: url('.$color['thumbnail'].')':'background-color:'.$color['data_type'] ?>"></span>
+            <span class="item_color" data-bs-toggle="tooltip" data-placement="right"  title="<?= $color['name'] ?>" data-key="<?= $color['data_key'] ?>" data-color_id="<?= $color['id'] ?>" data-color="<?= $color['name'] ?>" data-product_id="<?= $product['product_id'] ?>" onclick="change_color_img_product(this)" onmouseover="change_color_img_product(this)" data-img="<?= (isset($color['img']))?$color['img']:asset('images/products/default.jpg'); ?>" style=" <?= (isset($color['thumbnail']))?'background-image: url('.$color['thumbnail'].')':'background-color:'.$color['data_type'] ?>"></span>
             <?php endforeach;  ?>
             </div>
         </div>

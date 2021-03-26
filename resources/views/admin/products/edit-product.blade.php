@@ -23,6 +23,7 @@
     $data = \App\Product::insert_best_sell_product($product_id,'top_sell_month');
 
     $display_data_attribute = \App\Product::get_meta_product($product->id,'all_attributes');
+    $number_line = 0;
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -142,6 +143,18 @@
                                     </div>
                             @endforeach
                         @endif
+                            <div class="form-group item-attribute item-attibute-99 d-flex">
+                                <label class="d-inline-block" style="min-width: 110px;">Name plate</label>
+                                <select class="form-control" name="number_line" style="min-width: 110px;">
+                                    <option value="">None</option>
+                                    <?php for ($i=1;$i<4;$i++): ?>
+                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                            <div class="form-group pt-3" display_name_plate_render_control>
+
+                            </div>
 
                             <!--Show variations product render control-->
                             <div class="form-group pt-3 border-top" display_attribute_render_control>
@@ -276,10 +289,6 @@
 @section('footer')
     <script>
         var product_id = {{ $product_id }};
-        // var price_attr = {};
-        // var default_attr = {};
-        // var thumbnail_attr = {};
-        // var thumbnail_color = {};
         var $Attribute = {
             data:{!! ($display_data_attribute)?$display_data_attribute:'{}' !!},
             price_attr:{},
@@ -353,5 +362,12 @@
             }
         };
         $Attribute.render();
+
+        var $name_plate = {
+            data: {},
+            setup: function(){
+
+            }
+        }
     </script>
 @endsection
