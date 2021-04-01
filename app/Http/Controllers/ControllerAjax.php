@@ -728,6 +728,17 @@ class ControllerAjax extends Controller
          }
 
 
+        //Get name plate product
+        if(isset($request['action']) && $request['action']=='get_name_plate_ajax_view'){
+            $detail_attribute = \App\Product::get_product_attributes_detail_single($request['color']);
+            $plate = $request['plate'];
+            $name_plate = Product::product_name_line()[$plate];
+
+            return view('admin.products.template_name_plate_view', compact('detail_attribute','plate','name_plate'));
+
+        }
+
+
 
 
 

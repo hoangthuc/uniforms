@@ -266,7 +266,7 @@ async function save_product(){
                                 showConfirmButton: false,
                                 timer: 1500
                             })
-                            setTimeout(function(){location.href= resulf['redirect'];},3000)
+                         //   setTimeout(function(){location.href= resulf['redirect'];},3000)
 
                         }
 
@@ -1104,27 +1104,8 @@ if(!pause){
 function get_data_attribute() {
     let all_attribute = {product_type:0,attributes:{},optional:[] };
     let attributes_optional = [];
-document.querySelectorAll('[data-product-variations] .item-product-varition').forEach(item=>{
-    let data = {select:[],price:0,description:'',img:null};
-    item.querySelectorAll('select').forEach(s=>{
-        data['select'].push(s.value );
-    });
-    data['price'] = item.querySelector('[name="price"]').value;
-    data['description'] = item.querySelector('[name="description"]').value;
-    item.querySelectorAll('img').forEach(i=>{
-        data['img']= i.getAttribute('data-id');
-    });
-    if(item.querySelector('[data-check-default]').className == 'active'){
-        data['default'] = true;
-    };
-    attributes_optional.push(data);
-});
-    let attributes = $('[data-add-variation]').attr('data-json');
-    if(attributes){
-        attributes = JSON.parse(attributes);
-        all_attribute.attributes = attributes;
-        all_attribute.optional = attributes_optional;
-    }
+    all_attribute.attributes = $Attribute.data;
+    all_attribute.optional = attributes_optional;
     return all_attribute;
 }
 

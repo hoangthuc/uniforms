@@ -303,6 +303,15 @@ class Product extends Model
         return $product_status;
     }
 
+    public static function product_name_line(){
+        $plate = [
+            '1'=>'1 Line Engraving',
+            '2_even'=>'2 Line Engraving (Even Lines)',
+            '2_r_small'=>'2 Line Engraving (Reg./Small)',
+        ];
+        return $plate;
+    }
+
     // status product
     public static function product_type(){
         $product_type = [

@@ -125,30 +125,12 @@
                             @endforeach
                         @endif
 
-                        <!--Type product-->
-                            <div class="form-group">
-                                <label>Product type</label>
-                                <select class="form-control" name="product_type" onchange="change_product_type(this)">
-                                    @if($product_type)
-                                        @foreach($product_type as $key=> $value)
-                                            <option value="{{ $key }}">{{ $value }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <div class="alert alert-warning mt-2 d-none" role="alert">Attributes is invalid.</div>
+                            <div class="form-group pt-3" display_name_plate_render_control>
+
                             </div>
 
-                            <!--Show variations product-->
-                            <div class="form-group form-inline">
-                                <div class="mr-3 d-none" data-Attribute-Variations>
-                                    <button type="button" data-json="" onclick="add_variation(this)" data-Add-Variation class="btn btn-primary">Add Variations</button>
-                                </div>
-                            </div>
-
-
-
-                            <!--Show variations product from attribute-->
-                            <div class="form-group border-top" data-Product-Variations>
+                            <!--Show variations product render control-->
+                            <div class="form-group pt-3 border-top" display_attribute_render_control>
                             </div>
 
 
@@ -262,27 +244,6 @@
 
                     </div>
 
-                    {{--gallery Image--}}
-                    <div class="card card-primary">
-                        <!-- /.card-header -->
-                        <div class="card-header">
-                            <h3 class="card-title">Gallery</h3>
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="card-body">
-                            <div  class="form-group">
-                                <div class="display-gallery mb-3" data-gallery="button_gallery">
-
-                                </div>
-                                <!-- Button trigger modal -->
-                                <div type="button" class="btn btn-primary add_gallery_media" data-media="button_gallery" data-ftype="image" data-type="image/*" data-toggle="modal" data-target="#MediaModal" data-required="false">
-                                    Upload image
-                                </div>
-                            </div>
-                        </div>
-                        <!-- form start -->
-
-                    </div>
                     <!-- /.card -->
                 </div>
             </div>
@@ -294,22 +255,79 @@
 @section('footer')
     <script>
         var $Attribute = {
-          data:{},
-          setup: function(dom){
-              for(item in this.data){
-                  var data = {
-                      'action': 'my_action',
-                      'data': this.data
-                  };
-                  $.post(setting.ajax_url, data, function(response) {
-                      console.log(response);
-                  });
-              }
+            data:{},
+            price_attr:{},
+            default_attr:{},
+            thumbnail_attr:{},
+            thumbnail_color:{},
+            setup: function(dom){
+                dom.innerHTML = '';
+                for(item in this.data){
+                    var data = {
+                        'action': 'get_attribute_ajax_view',
+                        '_token': setting.token,
+                        'item_data': this.data[item],
+                        'id_attr': item,
+                    };
+                    $.post(setting.ajax_url, data, function(response) {
+                        let data = document.createElement('div');
+                        data.innerHTML = response;
+                        dom.appendChild(data);
+                    });
+                }
+            },
+            render: function(){
+                if(this.data){
+                    var html = document.querySelector('[display_attribute_render_control]');
+                    this.setup(html);
+                }
+            },
+            update: function (){
+                document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
+                    this.price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
+                });
+// full image
+                document.querySelectorAll('[data_thumbnail_product]').forEach(t_attr=>{
+                    if(this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ]){
+                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ][t_attr.getAttribute('data-id')] = t_attr.getAttribute('data-id');
+                    }else{
+                        let img = {};
+                        img[t_attr.getAttribute('data-id')] = t_attr.getAttribute('data-id');
+                        this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ] = img;
+                    }
+
+                });
+                // thumbnail color
+                document.querySelectorAll('[data_thumbnail_color_min]').forEach(t_attr=>{
+                    let thumbnail =  t_attr.querySelector('img');
+                    if(thumbnail){
+                        this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = thumbnail.getAttribute('data-id');
+                    }else{
+                        this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = '';
+                    }
+                });
+                this.default_attr = {};
+                document.querySelectorAll('.active[data-check-default]').forEach(d_attr=>{
+                    this.default_attr[d_attr.getAttribute('data-select')] = {id:d_attr.getAttribute('data-select'),value:d_attr.getAttribute('data-value'),title:d_attr.getAttribute('data-title')};
+                });
 
             },
-          render: function(){
+            send:function(data,name){
+                var data = {
+                    'action': 'update_field_atrribute_product',
+                    '_token': setting.token,
+                    'data': data,
+                    'name': name,
+                    'product_id': product_id,
+                };
+                $.post(setting.ajax_url, data, function(response) {
+                    console.log(response);
+                });
+            },
+            setup_name_plate: function(){
 
-          }
+            }
         };
+        $Attribute.render();
     </script>
 @endsection

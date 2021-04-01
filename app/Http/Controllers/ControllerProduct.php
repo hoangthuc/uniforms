@@ -81,7 +81,6 @@ class ControllerProduct extends Controller
         if ($request['data']) {
             foreach ($request['data'] as $value) {
                 if ($value['name'] == 'additional_information' && empty($value['value'])) $value['value'] = [];
-                if ($value['name'] == 'button_gallery' && empty($value['value'])) $value['value'] = [];
                 if ($value['name'] == 'product_category' && empty($value['value'])) $value['value'] = [];
                 $data[$value['name']] = $value['value'];
             }
@@ -106,6 +105,7 @@ class ControllerProduct extends Controller
             unset($data['sku']);
             unset($data['button_gallery']);
             unset($data['additional_information']);
+            unset($data['default_variant']);
 
             $product_id = DB::table('products')->insertGetId($data);
             // save category
@@ -123,8 +123,6 @@ class ControllerProduct extends Controller
             // save attributes
             if ($product_id) {
                 $all_attribute = $request['all_attributes'];
-                Product::update_meta_product($product_id, 'product_type', $all_attribute['product_type']);
-                if (isset($all_attribute['optional'])) Product::update_meta_product($product_id, 'product_variations', \GuzzleHttp\json_encode($all_attribute['optional']));
                 if (isset($all_attribute['attributes'])) {
                     Product::update_meta_product($product_id, 'all_attributes', \GuzzleHttp\json_encode($all_attribute['attributes']));
                     $attributes = [];
@@ -139,6 +137,10 @@ class ControllerProduct extends Controller
                     }
                     Product::update_meta_product($product_id, 'attributes', \GuzzleHttp\json_encode($attributes));
                 }
+                Product::update_meta_product($product_id, 'price_attribute', \GuzzleHttp\json_encode($request['price_attribute']));
+                Product::update_meta_product($product_id, 'default_attribute', \GuzzleHttp\json_encode($request['default_attribute']));
+                Product::update_meta_product($product_id, 'thumbnail_color', \GuzzleHttp\json_encode($request['thumbnail_color']));
+                Product::update_meta_product($product_id, 'thumbnail_attribute', \GuzzleHttp\json_encode($request['thumbnail_attribute']));
             }
             // end save attributes
 
@@ -154,7 +156,7 @@ class ControllerProduct extends Controller
         if ($request['data']) {
             foreach ($request['data'] as $value) {
                 if ($value['name'] == 'additional_information' && empty($value['value'])) $value['value'] = [];
-                if ($value['name'] == 'button_gallery' && empty($value['value'])) $value['value'] = [];
+                if ($value['name'] == 'product_category' && empty($value['value'])) $value['value'] = [];
                 $data[$value['name']] = $value['value'];
             }
             //apply for new product
@@ -194,8 +196,6 @@ class ControllerProduct extends Controller
             if ($data['id']) {
                 $product_id = $data['id'];
                 $all_attribute = $request['all_attributes'];
-                Product::update_meta_product($product_id, 'product_type', $all_attribute['product_type']);
-                if (isset($all_attribute['optional'])) Product::update_meta_product($product_id, 'product_variations', \GuzzleHttp\json_encode($all_attribute['optional']));
                 if (isset($all_attribute['attributes'])) {
                     Product::update_meta_product($product_id, 'all_attributes', \GuzzleHttp\json_encode($all_attribute['attributes']));
                     $attributes = [];
