@@ -39,6 +39,9 @@
         }
         $list_reviews['html_pagition'] = DisplayPagitionReview($pagition);
         $id_color = \App\Product::get_product_attributes_bylug('color');
+
+        $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
+        $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
     }
 
     ?>
@@ -123,7 +126,7 @@
                                                 class="fas fa-plus"></i></span>
                                 </div>
                             </div>
-                            <div class="attributes pt-1 border-top">
+                            <div class="select_variant attributes pt-1 border-top">
                                 @if( isset($attributes) )
                                     @foreach($attributes as $item_attribute)
                                         <div class="item-attribute {{ $item_attribute['select_variant'] =='true'?'select_variant':'' }}" Attribute-P{{ $item_attribute['id'] }}>
@@ -151,7 +154,11 @@
                                         </div>
                                     @endforeach
                                 @endif
-
+                            </div>
+                            <div class="select_name_plate">
+                                @if($name_plates)
+                                    @include('layouts.view_ajax.view_product_name_plate')
+                                @endif
                             </div>
                             <div id="form-add-cart" class="add-cart mt-3 d-flex">
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -371,7 +378,14 @@
         document.querySelectorAll('.item-attribute-list.active').forEach(el=>{
             el.click();
         });
-
+var $name_plate = {
+    label:'',
+    render:function(){
+       var sel = document.querySelector('[data-name-plate] [data-name="name_plate"]');
+       if(sel)sel.onchange();
+    }
+}
+        $name_plate.render();
     </script>
 @endsection
 

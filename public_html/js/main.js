@@ -474,7 +474,7 @@ async function select_attribute(event){
     document.querySelectorAll('.select_variant .item-attribute-list.active[attribute-type="color"]').forEach(ac=>{
         key_thumbnail +='_'+ac.getAttribute('data-id');
     });
-
+console.log(key_thumbnail);
  $('.slider_slick_thumbnail').slick('slickUnfilter');
  $('.slider_slick_thumbnail').slick('slickFilter', '[data-fiter-color="'+key_thumbnail+'"]');
 
@@ -1070,6 +1070,21 @@ function toggle_tooltip(event){
     $('[data-bs-toggle="tooltip"]').tooltip();
 }
 toggle_tooltip();
+
+function display_name_plate(event){
+    var sel = document.querySelector('[data-name-plate] select[data-name]');
+     var label =    sel.options[sel.selectedIndex].text;
+    sel.setAttribute('data-title',label);
+    $name_plate.label = label;
+
+  document.querySelectorAll('[data-name-plate] input[data-name]').forEach(el=>{
+      var name = el.getAttribute('data-name');
+      el.classList.add('d-none');
+      if(name == sel.value){
+          el.classList.remove('d-none');
+      }
+  })
+}
 window.clickOutSide = (element, clickOutside, clickInside) => {
     document.addEventListener('click', (event) => {
         if (!element.contains(event.target)) {

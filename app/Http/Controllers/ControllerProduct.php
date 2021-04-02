@@ -141,6 +141,7 @@ class ControllerProduct extends Controller
                 Product::update_meta_product($product_id, 'default_attribute', \GuzzleHttp\json_encode($request['default_attribute']));
                 Product::update_meta_product($product_id, 'thumbnail_color', \GuzzleHttp\json_encode($request['thumbnail_color']));
                 Product::update_meta_product($product_id, 'thumbnail_attribute', \GuzzleHttp\json_encode($request['thumbnail_attribute']));
+                if($request['name_plate'])Product::update_meta_product($product_id, 'name_plate', \GuzzleHttp\json_encode($request['name_plate']));
             }
             // end save attributes
 
@@ -215,6 +216,7 @@ class ControllerProduct extends Controller
                 Product::update_meta_product($product_id, 'default_attribute', \GuzzleHttp\json_encode($request['default_attribute']));
                 Product::update_meta_product($product_id, 'thumbnail_color', \GuzzleHttp\json_encode($request['thumbnail_color']));
                 Product::update_meta_product($product_id, 'thumbnail_attribute', \GuzzleHttp\json_encode($request['thumbnail_attribute']));
+                if($request['name_plate'])Product::update_meta_product($product_id, 'name_plate', \GuzzleHttp\json_encode($request['name_plate']));
             }
             // end save attributes
 

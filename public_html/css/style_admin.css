@@ -643,3 +643,8 @@ td.category_product a:hover{
         transform: translate(24px, 0);
     }
 }
+
+.btn-remove:hover{
+    cursor: pointer;
+    color: #007bff;
+}

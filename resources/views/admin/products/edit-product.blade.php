@@ -23,7 +23,7 @@
     $data = \App\Product::insert_best_sell_product($product_id,'top_sell_month');
 
     $display_data_attribute = \App\Product::get_meta_product($product->id,'all_attributes');
-    $number_line = 0;
+    $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -162,7 +162,17 @@
                                 </div>
                             </div>
                             <div class="form-group pt-3" display_name_plate_render_control>
-
+                                @if($name_plates)
+                                    @foreach($plate_item = \GuzzleHttp\json_decode($name_plates) as $key_n => $value_n)
+                                     <?php
+                                        $detail_attribute = \App\Product::get_product_attributes_detail_single($value_n->color);
+                                        $plate = $value_n->plate;
+                                        $name_plate = \App\Product::product_name_line()[$plate];
+                                        $img= $value_n->img;
+                                     ?>
+                                        @include('admin.products.template_name_plate_view')
+                                    @endforeach
+                                @endif
                             </div>
 
                             <!--Show variations product render control-->
@@ -304,7 +314,7 @@
             default_attr:{},
             thumbnail_attr:{},
             thumbnail_color:{},
-            name_plate:{},
+            name_plate:{!! ($name_plates)?$name_plates:'{}' !!},
             setup: function(dom){
                 dom.innerHTML = '';
                 for(item in this.data){
@@ -358,7 +368,7 @@
                     this.default_attr[d_attr.getAttribute('data-select')] = {id:d_attr.getAttribute('data-select'),value:d_attr.getAttribute('data-value'),title:d_attr.getAttribute('data-title')};
                 });
 
-
+                /// Name plate
                 var select_color = document.querySelector('[name="color_name_plate"]');
                 select_color.innerHTML = '';
                 for(var color in this.thumbnail_color ){
@@ -370,6 +380,17 @@
                         select_color.appendChild(option);
                     }
                 }
+                this.name_plate = {};
+                document.querySelectorAll('[display_name_plate_render_control] [data_display_name_plate]').forEach(nl=>{
+                    var key = nl.getAttribute('data_display_name_plate');
+                    var color = nl.getAttribute('data-color');
+                    var line = nl.getAttribute('data-line');
+                    var img = nl.querySelector('img');
+                    var img_id = '';
+                    if(img)img_id = img.getAttribute('data-id');
+                    this.name_plate[key] = {key:key,color:color,plate:line,img: img_id};
+                })
+
 
             },
             send:function(data,name){
@@ -388,7 +409,7 @@
                 var select_color = document.querySelector('[name="color_name_plate"]');
                 var plate = document.querySelector('[name="number_line"]');
                 var check = document.querySelector('[data_display_name_plate="'+select_color.value+'_'+plate.value+'"]');
-                if(!check){
+                if(!check && select_color){
                     var data = {
                         'action': 'get_name_plate_ajax_view',
                         '_token': setting.token,
@@ -401,6 +422,8 @@
                         display.insertAdjacentHTML('afterbegin',response);
 
                     });
+                }else{
+                    Swal.fire('Name plate is exist.');
                 }
 
             }

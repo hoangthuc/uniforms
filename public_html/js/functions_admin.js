@@ -253,7 +253,7 @@ async function save_product(){
             jQuery.ajax({
                 url: products['action']['value'],
                 type: 'post',
-                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute(),price_attribute:$Attribute.price_attr,default_attribute:$Attribute.default_attr,thumbnail_attribute:$Attribute.thumbnail_attr, thumbnail_color:$Attribute.thumbnail_color},
+                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute(),price_attribute:$Attribute.price_attr,default_attribute:$Attribute.default_attr,thumbnail_attribute:$Attribute.thumbnail_attr, thumbnail_color:$Attribute.thumbnail_color, name_plate:$Attribute.name_plate},
                 success: function(resulf){
                     if(resulf){
                         jQuery('#button-save-product span').addClass('d-none');
@@ -266,7 +266,7 @@ async function save_product(){
                                 showConfirmButton: false,
                                 timer: 1500
                             })
-                         //   setTimeout(function(){location.href= resulf['redirect'];},3000)
+                            setTimeout(function(){location.href= resulf['redirect'];},3000)
 
                         }
 

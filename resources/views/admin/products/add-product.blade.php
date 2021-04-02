@@ -125,6 +125,25 @@
                             @endforeach
                         @endif
 
+                            <div class="form-group item-attibute-99 row">
+                                <label class="col-md-2" style="min-width: 110px;">Name plate</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="color_name_plate" style="min-width: 110px;" data_color_name_plate>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="number_line" style="min-width: 110px;">
+                                        @foreach($plate = \App\Product::product_name_line() as $key_n => $value_n)
+                                            <option value="{{ $key_n }}">{{ $value_n }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" type="button" onclick="$Attribute.setup_name_plate(this)">Add name plate</button>
+                                </div>
+                            </div>
+
                             <div class="form-group pt-3" display_name_plate_render_control>
 
                             </div>
@@ -260,6 +279,7 @@
             default_attr:{},
             thumbnail_attr:{},
             thumbnail_color:{},
+            name_plate:{},
             setup: function(dom){
                 dom.innerHTML = '';
                 for(item in this.data){
@@ -273,6 +293,7 @@
                         let data = document.createElement('div');
                         data.innerHTML = response;
                         dom.appendChild(data);
+                        $Attribute.update();
                     });
                 }
             },
@@ -311,6 +332,29 @@
                     this.default_attr[d_attr.getAttribute('data-select')] = {id:d_attr.getAttribute('data-select'),value:d_attr.getAttribute('data-value'),title:d_attr.getAttribute('data-title')};
                 });
 
+                /// Name plate
+                var select_color = document.querySelector('[name="color_name_plate"]');
+                select_color.innerHTML = '';
+                for(var color in this.thumbnail_color ){
+                    var color_detail = document.querySelector('[display-attribute-product] [data-select="'+color+'"]');
+                    if(color_detail){
+                        var option  = document.createElement('option');
+                        option.setAttribute('value',color);
+                        option.textContent = color_detail.getAttribute('data-value');
+                        select_color.appendChild(option);
+                    }
+                }
+                this.name_plate = {};
+                document.querySelectorAll('[display_name_plate_render_control] [data_display_name_plate]').forEach(nl=>{
+                    var key = nl.getAttribute('data_display_name_plate');
+                    var color = nl.getAttribute('data-color');
+                    var line = nl.getAttribute('data-line');
+                    var img = nl.querySelector('img');
+                    var img_id = '';
+                    if(img)img_id = img.getAttribute('data-id');
+                    this.name_plate[key] = {key:key,color:color,plate:line,img: img_id};
+                });
+
             },
             send:function(data,name){
                 var data = {
@@ -324,8 +368,25 @@
                     console.log(response);
                 });
             },
-            setup_name_plate: function(){
+            setup_name_plate: function(event){
+                var select_color = document.querySelector('[name="color_name_plate"]');
+                var plate = document.querySelector('[name="number_line"]');
+                var check = document.querySelector('[data_display_name_plate="'+select_color.value+'_'+plate.value+'"]');
+                if(!check && select_color){
+                    var data = {
+                        'action': 'get_name_plate_ajax_view',
+                        '_token': setting.token,
+                        'color': select_color.value,
+                        'plate': plate.value,
+                    };
+                    $.post(setting.ajax_url, data, function(response) {
+                        var display = document.querySelector('[display_name_plate_render_control]');
+                        display.insertAdjacentHTML('afterbegin',response);
 
+                    });
+                }else{
+                    Swal.fire('Name plate is exist.');
+                }
             }
         };
         $Attribute.render();
