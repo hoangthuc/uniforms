@@ -76,6 +76,18 @@
                                 @endif
                             @endforeach
                        @endif
+
+                        @if($name_plates)
+                            @foreach($name_plates as $img_color)
+                                @if($img_color->img)
+                                        <div class="slide"  data-fiter-color="{{ $product->id.'_'.$img_color->color }}">
+                                            <a class="mb-2"><img onclick="javascript:selectImageThumbnail(this);" data_key_name_plate="{{$img_color->key}}"
+                                                                 data-color="{{ $product->id.'_'.$img_color->color }}"
+                                                                 src="{{ get_url_media($img_color->img) }}"/></a>
+                                        </div>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
                 <!--End Data show price-->
                     <div class="{{ isset($variantions)?'col-md-6':'col-md-8' }}" id="display-images">
@@ -375,16 +387,49 @@
 @endsection
 @section('footer_layout')
     <script>
+        var $name_plate = {
+            label:'',
+            render:function(){
+                var sel = document.querySelector('[data-name-plate] [data-name="name_plate"]');
+                if(sel){
+                    sel.onchange();
+                    var selected =  sel.options[sel.selectedIndex];
+                    console.log(selected);
+                }
+            },
+            display_name_plate:function(event){
+                var type= $(event).attr('attribute-type');
+                if(type == 'color'){
+                    var color_id = $(event).attr('data-id');
+                    var plate = document.querySelector('[data-name-plate] [data-name="name_plate"]');
+                    if(plate){
+                        var plate_v = '';
+                        var l_display = 0;
+                        var options = document.querySelectorAll('[data-name-plate] [data-name="name_plate"] option');
+                        options.forEach(nl=>{
+                            var color_n = nl.getAttribute('data-color');
+                            if(color_n == color_id){
+                                nl.removeAttribute('disabled');
+                                nl.classList.remove('d-none');
+                                plate_v = nl.getAttribute('value');
+                                l_display++;
+                            }else{
+                                nl.setAttribute('disabled','');
+                                nl.classList.add('d-none');
+                            }
+                        });
+                        console.log(plate_v);
+                        plate.selectedIndex  = l_display-1;
+                        $name_plate.render();
+                    }
+
+                }
+            }
+        }
         document.querySelectorAll('.item-attribute-list.active').forEach(el=>{
             el.click();
         });
-var $name_plate = {
-    label:'',
-    render:function(){
-       var sel = document.querySelector('[data-name-plate] [data-name="name_plate"]');
-       if(sel)sel.onchange();
-    }
-}
+
         $name_plate.render();
     </script>
 @endsection

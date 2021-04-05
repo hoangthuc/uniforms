@@ -158,6 +158,15 @@ document.querySelectorAll('.item-attribute-list.active').forEach(att=>{
     key += '_'+i;
     attributes+= ' '+k+': '+v+',';
 })
+var name_plate =  document.querySelector('[data-name-plate]');
+if(name_plate){
+    attributes+= ' Line: '+$name_plate.label+' ,';
+    name_plate.querySelectorAll('input.active').forEach(inp=>{
+        if(inp.value)attributes+= ' '+inp.getAttribute('placeholder')+': '+inp.value+' ,';
+    });
+    var plate = name_plate.querySelector('select');
+    if(plate)key+='_'+plate.value;
+}
 data['key']=key;
 data['attributes']= attributes.slice(0,-1);
 let check = in_cart(data['key'],cart.products);
@@ -474,7 +483,7 @@ async function select_attribute(event){
     document.querySelectorAll('.select_variant .item-attribute-list.active[attribute-type="color"]').forEach(ac=>{
         key_thumbnail +='_'+ac.getAttribute('data-id');
     });
-console.log(key_thumbnail);
+
  $('.slider_slick_thumbnail').slick('slickUnfilter');
  $('.slider_slick_thumbnail').slick('slickFilter', '[data-fiter-color="'+key_thumbnail+'"]');
 
@@ -484,7 +493,6 @@ console.log(key_thumbnail);
  if(price)price = Number(price.value);
  document.querySelectorAll('.item-attribute-list.active').forEach(el=>{
      price += Number( el.getAttribute('data-price') );
-     console.log(price);
     });
 $('.price_amount .price').text( format_currency(price) );
 $('#form-add-cart [name="subtotal"]').val(price)
@@ -498,6 +506,9 @@ $('#form-add-cart [name="subtotal"]').val(price)
      document.querySelector('#display-images .action_view .zoom').setAttribute('data-image',image_default);
      document.querySelector('#display-images .show-imgage').setAttribute('style','background-image: url('+image_default+')');
  }
+
+ /// Name plate
+    $name_plate.display_name_plate(event);
 
 }
 
@@ -1074,16 +1085,22 @@ toggle_tooltip();
 function display_name_plate(event){
     var sel = document.querySelector('[data-name-plate] select[data-name]');
      var label =    sel.options[sel.selectedIndex].text;
+     var key =    sel.options[sel.selectedIndex].getAttribute('data-key');
     sel.setAttribute('data-title',label);
     $name_plate.label = label;
+    console.log(key);
+    var thumbnail = document.querySelector('[data_key_name_plate="'+key+'"]');
+    if(thumbnail)thumbnail.click();
 
   document.querySelectorAll('[data-name-plate] input[data-name]').forEach(el=>{
       var name = el.getAttribute('data-name');
       el.classList.add('d-none');
+      el.classList.remove('active');
       if(name == sel.value){
           el.classList.remove('d-none');
+          el.classList.add('active');
       }
-  })
+  });
 }
 window.clickOutSide = (element, clickOutside, clickInside) => {
     document.addEventListener('click', (event) => {
