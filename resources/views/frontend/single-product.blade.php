@@ -154,7 +154,7 @@
                                                          data-price="{{ isset($price_attribute[$attribute->id])?$price_attribute[$attribute->id]:0 }}"
                                                          onclick="select_attribute(this)" Data-Attribute-Product>
                                                         @if(isset($thumbnail_color[$attribute->id]))
-                                                            <span class="badge badge-secondary color attr_thumbnail" style="background-image: url('{{ \App\Media::get_url_media($thumbnail_color[$attribute->id]) }}'); font-size: 24px; text-transform: uppercase">{{ $attribute->name }}</span>
+                                                            <span class="badge badge-secondary color attr_thumbnail" style="{{ ($thumbnail_color[$attribute->id])?'background-image: url('.\App\Media::get_url_media($thumbnail_color[$attribute->id]).')':'background-color:'.$attribute->data_type }}; font-size: 24px; text-transform: uppercase">{{ $attribute->name }}</span>
                                                         @else
                                                             {!! DisplayAttributeType($attribute->type,$attribute->data_type) !!}
                                                         @endif

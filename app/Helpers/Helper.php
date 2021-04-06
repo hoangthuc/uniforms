@@ -524,14 +524,15 @@ if( !function_exists('showItemProduct') ){
         ];
         $colume_color = '';
         $default = end($colors);
-        if( isset($default['data_default']) )$default = $colors[$default['data_default']];
+        if( isset( $colors[$default['data_default']] ) )$default = $colors[$default['data_default']];
         if( isset($default['img']) )$product['image'] = $data['thumbnail'] = $default['img'];
         if( isset($default['attributes']) ){
             $data['attributes'] = 'Color: '.$default['name'].', '.$default['attributes'];
             $data['data_default'] = $default['attributes'];
         }
         if( isset($default['data_key']) )$data['key'] = $default['data_key'];
-
+        if(count($colors)> 9)$colume_color = 'show-colume-2';
+        if(count($colors)> 18)$colume_color = 'show-colume-3';
         ?>
         <div class="thumbnail-product" data-color='<?= json_encode($colors) ?>' >
             <span class="SKU">SKU: <?= $product['sku']  ?></span>

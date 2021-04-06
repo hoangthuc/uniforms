@@ -4,146 +4,36 @@
     $products =  App\Product::get_products();
     $product_status = App\Product::product_status();
 
-//    $xlsx = \App\SimpleXLSX::parse( public_path('imports/extra/get_image.xlsx') );
+//    $xlsx = \App\SimpleXLSX::parse( public_path('imports/extra/Unipro_Import_image_color.xlsx') );
 //    $body = [];
+//    $thumbnail_color = [];
+//    $thumbnail_attribute= [];
 //    foreach ( $xlsx->rows() as $r => $row ) {
-//        $media = \App\Media::get_media_first([ 'search'=>format_text_cell($row[4])]);
 //        $product_id = \App\Product::check_product_bysku($row[0]);
-//        if($r>0 && $row[4] && $media && $product_id){
-//            $body[$row[0]]['sku'] = format_text_cell($row[0]);
-//            $body[$row[0]]['img'] = format_text_cell($row[4]);
-//            $body[$row[0]]['product_id'] = $product_id;
-//            $body[$row[0]]['media_id'] = $media->id;
-//            $data['featured_image'] = $media->id;
-//            DB::table('products')->where('id',$product_id)->update($data);
+//        $thumbnail = null;
+//        $media = '';
+//        if($r>0 && $product_id){
+//            $data_attr = ['name'=>format_text_cell($row[1]),'parent_id'=>1];
+//            $data_attr['slug'] = check_field_table($row[1], 'slug', 'product_attributes');
+//            if($row[2])$thumbnail = \App\Media::get_media_first([ 'search'=>'/'.format_text_cell($row[2])]);
+//            if($row[3])$media = \App\Media::get_media_first([ 'search'=>'/'.format_text_cell($row[3])]);
+//            $color =  \App\Product::check_attributes($data_attr);
+//            $thumbnail = ($thumbnail)?$thumbnail->id:null;
+//            $media = ($media)?$media->id:'';
+//            $thumbnail_color[$product_id][$color]= $thumbnail;
+//            if($media)$thumbnail_attribute[$product_id][$color][$media]= $media;
 //        }
 //
 //    }
-//    var_dump($body);
+//    foreach($thumbnail_color as $product_id => $json){
+//        var_dump( $product_id );
+//        var_dump( json_encode($json) );
+//        \App\Product::update_meta_product($product_id,'thumbnail_color',json_encode($json));
+//    }
+//    foreach($thumbnail_attribute as $product_id => $json){
+//        \App\Product::update_meta_product($product_id,'thumbnail_attribute',json_encode($json));
+//    }
 
-//
-//    $xlsx = \App\SimpleXLSX::parse( public_path('imports/2021/03/unipro/import_product.xlsx') );
-//    $header = [];
-//    $attr_data = [];
-//    $body = [];
-//    $attribute = [];
-//    foreach ( $xlsx->rows(1) as $r => $row ) {
-//        if($r<1){
-//            $header = $row;
-//            foreach ($row as $stt => $item){
-//                $id = \App\Product::get_product_attributes_bylug($item);
-//                if($id){
-//                    foreach (App\Product::get_product_attributes_detail_man($id,1000)->child as $item_attr){
-//                        $attr_data[$item][$item_attr->data_type] =  ['title'=>$item_attr->name,'value'=>$item_attr->id];
-//                    }
-//                }
-//            }
-//        }
-//        if($r>0){
-//            foreach ($row as $stt => $item){
-//                if($item)$body[$r][ $header[$stt]  ]= $item;
-//            }
-//        }
-//
-//    }
-//    foreach ( $xlsx->rows(2) as $r => $row ) {
-//        if($r>0){
-//            $attribute[$row[0]][]= $row[7];
-//        }
-//
-//    }
-//foreach ($body as $r=>$item){
-//    foreach ($body[$r] as $key_attr => $value){
-//        $id = \App\Product::get_product_attributes_bylug($key_attr);
-//        if($id){
-//            $body[$r]['attributes'][]=$id;
-//            $array_attr = explode(',',$value);
-//            foreach ($array_attr as $attr_item){
-//                if(isset($attr_data[$key_attr][$attr_item])) {
-//                    $body[$r]['all_attributes'][$id]['value'][]=$attr_data[$key_attr][$attr_item];
-//                }
-//
-//            }
-//            $body[$r]['all_attributes'][$id]['display'] = true;
-//
-//        }
-//
-//    }
-//
-//    $body[$r]['product_id'] =   \App\Product::check_product_bysku($body[$r][ 'sku'  ]);
-//    $body[$r]['attributes'] =   \GuzzleHttp\json_encode($body[$r]['attributes'] );
-//    $body[$r]['all_attributes'] =   \GuzzleHttp\json_encode($body[$r]['all_attributes'] );
-//    $body[$r]['length_attr'] = ( isset($attribute[ $body[$r]['sku'] ]) )?$attribute[ $body[$r]['sku'] ]:[];
-//}
-//
-//foreach ($body as $r=>$item){
-//    $product_variant = \App\Product::get_meta_product($body[$r]['product_id'],'product_variations');
-//    $product_variant = ($product_variant)?\GuzzleHttp\json_decode($product_variant):[];
-//    foreach ($product_variant as $stt=> $attr_item){
-//        if(isset($body[$r]['length_attr'][$stt])){
-//            $length_attr =  $body[$r]['length_attr'][$stt];
-//           if(isset($attr_data['length'][$length_attr]['value']) && !array_search($attr_data['length'][$length_attr]['value'],$product_variant[$stt]->select))$product_variant[$stt]->select[]=$attr_data['length'][$length_attr]['value'];
-//        }
-//    }
-//    $body[$r]['product_variations']  = \GuzzleHttp\json_encode($product_variant);
-//    }
-//
-//    foreach ($body as $r=>$item){
-//        var_dump($body[$r]['product_id']);
-//        var_dump($body[$r]['sku']);
-//        var_dump($body[$r]['attributes']);
-//        var_dump($body[$r]['all_attributes']);
-//        var_dump($body[$r]['product_variations']);
-//        \App\Product::update_meta_product($body[$r]['product_id'],'attributes',$body[$r]['attributes']);
-//        \App\Product::update_meta_product($body[$r]['product_id'],'all_attributes',$body[$r]['all_attributes']);
-//        \App\Product::update_meta_product($body[$r]['product_id'],'product_variations',$body[$r]['product_variations']);
-////        \App\Product::delete_meta_product($body[$r]['product_id'],'attribute');
-////        \App\Product::delete_meta_product($body[$r]['product_id'],'all_attribute');
-//    }
-//    // set variants
-//    $header_var = [];
-//    $body_var = [];
-//    foreach ( $xlsx->rows(2) as $r => $row ) {
-//        if($r==0)$header_var = $row;
-//        if(!isset($body_var[$row[0].$row[4]]) && $r > 0 && !file_exists( 'imports/2021/03/unipro/'.format_text_cell($row[3])) ){
-//            $body_var[$row[0].$row[4]]['sku'] =format_text_cell($row[0]);
-//            $body_var[$row[0].$row[4]]['color'] = \App\Product::get_product_attributes_by_datatype(format_text_cell($row[4]),1)->name;
-//            $body_var[$row[0].$row[4]]['featured_image'] = format_text_cell($row[3]);
-//        }else if(!isset($body_var[$row[0].$row[4]]) && $r > 0 && $row[4] && empty($row[3])  ){
-//            $body_var[$row[0].$row[4]]['sku'] =format_text_cell($row[0]);
-//            $body_var[$row[0].$row[4]]['color'] = \App\Product::get_product_attributes_by_datatype(format_text_cell($row[4]),1)->name;
-//            $body_var[$row[0].$row[4]]['featured_image'] = format_text_cell($row[3]);
-//        }else{
-//            $body_var[$row[0].$row[4]]['sku'] =format_text_cell($row[0]);
-//            $body_var[$row[0].$row[4]]['color'] = format_text_cell($row[4]);
-//            $body_var[$row[0].$row[4]]['featured_image'] = format_text_cell($row[3]);
-//            $body_var[$row[0].$row[4]]['status'] = 'OK';
-//        }
-//
-//
-//    }
-//    echo '<table>';
-//    foreach ($body as  $tr){
-//        echo '<tr>
-//<td>'.$tr['sku'].'</td>
-//<td>'.$tr['name'].'</td>
-//<td>'.$tr['featured_image'].'</td>
-//</tr>';
-//    }
-//    echo '</table>';
-//
-//echo '<table>';
-//    foreach ($body_var as $k=> $tr){
-//        if( !isset($tr['status']) ){
-//            echo '<tr>
-//<td>'.$tr['sku'].'</td>
-//<td>'.$tr['color'].'</td>
-//<td>'.$tr['featured_image'].'</td>
-//</tr>';
-//        }
-//
-//    }
-//    echo '</table>';
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
