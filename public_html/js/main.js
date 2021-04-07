@@ -156,13 +156,13 @@ document.querySelectorAll('.item-attribute-list.active').forEach(att=>{
     var i =att.getAttribute('data-id');
     data[k] = v;
     key += '_'+i;
-    attributes+= ' '+k+': '+v+',';
+    attributes+= ' <b>'+k+'</b>: '+v+',';
 })
 var name_plate =  document.querySelector('[data-name-plate]');
 if(name_plate){
-    attributes+= ' Line: '+$name_plate.label+' ,';
+    attributes+= '<br/> <b>Line:</b> '+$name_plate.label+' ,';
     name_plate.querySelectorAll('input.active').forEach(inp=>{
-        if(inp.value)attributes+= ' '+inp.getAttribute('placeholder')+': '+inp.value+' ,';
+        if(inp.value)attributes+= '<br/> <b>'+inp.getAttribute('placeholder')+'</b>: <em>'+inp.value+'</em> ,';
     });
     var plate = name_plate.querySelector('select');
     if(plate)key+='_'+plate.value;

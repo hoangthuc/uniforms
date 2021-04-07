@@ -54,7 +54,7 @@
                                                         <img src="{{ $item['thumbnail'] }}" alt="image">
                                                     </a>
                                                     <h6 class="pl-3"><a class="font-weight-bold" href="{{ $item['link'] }}">{{ $item['title'] }}</a>
-                                                       <div class="mt-3">{{ $item['attributes'] }}</div>
+                                                       <div class="mt-3">{!! $item['attributes'] !!}</div>
                                                     </h6>
                                                 </div>
                                             </div>

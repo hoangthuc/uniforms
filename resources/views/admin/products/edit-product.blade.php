@@ -409,6 +409,7 @@
                 var select_color = document.querySelector('[name="color_name_plate"]');
                 var plate = document.querySelector('[name="number_line"]');
                 var check = document.querySelector('[data_display_name_plate="'+select_color.value+'_'+plate.value+'"]');
+                if(!select_color.value)Swal.fire('Color is required.');
                 if(!check && select_color){
                     var data = {
                         'action': 'get_name_plate_ajax_view',

@@ -888,6 +888,9 @@ color: #7f7f7f;
     cursor: pointer;
     position: relative;
     box-shadow: 0px 0px 2px #0000008c;
+    overflow: hidden;
+    display: inline-block;
+    font-size: 0;
 }
 .order-product .item-attribute .active[attribute-type="0"],
 .order-product .item-attribute-list[attribute-type="0"]:hover{

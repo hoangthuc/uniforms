@@ -4,7 +4,7 @@
     $user = Auth::user();
     $medias = App\Media::get_media();
     $product_status = App\Product::product_status();
-    $product_categories =  App\Product::get_product_categories();
+    $product_categories =  App\Product::get_product_categories_all();
     $product_type = App\Product::product_type();
     $product_attributes =  App\Product::product_attributes();
     ?>
@@ -254,7 +254,7 @@
 
                                 </div>
                                 <!-- Button trigger modal -->
-                                <div type="button" class="btn btn-primary button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="modal" data-target="#MediaModal" data-required="false">
+                                <div type="button" onclick="single_upload_media(this)" class="btn btn-primary button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="modal" data-target="#MediaModal" data-insert="single_image" data-required="false">
                                     Upload image
                                 </div>
                             </div>
@@ -372,6 +372,7 @@
                 var select_color = document.querySelector('[name="color_name_plate"]');
                 var plate = document.querySelector('[name="number_line"]');
                 var check = document.querySelector('[data_display_name_plate="'+select_color.value+'_'+plate.value+'"]');
+                if(!select_color.value)Swal.fire('Color is required.');
                 if(!check && select_color){
                     var data = {
                         'action': 'get_name_plate_ajax_view',

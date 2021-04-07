@@ -426,6 +426,7 @@ var Categories = [];
     $('[name="UploadMedia"]').on('change',function(){
         var id = $(this).attr('data-media');
         var media = $(this)[0].files[0];
+        var insert =  $(this).attr('data-insert');
         var formData = new FormData();
         formData.append('UploadMedia', media);
         formData.append('_token', setting.token);
@@ -453,10 +454,11 @@ var Categories = [];
                             title: 'Upload media successfully.'
                         });
 
-                        if(id == 'button_featured_image'){
-                            setup_media(resulf,'[data-media="'+id+'"]');
-                        }else{
+                        if(insert == 'gallery'){
                             setup_media_gallery(resulf,'[data-gallery="'+id+'"]')
+                        }
+                        else{
+                            setup_media(resulf,'[data-media="'+id+'"]');
                         }
 
                     }

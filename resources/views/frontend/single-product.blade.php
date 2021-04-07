@@ -426,9 +426,16 @@
                 }
             }
         }
-        document.querySelectorAll('.item-attribute-list.active').forEach(el=>{
-            el.click();
-        });
+        document.querySelectorAll('.item-attribute.select_variant').forEach(att=>{
+           var check =  att.querySelector('.item-attribute-list.active');
+           var default_att =  att.querySelector('.item-attribute-list');
+           if(check){
+               check.click();
+           }else{
+               default_att.click();
+           }
+
+        })
 
         $name_plate.render();
     </script>

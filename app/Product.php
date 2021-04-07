@@ -308,6 +308,8 @@ class Product extends Model
             '1'=>'1 Line Engraving',
             '2_even'=>'2 Line Engraving (Even Lines)',
             '2_r_small'=>'2 Line Engraving (Reg./Small)',
+            '3_even'=>'3 Line Engraving (Even Lines)',
+            '3_r_small'=>'3 Line Engraving (Reg./Small)',
         ];
         return $plate;
     }

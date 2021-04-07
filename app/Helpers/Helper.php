@@ -293,7 +293,10 @@ if (! function_exists('check_search_array')) {
 // format currency
 if (! function_exists('format_currency')) {
     function format_currency($input, $decimal=0, $cur=''){
-        if($input < 0 )return $cur.'0';
+        if($input < 0 || !$input ){
+            $input=0;
+            return $cur.$input;
+        }
         $currency = number_format($input, $decimal, '.', ',');
         return $cur.$currency;
     }
@@ -311,11 +314,11 @@ if (! function_exists('display_product_in_order')) {
              $title = (isset($detail_product))?'<a href="'.url('product/'.$detail_product->slug).'" target="_blank">'.$detail_product->name.'</a>':$value->title;
             ?>
                 <tr>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e($value->quantily) ?></td>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e($title) ?></td>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e($value->attributes) ?></td>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e( format_currency( $value->subtotal,2,'$') ) ?></td>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;text-align: center;"><?php _e( format_currency( $value->subtotal * $value->quantily,2,'$') ) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e($value->quantily) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e($title) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e($value->attributes) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e( format_currency( $value->subtotal,2,'$') ) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e( format_currency( $value->subtotal * $value->quantily,2,'$') ) ?></td>
                 </tr>
           <?php  endforeach;
             $resulf['subtotal'] =  $total;

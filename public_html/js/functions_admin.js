@@ -1213,8 +1213,9 @@ function format_currency(money){
 }
 function load_data_money(event){
     let price = $(event).val();
+    if(price < 0)price = 0;
+    $(event).val(price);
     price = format_currency(price);
-    if(price =='$0.00')price='';
     $(event).prev().text(price);
     $Attribute.update();
 }
