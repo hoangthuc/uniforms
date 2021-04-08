@@ -967,8 +967,7 @@ async function change_product_type(event){
     let check  =[];
     document.querySelectorAll('.item-attribute.selected select').forEach(el=>{
     let name = $(el).attr('name');
-    let display =  document.getElementById("display_varition_"+name);
-     data[name] = {value:[],display: display.checked};
+     data[name] = {value:[],display: true};
     $(el).val().forEach( item =>{
         data[name]['value'].push( {title:json[name].value[item],value: item } );
     });
@@ -1214,6 +1213,7 @@ function format_currency(money){
 function load_data_money(event){
     let price = $(event).val();
     if(price < 0)price = 0;
+    if(price > 999999)price = 999999;
     $(event).val(price);
     price = format_currency(price);
     $(event).prev().text(price);

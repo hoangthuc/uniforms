@@ -2,12 +2,11 @@
 @section('content')
     <?php
     $type= (isset($_GET['type']))?$_GET['type']:'';
-    $cat= get_categories_bytype($type);
+    $cat= ($type)?get_categories_bytype($type):[];
     $search = isset($_GET['search'])?$_GET['search']:'';
-    $query = ['sort'=>'sku','product'=>$cat,'product_attribute'=>[],'search'=>$search];
+    $query = ['type'=>$type,'sort'=>'sku','product'=>$cat,'product_attribute'=>[],'search'=>$search];
     $filter_products = getProductFilterPage($query);
     $product_departments = \App\Product::product_departments();
-   /// $filters = get_filter_product( ['type'=>$type,'search'=>$search] );
     ?>
     <section class="products-page">
         <div class="container">

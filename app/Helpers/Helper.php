@@ -902,11 +902,18 @@ if(!function_exists('display_resulf_ajax_search') ){
         ob_start();
         if( count($products) ):
         foreach($products as $item_product):
-       ?>
+            $thumbnail_attribute = \App\Product::get_meta_product($item_product->id,'thumbnail_attribute');
+            if($thumbnail_attribute){
+                $thumbnail_attribute = ($thumbnail_attribute)?(array)\GuzzleHttp\json_decode($thumbnail_attribute):[];
+                $thumbnail_attribute = (array)end($thumbnail_attribute);
+                $thumbnail_attribute = array_shift($thumbnail_attribute);
+            }
+
+            ?>
             <div class="item-product-aj mb-2 border-bottom" data-product="<?= $item_product->id ?>">
                 <div class="d-flex">
                     <div class="thumbnail_product pl-0 pr-0">
-                        <a href="<?= url( 'product/'.$item_product->slug ) ?>"><img src="<?= \App\Media::get_url_media($item_product->featured_image) ?>"></a>
+                        <a href="<?= url( 'product/'.$item_product->slug ) ?>"><img src="<?= ($item_product->featured_image)?\App\Media::get_url_media($item_product->featured_image):\App\Media::get_url_media($thumbnail_attribute); ?>"></a>
                     </div>
                     <div class="title_product pl-2 pr-2">
                         <div class="title font-weight-bold"><a href="<?= url( 'product/'.$item_product->slug ) ?>"><?= $item_product->name ?></a></div>
@@ -1629,7 +1636,7 @@ function show_color_list_product($product_id){
 
     if($thumbnail_color)foreach ($thumbnail_color as $id => $item){
         $data_color =  Product::get_product_attributes_detail_single($id);
-        $img = $item;
+        $img = '';
         if(isset($thumbnail_attribute[$id]) && count(  (array)$thumbnail_attribute[$id] ) )$img = end( $thumbnail_attribute[$id] );
         $color[$id]['img'] = \App\Media::get_url_media($img);
         if($item)$color[$id]['thumbnail'] = \App\Media::get_url_media($item);

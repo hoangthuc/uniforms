@@ -117,10 +117,6 @@
                                             @endforeach
                                         </select>
                                         <span class="um-field-error d-none"></span>
-                                        <div class="form-check mt-2">
-                                            <input class="form-check-input" type="checkbox" value="{{ $attribute_k }}" onclick="change_attribute(this)" id="display_varition_{{ $attribute_k }}" name="display_varition">
-                                            <label class="form-check-label" for="display_varition_{{ $attribute_k }}">Display Product variations</label>
-                                        </div>
                                     </div>
                             @endforeach
                         @endif

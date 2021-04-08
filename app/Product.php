@@ -411,6 +411,7 @@ class Product extends Model
 
     // get all product
     public static function get_filter_products($query=array()){
+        $type_product = isset($query['type'])?$query['type']:'';
         $page = isset($query['page'])?$query['page']:1;
         $search = isset($query['search'])?$query['search']:'';
         $categories = isset($query['product'])?$query['product']:[];

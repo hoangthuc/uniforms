@@ -136,10 +136,6 @@
                                             @endforeach
                                         </select>
                                         <span class="um-field-error d-none"></span>
-                                        <div class="form-check mt-2">
-                                            <input class="form-check-input" type="checkbox" value="{{ $attribute_k }}" onclick="change_attribute(this)" id="display_varition_{{ $attribute_k }}" name="display_varition" {{ check_item_variation_product($product->id,$attribute_k) }}>
-                                            <label class="form-check-label" for="display_varition_{{ $attribute_k }}">Display Product variations</label>
-                                        </div>
                                     </div>
                             @endforeach
                         @endif
@@ -285,7 +281,7 @@
                                 <!-- Button trigger modal -->
                                 <div type="button" onclick="single_upload_media(this)" class="btn {{ (isset($featured_image))?'':'btn-primary' }} button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="{{ (isset($featured_image))?'modal2':'modal' }}" data-target="#MediaModal" data-insert="single_image" data-required=false>
                                     @if( isset($featured_image))
-                                        <div><img src="{{ url( $featured_image->path ) }}"></div>
+                                        <div><img src="{{ url( $featured_image->path ) }}" data-id="{{$product->featured_image}}"></div>
                                         <button class="btn btn-app mt-3" onclick='remove_media(`[data-media="button_featured_image"]`)'><i class="far fa-trash-alt" style="font-size: 20px;"></i> Remove</button>
                                     @else
                                         Upload Image
@@ -389,8 +385,11 @@
                     var img_id = '';
                     if(img)img_id = img.getAttribute('data-id');
                     this.name_plate[key] = {key:key,color:color,plate:line,img: img_id};
-                })
+                });
 
+                // update feature image
+                var button_featured_image = document.querySelector('[data-media="button_featured_image"] img');
+                if(button_featured_image)products['button_featured_image'] = {name:'button_featured_image',label:'Image',required:false, value:button_featured_image.getAttribute('data-id') };
 
             },
             send:function(data,name){
