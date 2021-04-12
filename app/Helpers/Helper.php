@@ -793,11 +793,17 @@ if( !function_exists('DisplayPagition') ){
         if($data['total']>$data['perPage']):
         $list = round($data['total']/$data['perPage'],0);
         echo '<ul class="pagination">';
+         if($data['currentPage']>2){
+                echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product(1);" data-page="'.($data['currentPage']-1).'">First</a></li>';
+         }
         if($data['currentPage']>1){
-            echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']-1).');" data-page="'.($data['currentPage']-1).'">Previous</a></li>';
+            echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']-1).');" data-page="'.($data['currentPage']-1).'"><i class="fas fa-angle-double-left"></i></a></li>';
+        }
+        if($data['currentPage']>3){
+            echo '<li class="page-item"><span class="page-link">...</span></li>';
         }
         if($data['currentPage']>2){
-            echo '<li class="page-item"><span class="page-link">...</span></li>';
+                echo '<li class="page-item d-none d-md-block"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']-2).');" data-page="'.($data['currentPage']-2).'">'.($data['currentPage']-2).'</a></li>';
         }
         if($data['currentPage']>1){
             echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']-1).');" data-page="'.($data['currentPage']-1).'">'.($data['currentPage']-1).'</a></li>';
@@ -806,11 +812,17 @@ if( !function_exists('DisplayPagition') ){
         if($data['currentPage']< $list){
             echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']+1).');" data-page="'.($data['currentPage']+1).'">'.($data['currentPage']+1).'</a></li>';
         }
-        if($data['currentPage']< ($list-1) ){
+            if($data['currentPage']< ($list-1) ){
+                echo '<li class="page-item d-none d-md-block"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']+2).');" data-page="'.($data['currentPage']+2).'">'.($data['currentPage']+2).'</a></li>';
+            }
+        if($data['currentPage']< ($list-2) ){
             echo '<li class="page-item"><span class="page-link">...</span></li>';
         }
         if($data['currentPage']*$data['perPage'] < $data['total'] ){
-            echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']+1).');" data-page="'.($data['currentPage']+1).'">Next</a></li>';
+            echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product('.($data['currentPage']+1).');" data-page="'.($data['currentPage']+1).'"><i class="fas fa-angle-double-right"></i></a></li>';
+        }
+        if($data['currentPage']*$data['perPage'] < $data['total'] ){
+                echo '<li class="page-item"><a class="page-link" href="javascript:start_filter_product('.($list).');" data-page="'.($data['currentPage']+1).'">Last</a></li>';
         }
         echo '</ul>';
         endif;
@@ -851,8 +863,8 @@ if( !function_exists('getProductRelation') ){
         $relation_products = [];
         if($products){
             foreach ($products as $item){
-
-                $relation_products[] = [
+                $colors = show_color_list_product($item->id);
+                $product =  [
                     'sku'=> App\Product::get_meta_product($item->id,'sku'),
                     'title'=> $item->name,
                     'category'=> display_category_product($item->id),
@@ -860,6 +872,9 @@ if( !function_exists('getProductRelation') ){
                     'image'=>get_url_media($item->featured_image),
                     'url'=> url('product/'.$item->slug),
                 ];
+                $default = end($colors);
+                if( isset($default['img']) )$product['image'] =  $default['img'];
+                $relation_products[] = $product;
             }
         }
         return $relation_products;
@@ -1633,8 +1648,8 @@ function show_color_list_product($product_id){
         }
     }
 
-
     if($thumbnail_color)foreach ($thumbnail_color as $id => $item){
+        if(!$default_color)$default_color = $id;
         $data_color =  Product::get_product_attributes_detail_single($id);
         $img = '';
         if(isset($thumbnail_attribute[$id]) && count(  (array)$thumbnail_attribute[$id] ) )$img = end( $thumbnail_attribute[$id] );

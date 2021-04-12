@@ -300,6 +300,11 @@
                 }
             },
             update: function (){
+                this.price_attr = {};
+                this.default_attr = {};
+                this.thumbnail_attr = {};
+                this.thumbnail_color = {};
+                this.name_plate = {};
                 document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
                     this.price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
                 });
@@ -323,7 +328,6 @@
                         this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = '';
                     }
                 });
-                this.default_attr = {};
                 document.querySelectorAll('.active[data-check-default]').forEach(d_attr=>{
                     this.default_attr[d_attr.getAttribute('data-select')] = {id:d_attr.getAttribute('data-select'),value:d_attr.getAttribute('data-value'),title:d_attr.getAttribute('data-title')};
                 });

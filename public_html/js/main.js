@@ -495,7 +495,7 @@ async function select_attribute(event){
      price += Number( el.getAttribute('data-price') );
     });
 $('.price_amount .price').text( format_currency(price) );
-$('#form-add-cart [name="subtotal"]').val(price)
+$('#form-add-cart [name="subtotal"]').val(price);
  if(get_img){
      /// set image by color product
      get_img.click();

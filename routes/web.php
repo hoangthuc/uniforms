@@ -282,9 +282,7 @@ Route::get('/products', function(){
 })->name('shops');
 
 // Story detail
-Route::get('/product/{slug}', function($slug){
-    return view('frontend.single-product',['slug'=>$slug]);
-});
+Route::get('/product/{slug}',['uses'=> 'ControllerProduct@single_product']);
 
 // Categories detail
 Route::get('/product_categories/{slug}', function($slug){

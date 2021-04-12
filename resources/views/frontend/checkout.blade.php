@@ -62,7 +62,7 @@
                                             <input type="email" id="billing_email" name="email" value="{{ ($user_data)?$user_data->email:'' }}" placeholder="Email Address" class="form-control common-input">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="text" id="billing_phone" name="phone"  value="{{ get_user_meta($user_id,'phone') }}" placeholder="Phone Number" class="form-control common-input">
+                                            <input type="number" id="billing_phone" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"  value="{{ get_user_meta($user_id,'phone') }}" placeholder="Phone Number" class="form-control common-input">
                                         </div>
                                     </div>
                                     <h3 class="billing-title mt-5 mb-2"><i class="fa fa-truck fa-right-5"></i> Shipping Details</h3>
@@ -93,7 +93,7 @@
                                             <input type="email" id="shipping_email" name="shipping_email" placeholder="Email Address" class="form-control common-input">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="text" id="shipping_phone" name="shipping_phone" placeholder="Phone Number" class="form-control common-input">
+                                            <input type="number" id="shipping_phone" name="shipping_phone" placeholder="Phone Number" class="form-control common-input">
                                         </div>
                                     </div>
                                     <h3 class="billing-title mt-5 mb-2"><i class="far fa-file-alt"></i> Special Comments</h3>

@@ -331,6 +331,10 @@ div[DataCurrency]{
     width: 100%;
     color: transparent;
     background-color: transparent;
+    opacity: 0;
+}
+.DataCurrencyGet:focus{
+    opacity: 1;
 }
 #display_categories .badge.color{
     box-shadow: 0px 0px 5px #00000066;

@@ -226,6 +226,59 @@ class ControllerProduct extends Controller
         echo \GuzzleHttp\json_encode($resulf);
     }
 
+    public function single_product($slug){
+        $cart = session()->get('cart');
+        $product = Product::get_product_bySlug($slug);
+        // check product if fail
+        if (isset($product)) {
+            if($product->status == 1){
+               return redirect()->route('shops');
+            }
+
+            if ($product->featured_image) {
+                $featured_image = get_url_media($product->featured_image);
+            }
+            $category = Relationships::get_relationships($product->id, 'product_category');
+            $price = Product::get_meta_product($product->id, 'price');
+            $shipping = Product::get_meta_product($product->id, 'shipping');
+            $sku = Product::get_meta_product($product->id, 'sku');
+
+            $thumbnail_color = Product::get_meta_product($product->id, 'thumbnail_color');
+            $thumbnail_color = ($thumbnail_color)?(array)json_decode($thumbnail_color):[];
+
+            $price_attribute = Product::get_meta_product($product->id, 'price_attribute');
+            $price_attribute = ($price_attribute)?(array)json_decode($price_attribute):[];
+
+            $default_attribute = Product::get_meta_product($product->id, 'default_attribute');
+            $default_attribute = ($default_attribute)?(array)json_decode($default_attribute):[];
+
+            $attributes = DisplayAttributeProductSimple($product->id);
+            $relation_product = ($category) ? getProductRelation($product->id, $category->id) : [];
+            $variantions = get_product_variantions($product->id);
+            $reviews = get_rating_analytic($product->id);
+            $list_reviews = ['html_reviews'=>'','html_pagition'=>''];
+            $query = ['type'=>'product','status'=>2,'object_id'=>$product->id,'rating'=>[]];
+            $get_reviews = \App\Reviews::get_reviews($query);
+            $pagition = [
+                'total'=> $get_reviews->total(),
+                'perPage'=> $get_reviews->perPage(),
+                'currentPage'=> $get_reviews->currentPage(),
+            ];
+            if(isset($get_reviews))foreach ($get_reviews as $item_review){
+                $list_reviews['html_reviews'] .= display_item_review($item_review);
+            }
+            $list_reviews['html_pagition'] = DisplayPagitionReview($pagition);
+            $id_color = \App\Product::get_product_attributes_bylug('color');
+
+            $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
+            $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
+            return view('frontend.single-product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color'));
+        }else{
+            return redirect()->route('shops');
+        }
+
+    }
+
 
 
 

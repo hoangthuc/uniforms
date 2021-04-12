@@ -336,6 +336,11 @@
                 }
             },
             update: function (){
+                this.price_attr = {};
+                this.default_attr = {};
+                this.thumbnail_attr = {};
+                this.thumbnail_color = {};
+                this.name_plate = {};
                 document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
                     this.price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
                 });
@@ -376,7 +381,6 @@
                         select_color.appendChild(option);
                     }
                 }
-                this.name_plate = {};
                 document.querySelectorAll('[display_name_plate_render_control] [data_display_name_plate]').forEach(nl=>{
                     var key = nl.getAttribute('data_display_name_plate');
                     var color = nl.getAttribute('data-color');

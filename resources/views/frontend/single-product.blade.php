@@ -1,50 +1,6 @@
 @extends('layouts.layout_main')
 @section('content')
-    <?php
-    $cart = Request::session()->get('cart');
-    $product = App\Product::get_product_bySlug($slug);
-    // check product if fail
-    if (isset($product)) {
-        if ($product->featured_image) {
-            $featured_image = get_url_media($product->featured_image);
-        }
-        $category = App\Relationships::get_relationships($product->id, 'product_category');
-        $price = App\Product::get_meta_product($product->id, 'price');
-        $shipping = App\Product::get_meta_product($product->id, 'shipping');
-        $sku = App\Product::get_meta_product($product->id, 'sku');
 
-        $thumbnail_color = App\Product::get_meta_product($product->id, 'thumbnail_color');
-        $thumbnail_color = ($thumbnail_color)?(array)json_decode($thumbnail_color):[];
-
-        $price_attribute = App\Product::get_meta_product($product->id, 'price_attribute');
-        $price_attribute = ($price_attribute)?(array)json_decode($price_attribute):[];
-
-        $default_attribute = App\Product::get_meta_product($product->id, 'default_attribute');
-        $default_attribute = ($default_attribute)?(array)json_decode($default_attribute):[];
-
-        $attributes = DisplayAttributeProductSimple($product->id);
-        $relation_product = ($category) ? getProductRelation($product->id, $category->id) : [];
-        $variantions = get_product_variantions($product->id);
-        $reviews = get_rating_analytic($product->id);
-        $list_reviews = ['html_reviews'=>'','html_pagition'=>''];
-        $query = ['type'=>'product','status'=>2,'object_id'=>$product->id,'rating'=>[]];
-        $get_reviews = \App\Reviews::get_reviews($query);
-        $pagition = [
-            'total'=> $get_reviews->total(),
-            'perPage'=> $get_reviews->perPage(),
-            'currentPage'=> $get_reviews->currentPage(),
-        ];
-        if(isset($get_reviews))foreach ($get_reviews as $item_review){
-            $list_reviews['html_reviews'] .= display_item_review($item_review);
-        }
-        $list_reviews['html_pagition'] = DisplayPagitionReview($pagition);
-        $id_color = \App\Product::get_product_attributes_bylug('color');
-
-        $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
-        $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
-    }
-
-    ?>
     @if(isset($product))
         <section class="single-product-page pt-3 pb-5" data-id="{{ $product->id }}">
             <div class="container">
@@ -67,8 +23,10 @@
                             @foreach($variantions['thumbnail_attribute'] as $color_id => $list_thumbnail)
                                 @if($list_thumbnail)
                                     @foreach($list_thumbnail as $thumbnail)
-                                        <div class="slide" data-fiter-color="{{ $product->id.'_'.$color_id }}">
-                                            <a class="mb-2"><img onclick="javascript:selectImageThumbnail(this);"
+                                        <div class="slide" data-fiter-color="{{ $product->id.'_'.$color_id }}" onclick="javascript:selectImageThumbnail(this);"
+                                             data-color="{{ $product->id.'_'.$color_id }}"
+                                             src="{{ get_url_media($thumbnail) }}">
+                                            <a class="mb-2"><img
                                                                  data-color="{{ $product->id.'_'.$color_id }}"
                                                                  src="{{ get_url_media($thumbnail) }}"/></a>
                                         </div>
@@ -141,7 +99,7 @@
                             <div class="select_variant attributes pt-1 border-top">
                                 @if( isset($attributes) )
                                     @foreach($attributes as $item_attribute)
-                                        <div class="item-attribute {{ $item_attribute['select_variant'] =='true'?'select_variant':'' }}" Attribute-P{{ $item_attribute['id'] }}>
+                                        <div class="item-attribute select_variant" Attribute-P{{ $item_attribute['id'] }}>
                                             <label>{{ $item_attribute['name'] }}</label> <span class="ml-1">({{ $item_attribute['display'] }})</span>
                                             <div class="list">
                                               @if(isset($item_attribute['list']))  @foreach ($item_attribute['list'] as $key=> $attribute)
@@ -405,21 +363,24 @@
                     if(plate){
                         var plate_v = '';
                         var l_display = 0;
+                        var check_selected = true;
                         var options = document.querySelectorAll('[data-name-plate] [data-name="name_plate"] option');
                         options.forEach(nl=>{
                             var color_n = nl.getAttribute('data-color');
+                            l_display++;
                             if(color_n == color_id){
                                 nl.removeAttribute('disabled');
                                 nl.classList.remove('d-none');
                                 plate_v = nl.getAttribute('value');
-                                l_display++;
+                                if(check_selected){
+                                    plate.selectedIndex  = l_display-1;
+                                    check_selected = false;
+                                }
                             }else{
                                 nl.setAttribute('disabled','');
                                 nl.classList.add('d-none');
                             }
                         });
-                        console.log(plate_v);
-                        plate.selectedIndex  = l_display-1;
                         $name_plate.render();
                     }
 
