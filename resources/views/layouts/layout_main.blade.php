@@ -249,7 +249,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
                     <h4>Customer service</h4>
                     <ul class="service">
                         @foreach( display_menu_data('footer-1') as $item )
-                            <li><a class="{{ $item->title }}" href="{{ $item->href }}">{{ $item->text }}</a></li>
+                            <li><a class="{{ $item->title }}" {{ ($item->href)?"href=".$item->href:'' }}>{{ $item->text }}</a></li>
                         @endforeach
                     </ul>
                 </div>

@@ -46,6 +46,17 @@
                                 @endif
                             @endforeach
                         @endif
+
+                            @if(!isset($variantions['thumbnail_attribute']) && $galleries)
+                                @foreach($galleries as $img_color)
+                                        <div class="slide"  data-fiter-color="{{ $product->id.'_'.$img_color}}">
+                                            <a class="mb-2"><img onclick="javascript:selectImageThumbnail(this);" data_key_name_plate="{{$img_color}}"
+                                                                 data-color="{{ $product->id.'_'.$img_color }}"
+                                                                 src="{{ get_url_media($img_color) }}"/></a>
+                                        </div>
+                                @endforeach
+                            @endif
+
                     </div>
                 <!--End Data show price-->
                     <div class="{{ isset($variantions)?'col-md-6':'col-md-8' }}" id="display-images">
@@ -102,7 +113,8 @@
                                         <div class="item-attribute select_variant" Attribute-P{{ $item_attribute['id'] }}>
                                             <label>{{ $item_attribute['name'] }}</label> <span class="ml-1">({{ $item_attribute['display'] }})</span>
                                             <div class="list">
-                                              @if(isset($item_attribute['list']))  @foreach ($item_attribute['list'] as $key=> $attribute)
+                                              @if(isset($item_attribute['list']))
+                                                    @foreach ($item_attribute['list'] as $key=> $attribute)
                                                     <div class="item-attribute-list d-inline-block {{ ( isset($default_attribute[$attribute->id]) )  ?'active':'' }} mb-1"
                                                          Attribute-Type="{{ $item_attribute['type'] }}"
                                                          data-name-parent="{{ $item_attribute['name'] }}"
@@ -381,7 +393,13 @@
                                 nl.classList.add('d-none');
                             }
                         });
-                        $name_plate.render();
+                        if(!check_selected ){
+                            $name_plate.render();
+                            document.querySelector('[data-name-plate]').classList.remove('d-none');
+                        }else{
+                            document.querySelector('[data-name-plate]').classList.add('d-none');
+                        }
+
                     }
 
                 }

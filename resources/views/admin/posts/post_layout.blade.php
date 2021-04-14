@@ -118,7 +118,18 @@
             {
                 placeholder: 'Post content...',
                 tabsize: 2,
-                height: 300
+                height: 300,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['height', ['height']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                ]
             }
         );
         // show manage media to updaload

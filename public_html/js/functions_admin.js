@@ -253,7 +253,7 @@ async function save_product(){
             jQuery.ajax({
                 url: products['action']['value'],
                 type: 'post',
-                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute(),price_attribute:$Attribute.price_attr,default_attribute:$Attribute.default_attr,thumbnail_attribute:$Attribute.thumbnail_attr, thumbnail_color:$Attribute.thumbnail_color, name_plate:$Attribute.name_plate},
+                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute(),price_attribute:$Attribute.price_attr,default_attribute:$Attribute.default_attr,thumbnail_attribute:$Attribute.thumbnail_attr, thumbnail_color:$Attribute.thumbnail_color, name_plate:$Attribute.name_plate,gallery:$Attribute.gallery},
                 success: function(resulf){
                     if(resulf){
                         jQuery('#button-save-product span').addClass('d-none');
@@ -1213,7 +1213,7 @@ function format_currency(money){
 function load_data_money(event){
     let price = $(event).val();
     if(price < 0)price = 0;
-    if(price > 999999)price = 999999;
+    if(price > 999999)price = 999999.99;
     $(event).val(price);
     price = format_currency(price);
     $(event).prev().text(price);
@@ -1729,7 +1729,7 @@ async function setup_media_gallery(data,id){
 // remove media gallery button
 function remove_media_gallery(color_id,img_id,name){
     var media = document.querySelector('.item_'+name+img_id);
-    delete $Attribute.thumbnail_attr[color_id][img_id];
+    if(color_id)delete $Attribute.thumbnail_attr[color_id][img_id];
     media.remove();
     console.log($Attribute.thumbnail_attr);
 }

@@ -652,3 +652,15 @@ td.category_product a:hover{
     cursor: pointer;
     color: #007bff;
 }
+#show-images-gallery .add_gallery_media{
+    width: 100%;
+    text-align: center;
+    padding: 10px 0px;
+}
+[data-gallery="button_gallery_product_main"] .item-gallery{
+    margin-bottom: 20px;
+    max-width: 45%;
+}
+[data-gallery="button_gallery_product_main"] [Data_Thumbnail_Product]{
+    margin: 0px 5px;
+}

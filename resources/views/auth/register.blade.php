@@ -56,7 +56,6 @@
                                                     <div class="form-group">
                                                         <label>State</label>
                                                         <select  name="state" class="form-control"  data-title="State" data-required="false">
-                                                            <option value="0">-- Select --</option>
                                                             <option value="AL">Alabama</option>
                                                             <option value="AK">Alaska</option>
                                                             <option value="AZ">Arizona</option>

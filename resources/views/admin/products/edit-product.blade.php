@@ -5,9 +5,8 @@
     $medias = App\Media::get_media();
     $product = App\Product::get_product($product_id??'');
     $product_status = App\Product::product_status();
-    if($product->featured_image){
-        $featured_image = App\Media::get_media_detail($product->featured_image);
-    }
+
+    $featured_image = isset($product->featured_image)? App\Media::get_media_detail($product->featured_image):'';
     $product_categories =  App\Product::get_product_categories_all();
     $category = App\Relationships::get_relationships($product_id,'product_category_');
     $product_type = App\Product::product_type();
@@ -24,6 +23,10 @@
 
     $display_data_attribute = \App\Product::get_meta_product($product->id,'all_attributes');
     $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
+
+    $galleries = \App\Product::get_meta_product($product->id,'gallery');
+    $galleries= ($galleries)?(array)\GuzzleHttp\json_decode($galleries):[];
+
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -139,7 +142,7 @@
                                     </div>
                             @endforeach
                         @endif
-                            <div class="form-group item-attribute item-attibute-99 row">
+                            <div class="form-group item-attributes item-attibute-99 row">
                                 <label class="col-md-2" style="min-width: 110px;">Name plate</label>
                                 <div class="col-md-3">
                                     <select class="form-control" name="color_name_plate" style="min-width: 110px;" data_color_name_plate>
@@ -280,7 +283,7 @@
                                 </div>
                                 <!-- Button trigger modal -->
                                 <div type="button" onclick="single_upload_media(this)" class="btn {{ (isset($featured_image))?'':'btn-primary' }} button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="{{ (isset($featured_image))?'modal2':'modal' }}" data-target="#MediaModal" data-insert="single_image" data-required=false>
-                                    @if( isset($featured_image))
+                                    @if( $featured_image)
                                         <div><img src="{{ url( $featured_image->path ) }}" data-id="{{$product->featured_image}}"></div>
                                         <button class="btn btn-app mt-3" onclick='remove_media(`[data-media="button_featured_image"]`)'><i class="far fa-trash-alt" style="font-size: 20px;"></i> Remove</button>
                                     @else
@@ -293,6 +296,42 @@
                         <!-- form start -->
 
                     </div>
+
+                    <!-- Gallery -->
+                    <div class="card card-primary">
+                        <!-- /.card-header -->
+                        <div class="card-header">
+                            <h3 class="card-title">Gallery</h3>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-body">
+                            <div id="show-images-gallery" class="form-group">
+                                <div class="d-inline-block mb-3" data-gallery="button_gallery_product_main">
+                                    @if( isset($galleries) )
+                                        @foreach($galleries as $image)
+                                            <div class="d-inline-block item-gallery item_button_gallery_product_main{{ $image }}">
+                                                <img src="{{ \App\Media::get_url_media($image) }}" data-attribute-id="{{ $image }}" data-id="{{ $image }}" data_thumbnail_product>
+                                                <button class="btn-item-gallery"
+                                                        onclick="remove_media_gallery( '','{{ $image }}','button_gallery_product_main')">
+                                                    <i class="far fa-trash-alt" style="font-size: 20px;"></i>
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    @endif
+
+                                </div>
+                                <div type="button" class="d-inline-block add_gallery_media" onclick="add_gallery_media(this)"
+                                     data-media="button_gallery_product_main" data-ftype="image" data-type="image/*"
+                                     data-toggle="modal" data-target="#MediaModal" data-required="false" data-insert="gallery">
+                                    Add image
+                                </div>
+                        </div>
+                        <!-- form start -->
+
+                        </div>
+                    </div>
+
+                    <!-- End Gallery -->
 
                 </div>
             </div>
@@ -310,6 +349,7 @@
             default_attr:{},
             thumbnail_attr:{},
             thumbnail_color:{},
+            gallery:{},
             name_plate:{!! ($name_plates)?$name_plates:'{}' !!},
             setup: function(dom){
                 dom.innerHTML = '';
@@ -326,6 +366,7 @@
                         data.innerHTML = response;
                         dom.appendChild(data);
                         $Attribute.update();
+                        $('[data-toggle-show="tooltip"]').tooltip();
                     });
                 }
             },
@@ -341,11 +382,12 @@
                 this.thumbnail_attr = {};
                 this.thumbnail_color = {};
                 this.name_plate = {};
+                this.gallery = {};
                 document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
                     this.price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
                 });
 // full image
-                document.querySelectorAll('[data_thumbnail_product]').forEach(t_attr=>{
+                document.querySelectorAll('[display-attribute-product] [data_thumbnail_product]').forEach(t_attr=>{
                     if(this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ]){
                         this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ][t_attr.getAttribute('data-id')] = t_attr.getAttribute('data-id');
                     }else{
@@ -356,7 +398,7 @@
 
                 });
                 // thumbnail color
-                document.querySelectorAll('[data_thumbnail_color_min]').forEach(t_attr=>{
+                document.querySelectorAll('[display-attribute-product] [data_thumbnail_color_min]').forEach(t_attr=>{
                     let thumbnail =  t_attr.querySelector('img');
                     if(thumbnail){
                         this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = thumbnail.getAttribute('data-id');
@@ -394,6 +436,12 @@
                 // update feature image
                 var button_featured_image = document.querySelector('[data-media="button_featured_image"] img');
                 if(button_featured_image)products['button_featured_image'] = {name:'button_featured_image',label:'Image',required:false, value:button_featured_image.getAttribute('data-id') };
+
+                // Gallery
+                document.querySelectorAll('#show-images-gallery [data_thumbnail_product]').forEach(t_attr=>{
+                    this.gallery[ t_attr.getAttribute('data-id') ] = t_attr.getAttribute('data-id');
+                });
+
 
             },
             send:function(data,name){

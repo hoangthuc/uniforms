@@ -132,8 +132,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>State</label>
-                                                <select id="state" name="state" class="form-control" data-type="meta">
-                                                    <option value="0">-- Select --</option>
+                                                <select id="state" name="state" class="form-control" data-type="meta" placeholder="-- Select --">
                                                     <option value="AL">Alabama</option>
                                                     <option value="AK">Alaska</option>
                                                     <option value="AZ">Arizona</option>

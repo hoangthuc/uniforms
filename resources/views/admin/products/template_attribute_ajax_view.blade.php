@@ -8,7 +8,7 @@
                     <div data-check-default="{{ $detail_attribute->id }}"
                          class="{{ isset($default_attribute[$attr['value']])?'active':'none' }}"
                          onclick="add_product_varition_default(this)" data-select="{{ $attr['value'] }}"
-                         data-title="{{ $detail_attribute->name }}" data-value="{{ $attr['title'] }}">
+                         data-title="{{ $detail_attribute->name }}" data-value="{{ $attr['title'] }}" data-toggle-show="tooltip" data-placement="top" data-original-title="Set default">
                         <i class="fas fa-star"></i>
                         <i class="far fa-star"></i>
                     </div>
@@ -41,7 +41,7 @@
                                      data-media="varition_featured_image_thumbnail_{{ $attr['value'] }}"
                                      data-ftype="image"
                                      data-type="image/*" data-toggle="modal" data-target="#MediaModal"
-                                     data-required="false" onclick="loading_medias(this)" Data_Thumbnail_Color_Min><i
+                                     data-required="false" onclick="loading_medias(this)" Data_Thumbnail_Color_Min  data-toggle-show="tooltip" data-placement="top" data-original-title="Thumbnail color"><i
                                             class="fas fa-image" style="font-size: 20px;"></i>
                                 </div>
                             @endif

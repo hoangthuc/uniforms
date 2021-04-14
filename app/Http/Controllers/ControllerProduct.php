@@ -94,8 +94,7 @@ class ControllerProduct extends Controller
                 unset($data['product_category']);
             }
             $price = (isset($data['price'])) ? $data['price'] : null;
-            $sku = (isset($data['price'])) ? $data['sku'] : null;
-            $gallery = (isset($data['button_gallery'])) ? \GuzzleHttp\json_encode($data['button_gallery']) : null;
+            $sku = (isset($data['sku'])) ? $data['sku'] : null;
             $additional_information = (isset($data['additional_information'])) ? \GuzzleHttp\json_encode($data['additional_information']) : null;
             unset($data['action']);
             unset($data['files']);
@@ -117,7 +116,6 @@ class ControllerProduct extends Controller
 
             if ($price) Product::update_meta_product($product_id, 'price', $price);
             if ($sku) Product::update_meta_product($product_id, 'sku', $sku);
-            if ($gallery) Product::update_meta_product($product_id, 'gallery', $gallery);
             if ($additional_information) Product::update_meta_product($product_id, 'additional_information', $additional_information);
 
             // save attributes
@@ -142,6 +140,7 @@ class ControllerProduct extends Controller
                 Product::update_meta_product($product_id, 'thumbnail_color', \GuzzleHttp\json_encode($request['thumbnail_color']));
                 Product::update_meta_product($product_id, 'thumbnail_attribute', \GuzzleHttp\json_encode($request['thumbnail_attribute']));
                 if($request['name_plate'])Product::update_meta_product($product_id, 'name_plate', \GuzzleHttp\json_encode($request['name_plate']));
+                if($request['gallery'])Product::update_meta_product($product_id, 'gallery', \GuzzleHttp\json_encode($request['gallery']));
             }
             // end save attributes
 
@@ -163,8 +162,7 @@ class ControllerProduct extends Controller
             //apply for new product
             $data['updated_at'] = date('Y-m-d H:i:s');
             $data['featured_image'] = (isset($data['button_featured_image'])) ? $data['button_featured_image'] : null;
-            $gallery = (isset($data['button_gallery'])) ? \GuzzleHttp\json_encode($data['button_gallery']) : null;
-            $price = (isset($data['price'])) ? $data['price'] : null;
+            $price = (isset($data['price'])) ? $data['price'] : 0;
             $sku = (isset($data['sku'])) ? $data['sku'] : null;
             $additional_information = (isset($data['additional_information'])) ? \GuzzleHttp\json_encode($data['additional_information']) : null;
             unset($data['action']);
@@ -186,9 +184,8 @@ class ControllerProduct extends Controller
                 unset($data['product_category']);
             }
             // save attribute
-            if ($price) Product::update_meta_product($data['id'], 'price', $price);
+            Product::update_meta_product($data['id'], 'price', $price);
             if ($sku) Product::update_meta_product($data['id'], 'sku', $sku);
-            if ($gallery) Product::update_meta_product($data['id'], 'gallery', $gallery);
             if ($additional_information) Product::update_meta_product($data['id'], 'additional_information', $additional_information);
 
             DB::table('products')->where('id', $data['id'])->update($data);
@@ -217,6 +214,7 @@ class ControllerProduct extends Controller
                 Product::update_meta_product($product_id, 'thumbnail_color', \GuzzleHttp\json_encode($request['thumbnail_color']));
                 Product::update_meta_product($product_id, 'thumbnail_attribute', \GuzzleHttp\json_encode($request['thumbnail_attribute']));
                 if($request['name_plate'])Product::update_meta_product($product_id, 'name_plate', \GuzzleHttp\json_encode($request['name_plate']));
+                if($request['gallery'])Product::update_meta_product($product_id, 'gallery', \GuzzleHttp\json_encode($request['gallery']));
             }
             // end save attributes
 
@@ -272,7 +270,11 @@ class ControllerProduct extends Controller
 
             $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
             $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
-            return view('frontend.single-product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color'));
+
+            $galleries = \App\Product::get_meta_product($product->id,'gallery');
+            $galleries= ($galleries)?(array)\GuzzleHttp\json_decode($galleries):[];
+
+            return view('frontend.single-product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color','galleries'));
         }else{
             return redirect()->route('shops');
         }

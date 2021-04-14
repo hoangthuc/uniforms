@@ -113,7 +113,7 @@
 
                                 <div class="row mt-5">
                                     <!-- /.col -->
-                                    <div class="col-6 text-left">
+                                    <div class="col-md-6 text-left">
                                         <p class="lead"><b>Order total</b></p>
 
                                         <div class="table-responsive">

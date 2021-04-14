@@ -295,7 +295,6 @@ if (! function_exists('format_currency')) {
     function format_currency($input, $decimal=0, $cur=''){
         if($input < 0 || !$input ){
             $input=0;
-            return $cur.$input;
         }
         $currency = number_format($input, $decimal, '.', ',');
         return $cur.$currency;
@@ -847,10 +846,12 @@ if( !function_exists('DisplayAttributeProductSimple') )    {
                     foreach($item->value as $item_child){
                         $child[] = App\Product::get_product_attributes_detail($item_child->value);
                     }
+                    array_multisort(array_column($child, 'name'), SORT_ASC, $child);
                     $data[] = ['name'=>$attributes->name,'id'=>$attributes->id,'select_variant'=>$item->display,'list'=>$child, 'display'=>$item->value[0]->title, 'type'=>$attribute_type[$attributes->type]['type'] ];
                 }
 
             }
+
         }
         return $data;
     }

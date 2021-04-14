@@ -259,6 +259,31 @@
 
                     </div>
 
+
+                    <!-- Gallery -->
+                    <div class="card card-primary">
+                        <!-- /.card-header -->
+                        <div class="card-header">
+                            <h3 class="card-title">Gallery</h3>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-body">
+                            <div id="show-images-gallery" class="form-group">
+                                <div class="d-inline-block mb-3" data-gallery="button_gallery_product_main">
+                                </div>
+                                <div type="button" class="d-inline-block add_gallery_media" onclick="add_gallery_media(this)"
+                                     data-media="button_gallery_product_main" data-ftype="image" data-type="image/*"
+                                     data-toggle="modal" data-target="#MediaModal" data-required="false" data-insert="gallery">
+                                    Add image
+                                </div>
+                            </div>
+                            <!-- form start -->
+
+                        </div>
+                    </div>
+
+                    <!-- End Gallery -->
+
                     <!-- /.card -->
                 </div>
             </div>
@@ -276,6 +301,7 @@
             thumbnail_attr:{},
             thumbnail_color:{},
             name_plate:{},
+            gallery:{},
             setup: function(dom){
                 dom.innerHTML = '';
                 for(item in this.data){
@@ -290,6 +316,7 @@
                         data.innerHTML = response;
                         dom.appendChild(data);
                         $Attribute.update();
+                        $('[data-toggle-show="tooltip"]').tooltip();
                     });
                 }
             },
@@ -305,11 +332,12 @@
                 this.thumbnail_attr = {};
                 this.thumbnail_color = {};
                 this.name_plate = {};
+                this.gallery = {};
                 document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
                     this.price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
                 });
 // full image
-                document.querySelectorAll('[data_thumbnail_product]').forEach(t_attr=>{
+                document.querySelectorAll('[display-attribute-product] [data_thumbnail_product]').forEach(t_attr=>{
                     if(this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ]){
                         this.thumbnail_attr[ t_attr.getAttribute('data-attribute-id') ][t_attr.getAttribute('data-id')] = t_attr.getAttribute('data-id');
                     }else{
@@ -320,7 +348,7 @@
 
                 });
                 // thumbnail color
-                document.querySelectorAll('[data_thumbnail_color_min]').forEach(t_attr=>{
+                document.querySelectorAll('[display-attribute-product] [data_thumbnail_color_min]').forEach(t_attr=>{
                     let thumbnail =  t_attr.querySelector('img');
                     if(thumbnail){
                         this.thumbnail_color[ t_attr.getAttribute('data-attribute-id') ] = thumbnail.getAttribute('data-id');
@@ -353,6 +381,11 @@
                     var img_id = '';
                     if(img)img_id = img.getAttribute('data-id');
                     this.name_plate[key] = {key:key,color:color,plate:line,img: img_id};
+                });
+
+                // Gallery
+                document.querySelectorAll('#show-images-gallery [data_thumbnail_product]').forEach(t_attr=>{
+                    this.gallery[ t_attr.getAttribute('data-id') ] = t_attr.getAttribute('data-id');
                 });
 
             },

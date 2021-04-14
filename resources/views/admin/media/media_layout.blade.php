@@ -359,7 +359,14 @@
 
         // display date create
         var type_dc = document.createElement('p');
-        type_dc.innerText = 'Create: '+ data.created_at;
+        let today = new Date(data.created_at);
+        let dd = today.getDate();
+        let mm = today.getMonth()+1;
+        const yyyy = today.getFullYear();
+        if(dd<10)dd=`0${dd}`;
+        if(mm<10)mm=`0${mm}`;
+        today = `${mm}/${dd}/${yyyy}`;
+        type_dc.innerText = 'Create: '+ today;
         media_info.appendChild(type_dc);
 
         //display data size media
