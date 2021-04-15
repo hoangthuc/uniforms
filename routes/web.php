@@ -289,6 +289,9 @@ Route::get('/product_categories/{slug}', function($slug){
     return view('frontend.product_categories',['slug'=>$slug]);
 });
 
+// Get quick view in list product
+Route::post('/get_quick_view',['uses'=> 'ControllerProduct@quick_view_product']);
+
 
 // My account
 Route::get('/my-account', function(){

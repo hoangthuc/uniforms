@@ -548,7 +548,7 @@ if( !function_exists('showItemProduct') ){
         <div class="title-product"><a href="<?= $product['url'] ?>"><?= $product['title']  ?></a></div>
         <div class="price-product pb-2 d-flex">
          <span>$<?= format_currency($product['price'],2); ?></span>
-            <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' onclick="add_to_cart(this)">Add to cart <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
+            <a class="add-to-cart btn btn-unipro d-inline-block text-center" data-product="<?= $product['product_id'] ?>" data-title="<?= $product['title'] ?>" data-json='<?= json_encode($data) ?>' data-toggle="modal" data-target="#quickviewproduct" onclick="quick_view_product(this)">Quick view <i class="fas fa-spinner fa-spin fa-1x fa-fw d-none"></i></a>
         </div>
     <?php
         $resulf = ob_get_contents();
@@ -1726,4 +1726,20 @@ function http_build_query_not_enc_type($array,$numeric_prefix = '', $arg_separat
         $resulf[]=$key.$numeric_prefix.$value;
     }
     return implode($arg_separator,$resulf);
+}
+
+
+function getUrlContent($url){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
+    $data = curl_exec($ch);
+    var_dump($data);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return ($httpcode>=200 && $httpcode<300) ? $data : false;
 }
