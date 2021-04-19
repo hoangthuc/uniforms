@@ -870,11 +870,12 @@ if( !function_exists('getProductRelation') ){
                     'title'=> $item->name,
                     'category'=> display_category_product($item->id),
                     'price'=>App\Product::get_meta_product($item->id,'price'),
-                    'image'=>get_url_media($item->featured_image),
+                    'image'=>($item->featured_image)?get_url_media($item->featured_image):'',
                     'url'=> url('product/'.$item->slug),
                 ];
                 $default = end($colors);
                 if( isset($default['img']) )$product['image'] =  $default['img'];
+                if( isset($default['data_default']) )$product['image'] =  $colors[$default['data_default']]['img'];
                 $relation_products[] = $product;
             }
         }

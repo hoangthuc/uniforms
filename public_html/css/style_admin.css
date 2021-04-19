@@ -664,3 +664,6 @@ td.category_product a:hover{
 [data-gallery="button_gallery_product_main"] [Data_Thumbnail_Product]{
     margin: 0px 5px;
 }
+.select2-container {
+    max-width: 100%;
+}

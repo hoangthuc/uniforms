@@ -184,6 +184,8 @@ async function add_cart() {
 }
 
 async function buy_now(event) {
+    var check = $name_plate.check_required();
+    if(check)return false;
     await add_cart();
     let amount = $('[name="amount"]').val();
     let link = $(event).data('href');
@@ -524,9 +526,10 @@ async function select_attribute(event) {
         let img = get_img.getAttribute('src');
         $('#form-add-cart [name="thumbnail"]').val(img);
     } else {
-        document.querySelector('#display-images .show-imgage img').setAttribute('src', image_default);
-        document.querySelector('#display-images .action_view .zoom').setAttribute('data-image', image_default);
-        document.querySelector('#display-images .show-imgage').setAttribute('style', 'background-image: url(' + image_default + ')');
+            document.querySelector('#display-images .show-imgage img').setAttribute('src', image_default);
+            document.querySelector('#display-images .action_view .zoom').setAttribute('data-image', image_default);
+            document.querySelector('#display-images .show-imgage').setAttribute('style', 'background-image: url(' + image_default + ')');
+
     }
 
     /// Name plate
@@ -1123,7 +1126,6 @@ function display_name_plate(event) {
     var key = sel.options[sel.selectedIndex].getAttribute('data-key');
     sel.setAttribute('data-title', label);
     $name_plate.label = label;
-    console.log(key);
     var thumbnail = document.querySelector('[data_key_name_plate="' + key + '"]');
     if (thumbnail) thumbnail.click();
 
@@ -1212,8 +1214,29 @@ var $name_plate = {
         if(sel){
             sel.onchange();
             var selected =  sel.options[sel.selectedIndex];
-            console.log(selected);
         }
+    },
+    check_required:function(){
+        var error = 0;
+        var a = document.querySelector('.alert-notification');
+        document.querySelectorAll('[data-name-plate] input.active').forEach(nl=>{
+            if(!nl.value){
+                error++;
+                nl.classList.add('border-danger');
+            }else {
+                nl.classList.remove('border-danger');
+            }
+        });
+
+        if(error>0){
+            a.classList.remove('d-none');
+            a.querySelector('[data-number-field]').textContent = error;
+            return true;
+        }else{
+            a.classList.add('d-none');
+        }
+        return false;
+
     },
     display_name_plate:function(event){
         var type= $(event).attr('attribute-type');
@@ -1258,9 +1281,9 @@ document.querySelectorAll('.item-attribute.select_variant').forEach(att=>{
     var default_att =  att.querySelector('.item-attribute-list');
     if(check){
         check.click();
+        console.log('fsaf');
     }else{
         default_att.click();
     }
-
 })
 $name_plate.render();

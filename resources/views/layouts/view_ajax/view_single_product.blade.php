@@ -93,6 +93,12 @@
                                             class="fas fa-plus"></i></span>
                             </div>
                         </div>
+                        <div class="alert-notification d-none">
+                            <div class="alert alert-danger cat-itm-err-msg" style="display: block;">
+                                <strong>Missing <span data-number-field>2</span> Fields!</strong>
+                                Please make sure you have completed all required fields! (<em class="small">highlighted in red)</em>
+                            </div>
+                        </div>
                         <div class="select_variant attributes pt-1 border-top">
                             @if( isset($attributes) )
                                 @foreach($attributes as $item_attribute)
