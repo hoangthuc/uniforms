@@ -394,6 +394,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 <script src="{{ asset('plugins/owlcarousel2-2.3.4/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('plugins/slick/slick.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+@yield('footer_library_layout');
 <script src="{{ asset('js/custom.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script>

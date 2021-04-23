@@ -1739,8 +1739,7 @@ function getUrlContent($url){
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
     $data = curl_exec($ch);
-    var_dump($data);
     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-    return ($httpcode>=200 && $httpcode<300) ? $data : false;
+    return ($httpcode>=200 && $httpcode<300) ? $data : '{}';
 }

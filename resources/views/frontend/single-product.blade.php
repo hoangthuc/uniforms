@@ -1,6 +1,5 @@
 @extends('layouts.layout_main')
 @section('content')
-
     @if(isset($product))
         <section class="single-product-page pt-3 pb-5" data-id="{{ $product->id }}">
             <div class="container">
@@ -116,6 +115,7 @@
                             <div class="select_variant attributes pt-1 border-top">
                                 @if( isset($attributes) )
                                     @foreach($attributes as $item_attribute)
+                                    	@if( $item_attribute['name'] != 'Weight')
                                         <div class="item-attribute select_variant" Attribute-P{{ $item_attribute['id'] }}>
                                             <label>{{ $item_attribute['name'] }}</label> <span class="ml-1">({{ $item_attribute['display'] }})</span>
                                             <div class="list">
@@ -140,6 +140,8 @@
                                               @endif
                                             </div>
                                         </div>
+                                         @endif
+                                         <!--end end weight--->
                                     @endforeach
                                 @endif
                             </div>
@@ -148,7 +150,7 @@
                                     @include('layouts.view_ajax.view_product_name_plate')
                                 @endif
                             </div>
-                            <div id="form-add-cart" class="add-cart mt-3 d-flex">
+                            <div id="form-add-cart" class="add-cart mt-3 d-flex" data-outstock="{{ $outstock }}" data-all-price="{{ $all_price }}">
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <input type="hidden" name="thumbnail"
                                        value="{{ isset($featured_image)?$featured_image:asset('images/products/default.jpg') }}">
@@ -159,9 +161,10 @@
                                 <button type="button" class="btn btn-unipro form-control d-none" onclick="add_cart()">Add to
                                     cart
                                 </button>
-                                <button type="button" class="btn btn-unipro form-control "
+                                <button type="button" class="btn btn-unipro btn-buy-now form-control "
                                         data-href="{{ url('cart') }}" onclick="buy_now(this)">Add to cart
                                 </button>
+                                <div class="out-of-stock text-danger font-weight-bold d-none">Out of stock</div>
                             </div>
                         </div>
                     </div>
@@ -362,5 +365,6 @@
     @endif
 @endsection
 @section('footer_layout')
+
 @endsection
 

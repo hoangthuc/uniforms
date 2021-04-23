@@ -3,9 +3,9 @@
     <?php
     $user = Auth::user();
     $medias = App\Media::get_media();
-    $product = App\Product::get_product($product_id??'');
+    if(!$product_id)$product_id= '';
+    $product = App\Product::get_product($product_id);
     $product_status = App\Product::product_status();
-
     $featured_image = isset($product->featured_image)? App\Media::get_media_detail($product->featured_image):'';
     $product_categories =  App\Product::get_product_categories_all();
     $category = App\Relationships::get_relationships($product_id,'product_category_');

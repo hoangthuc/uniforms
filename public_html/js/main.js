@@ -534,6 +534,24 @@ async function select_attribute(event) {
 
     /// Name plate
     $name_plate.display_name_plate(event);
+    let divcart = document.querySelector('#form-add-cart');
+    if(divcart){
+        $product_stock.outstock = JSON.parse(divcart.getAttribute('data-outstock')); 
+        $product_stock.all_price = JSON.parse(divcart.getAttribute('data-all-price'));
+    }
+    let outstock = $product_stock.search();
+    if( Number(outstock) > 0){
+        document.querySelector('.out-of-stock').classList.add('d-none');
+        document.querySelector('.btn-buy-now').classList.remove('d-none');
+    }else{
+        document.querySelector('.out-of-stock').classList.remove('d-none');
+        document.querySelector('.btn-buy-now').classList.add('d-none');
+    }
+    if($product_stock.price){
+        $('.price_amount .price').text(format_currency($product_stock.price));
+        $('#form-add-cart [name="subtotal"]').val($product_stock.price);
+    }
+
 
 }
 
@@ -1276,6 +1294,46 @@ var $name_plate = {
         }
     }
 }
+var $product_stock = {
+        outstock: {},
+        all_price: {},
+        price: 0,
+        choose:{},
+        search: function(){
+            var search = 0;
+            if(this.outstock.data){
+                var data = {};
+                document.querySelectorAll('.item-attribute.select_variant .item-attribute-list.active').forEach(attr=>{
+                    let title = attr.getAttribute('data-title');
+                    title = title.replace("|", "/");
+                    data[ attr.getAttribute('data-name-parent') ] = title;
+                });
+                var outstock = this.outstock.data.item;
+                var count = Object.keys(data).length;
+                var sku_item = '';
+                for (var i = 0; i < outstock.length; i++) {
+                    var s = 0;
+                    for(t in data){
+                        if(outstock[i][t] == data[t]){
+                        s++;    
+                        }   
+                    }
+                    if(s==count){
+                    search = outstock[i].QtyAvailable;
+                    sku_item =outstock[i].ProductID;
+                    }
+                }
+            }
+            if(this.all_price[sku_item]){
+                this.price = this.all_price[sku_item];
+            }else{
+                this.price = 0;
+            }
+            console.log(search);
+            console.log(this.price);
+            return search;
+        }
+    };
 document.querySelectorAll('.item-attribute.select_variant').forEach(att=>{
     var check =  att.querySelector('.item-attribute-list.active');
     var default_att =  att.querySelector('.item-attribute-list');

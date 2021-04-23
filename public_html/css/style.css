@@ -1665,6 +1665,9 @@ span.attr_thumbnail{
     color: #000000ba;
     font-size: 18px;
 }
+.out-of-stock {
+    font-size: 22px;
+}
 
 .full_modal-dialog {
     width: 90% !important;
