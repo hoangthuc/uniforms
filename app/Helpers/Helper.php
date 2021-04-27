@@ -876,6 +876,7 @@ if( !function_exists('getProductRelation') ){
                 $default = end($colors);
                 if( isset($default['img']) )$product['image'] =  $default['img'];
                 if( isset($default['data_default']) )$product['image'] =  $colors[$default['data_default']]['img'];
+                if(!$product['image']) $product['image'] = url('images/products/default.jpg');
                 $relation_products[] = $product;
             }
         }
@@ -1727,6 +1728,14 @@ function http_build_query_not_enc_type($array,$numeric_prefix = '', $arg_separat
         $resulf[]=$key.$numeric_prefix.$value;
     }
     return implode($arg_separator,$resulf);
+}
+function get_title_media_array($array){
+    $media = [];
+    foreach ($array as $key => $id){
+       $images  = \App\Media::get_media_detail($id);
+       $media[$key] = ($images)?$images->title:'';
+    }
+    return $media;
 }
 
 

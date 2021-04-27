@@ -60,7 +60,7 @@ class ControllerMedia extends Controller
 
     public function UploadFileImport(Request $request)
     {
-        $head = ['id','sku','name','description','price','category','featured_image','gallery','color','size','number_size','weight'];
+        $head = ['id','sku','name','description','price','category','featured_image','gallery','color','size','length','weight'];
         $info = ['images'=>0];
 
             $file = $request->folder_images;

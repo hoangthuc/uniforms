@@ -1,9 +1,9 @@
 @extends('admin.products.product_layout')
 @section('content')
     <?php
+
   //  $products = App\Product::get_products();
-  //  $product_status = App\Product::product_status();
-  //  $products_all = DB::table('products')->get();
+    $products_all = DB::table('products')->get();
 //    $xlsx = \App\SimpleXLSX::parse(public_path('imports/extra/UniPro_ComPriceList.xlsx'));
 //    $body = [];
 //    foreach ($xlsx->rows() as $r => $row) {
@@ -14,69 +14,73 @@
 ////    var_dump($body);
 //    echo '<pre>'.json_encode($body).'</pre>';
 // $id = \App\Product::get_product_attributes_bylug('size');
-    $string = file_get_contents( public_path('imports/extra/data.json'));
-    $string = json_decode($string, true);
-    $body= [];
-   foreach($string as $key => $size){
-        $product_id = \App\Product::check_product_bysku($key);
-       $body[$product_id] = $size;
-
-   }
-        foreach($body as $product_id => $json){
-            var_dump( $product_id );
-            var_dump( json_encode($json) );
-            var_dump(end($json));
-            \App\Product::update_meta_product($product_id,'price',end($json));
-            \App\Product::update_meta_product($product_id,'price_attribute','{}');
-            \App\Product::update_meta_product($product_id,'all_price',json_encode($json));
-        }
+//    $string = file_get_contents( public_path('imports/extra/data.json'));
+//    $string = json_decode($string, true);
+//    $body= [];
+//   foreach($string as $key => $size){
+//        $product_id = \App\Product::check_product_bysku($key);
+//       $body[$product_id] = $size;
+//
+//   }
+//        foreach($body as $product_id => $json){
+//            var_dump( $product_id );
+//            var_dump( json_encode($json) );
+//            var_dump(end($json));
+//            \App\Product::update_meta_product($product_id,'price',end($json));
+//            \App\Product::update_meta_product($product_id,'price_attribute','{}');
+//            \App\Product::update_meta_product($product_id,'all_price',json_encode($json));
+//        }
 
     ?>
-    <table>
-        <thead>
-        <tr>
-            <th>sku</th>
-            <th>type</th>
-            <th>attribute</th>
-            <th>price</th>
-            <th>default</th>
-            <th>thumbnail</th>
-            <th>gallery</th>
-        </tr>
-        </thead>
-        @if(isset($products_all))
-            @foreach ($products_all as $product)
-                <?php
-                $sku = \App\Product::get_meta_product($product->id, 'sku');
-                $all_attributes = \App\Product::get_meta_product($product->id, 'all_attributes');
-                $list_price = \App\Product::get_meta_product($product->id, 'price_attribute');
-                $list_price = ($list_price) ? (array)\GuzzleHttp\json_decode($list_price) : [];
+{{--    <table>--}}
+{{--        <thead>--}}
+{{--        <tr>--}}
+{{--            <th>sku</th>--}}
+{{--            <th>type</th>--}}
+{{--            <th>attribute</th>--}}
+{{--            <th>default</th>--}}
+{{--            <th>thumbnail</th>--}}
+{{--            <th>gallery</th>--}}
+{{--        </tr>--}}
+{{--        </thead>--}}
+{{--        @if(isset($products_all))--}}
+{{--            @foreach ($products_all as $product)--}}
+{{--                <?php--}}
+{{--                $sku = \App\Product::get_meta_product($product->id, 'sku');--}}
+{{--                $all_attributes = \App\Product::get_meta_product($product->id, 'all_attributes');--}}
+{{--                $list_price = \App\Product::get_meta_product($product->id, 'price_attribute');--}}
+{{--                $list_price = ($list_price) ? (array)\GuzzleHttp\json_decode($list_price) : [];--}}
 
-                $thumbnail_color = \App\Product::get_meta_product($product->id, 'thumbnail_color');
-                ?>
-                @if($all_attributes)
-                    @foreach( (array)\GuzzleHttp\json_decode($all_attributes) as $attribute_parent => $attribute_child )
-                        <?php
-                        $type = \App\Product::get_product_attributes_detail_single($attribute_parent);
-                        ?>
-                        @if( isset($attribute_child->value) )
-                            @foreach($attribute_child->value as $item_detail)
-                                <tr>
-                                    <td>{{ $sku }}</td>
-                                    <td>{{ isset($type)?$type->type:'' }}</td>
-                                    <td>{{ $item_detail->title }}</td>
-                                    <td>{{ isset($list_price[ $item_detail->value ])??0 }}</td>
-                                    <td>0</td>
-                                    <td>{{ isset($thumbnail_color[ $item_detail->value ])??0 }}</td>
-                                    <td>{{ isset($thumbnail_color[ $item_detail->value ])??0 }}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    @endforeach
-                @endif
-            @endforeach
-        @endif
-    </table>
+{{--                $thumbnail_color = \App\Product::get_meta_product($product->id, 'thumbnail_color');--}}
+{{--                $thumbnail_color = ($thumbnail_color)?(array)json_decode($thumbnail_color):[];--}}
+{{--                $thumbnail_color = ($thumbnail_color)?get_title_media_array($thumbnail_color):[];--}}
+
+
+{{--                $thumbnail_attribute = \App\Product::get_meta_product($product->id, 'thumbnail_attribute');--}}
+{{--                $thumbnail_attribute = ($thumbnail_attribute)?(array)json_decode($thumbnail_attribute):[];--}}
+{{--                ?>--}}
+{{--                @if($all_attributes)--}}
+{{--                    @foreach( (array)\GuzzleHttp\json_decode($all_attributes) as $attribute_parent => $attribute_child )--}}
+{{--                        <?php--}}
+{{--                        $type = \App\Product::get_product_attributes_detail_single($attribute_parent);--}}
+{{--                        ?>--}}
+{{--                        @if( isset($attribute_child->value) )--}}
+{{--                            @foreach($attribute_child->value as $item_detail)--}}
+{{--                                <tr>--}}
+{{--                                    <td>{{ $sku }}</td>--}}
+{{--                                    <td>{{ isset($type)?$type->type:'' }}</td>--}}
+{{--                                    <td>{{ $item_detail->title }}</td>--}}
+{{--                                    <td>0</td>--}}
+{{--                                    <td>{{ ( isset($thumbnail_color[ $item_detail->value]) )? $thumbnail_color[$item_detail->value] :'' }}</td>--}}
+{{--                                    <td>{{ isset($thumbnail_attribute[ $item_detail->value ])? implode(',', get_title_media_array( (array)$thumbnail_attribute[$item_detail->value]) ) :'' }}</td>--}}
+{{--                                </tr>--}}
+{{--                            @endforeach--}}
+{{--                        @endif--}}
+{{--                    @endforeach--}}
+{{--                @endif--}}
+{{--            @endforeach--}}
+{{--        @endif--}}
+{{--    </table>--}}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">

@@ -32,6 +32,12 @@ class Media extends Model
         return $media;
     }
 
+    public static function get_media_detail_by_title($title){
+        $media = DB::table('media')->where('title', $title)->first();
+        if(($media))return $media->id;
+        return '';
+    }
+
     public static function get_url_media($id){
         $media = DB::table('media')->where('id', $id)->first();
         if(!$media || !file_exists($media->path))return asset('images/products/default.jpg');
