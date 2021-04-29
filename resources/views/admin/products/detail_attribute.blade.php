@@ -55,7 +55,7 @@
 
                                         </div>
                                         <!-- Button trigger modal -->
-                                        <div type="button" class="btn btn-primary button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="modal" data-target="#MediaModal" data-required="false">
+                                        <div type="button" onclick="single_upload_media(this)" class="btn btn-primary button_upload_media" data-media="button_featured_image" data-ftype="image" data-type="image/*" data-toggle="modal" data-target="#MediaModal" data-required="false" data-insert="single_image">
                                             Upload image
                                         </div>
                                     </div>

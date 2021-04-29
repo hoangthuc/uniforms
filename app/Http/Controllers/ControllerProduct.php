@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Media;
 use App\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -337,6 +338,22 @@ class ControllerProduct extends Controller
 
     }
 
+    public function single_brand($brand,$slug){
+        $parent_brand = \App\Product::get_product_brand_bylug($brand);
+        $data_brand = \App\Product::get_product_brand_bylug($slug);
+        if($data_brand){
+            $brand_id = $data_brand->id;
+            $data_brand->img = Media::get_url_media($data_brand->data_type);
+        }
+        $type= (isset($_GET['type']))?$_GET['type']:'';
+        $cat= ($type)?get_categories_bytype($type):[];
+        $search = isset($_GET['search'])?$_GET['search']:'';
+        $query = ['type'=>$type,'sort'=>'sku','product'=>$cat,'product_attribute'=>[]];
+        if($brand_id)$query['product_attribute'][$brand]['data'][] = $brand_id;
+        $filter_products = getProductFilterPage($query);
+        $product_departments = \App\Product::product_departments();
+       return view('frontend.brand',compact('type','cat','search','query','filter_products','product_departments','brand','slug','brand_id','data_brand','parent_brand'));
+    }
 
 
 

@@ -195,6 +195,13 @@ class Product extends Model
         return $product_attribute;
     }
 
+    // get attribute brand by slug
+    public static function get_product_brand_bylug($slug)
+    {
+        $product_attribute = DB::table('product_attributes')->where('slug', $slug)->first();
+        return $product_attribute;
+    }
+
     // get attribute by data type
     public static function get_product_attributes_by_datatype($data_type, $parent_id)
     {

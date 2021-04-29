@@ -1669,6 +1669,21 @@ span.attr_thumbnail{
     font-size: 22px;
 }
 
+.zoom {
+    transition: transform .2s; /* Animation */
+}
+.zoom:hover {
+    transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    z-index: 9;
+    position: relative;
+}
+.logo-partner-top{
+    max-width: 200px;
+}
+.border-brand{
+    border: 1px solid #dedede;
+}
+
 .full_modal-dialog {
     width: 90% !important;
     min-width: 90% !important;

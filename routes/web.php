@@ -289,6 +289,10 @@ Route::get('/product_categories/{slug}', function($slug){
     return view('frontend.product_categories',['slug'=>$slug]);
 });
 
+// Brandname detail
+Route::get('/attributes/{brand}/{slug}',['uses'=> 'ControllerProduct@single_brand']);
+
+
 // Get quick view in list product
 Route::post('/get_quick_view',['uses'=> 'ControllerProduct@quick_view_product']);
 

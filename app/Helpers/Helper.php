@@ -1597,7 +1597,7 @@ function display_filter_product_html($query=[]){
     if(isset($filters)):
         foreach($filters as $item):
             ?>
-                    <div class="item-filter">
+                    <div class="item-filter" data-type="<?= $item['slug'] ?>">
                         <div class="item-header">
                             <div class="item-title"><?= $item['title'] ?></div>
                             <span class="btn-tool" data-card-widget="collapse" data-show="<?= $item['display'] ?>" onclick="collapse_attribute_filter(this)">
@@ -1752,3 +1752,12 @@ function getUrlContent($url){
     curl_close($ch);
     return ($httpcode>=200 && $httpcode<300) ? $data : '{}';
 }
+
+ function get_data_brands($slug){
+    $brand = Product::get_product_brand_bylug($slug);
+     $list = [];
+    if($brand){
+        $list = Product::get_product_attributes_detail($brand->id);
+    }
+    return $list;
+ }

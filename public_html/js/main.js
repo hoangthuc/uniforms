@@ -395,7 +395,6 @@ async function start_filter_product(page = 1) {
         }
     })
     if (!categories.length) categories = cat_default;
-    console.log(categories);
     document.querySelectorAll('.filter_product_attribute').forEach(el => {
         if (el.checked) {
             let name = el.getAttribute('name');
@@ -404,6 +403,8 @@ async function start_filter_product(page = 1) {
             attributes[name].data.push(el.value);
         }
     });
+    if(brand_default)attributes[brand_default.type] = {data: [brand_default.value]};
+    console.log(attributes);
     let sort = document.querySelector('.sort-filter').value;
     let slug = document.querySelector('[Data-Filter-Product] [name="slug"]').value;
     data.push({name: 'page', value: page});

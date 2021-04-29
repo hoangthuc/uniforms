@@ -3,18 +3,18 @@
     <?php
     $top_category = top_categories();
 $top_products = getProductHomePage();
-$partners = [
-    ['name'=>'#','img'=>asset('images/partner/partner1.png'),'link'=>'#'],
-    ['name'=>'#','img'=>asset('images/partner/urban_finel_logo.png'),'link'=>'#'],
-    ['name'=>'#','img'=>asset('images/partner/partner3.png'),'link'=>'#'],
-    ['name'=>'#','img'=>asset('images/partner/partner2.png'),'link'=>'#'],
-    ['name'=>'#','img'=>asset('images/partner/partner4.png'),'link'=>'#'],
-    ['name'=>'#','img'=>asset('images/partner/partner5.png'),'link'=>'#'],
-    ['name'=>'#','img'=>asset('images/partner/partner6.png'),'link'=>'#'],
-]
+$slug_brand = 'brand-1';
+$data_brand = get_data_brands($slug_brand);
+$partners = [];
+if($data_brand){
+    foreach ($data_brand->child as $item){
+        $partners[]=['name'=>$item->name,'img'=>\App\Media::get_url_media($item->data_type),'link'=> url('attributes/'.$slug_brand.'/'.$item->slug) ];
+    }
+}
+
     ?>
     <section class="banner_part mt-3">
-        <div id="CarouselHome" class="container carousel slide p-0" data-ride="carousel">
+        <div id="CarouselHome" class="container carousel slide carousel-fade p-0" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active" style="background-image: url({{ url('images/slider1.jpg') }})">
                     <dic class="content-slider">
@@ -69,7 +69,7 @@ $partners = [
             <div class="d-flex text-center">
                 @if($partners)
                     @foreach($partners as $item_partner)
-                <div class="item-partner d-inline-block mt-md-0 mt-3"><a><img src="{{ $item_partner['img']  }}"/></a></div>
+                <div class="item-partner d-inline-block mt-md-0 mt-3"><a href="{{ $item_partner['link'] }}"><img class="zoom" src="{{ $item_partner['img']  }}"/></a></div>
                     @endforeach
                 @endif
             </div>
