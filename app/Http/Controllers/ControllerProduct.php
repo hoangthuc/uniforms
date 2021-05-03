@@ -348,7 +348,7 @@ class ControllerProduct extends Controller
         $type= (isset($_GET['type']))?$_GET['type']:'';
         $cat= ($type)?get_categories_bytype($type):[];
         $search = isset($_GET['search'])?$_GET['search']:'';
-        $query = ['type'=>$type,'sort'=>'sku','product'=>$cat,'product_attribute'=>[]];
+        $query = ['type'=>$type,'sort'=>'sku','product'=>$cat,'product_attribute'=>[],'cat'=>$cat,'attr'=>[$brand_id]];
         if($brand_id)$query['product_attribute'][$brand]['data'][] = $brand_id;
         $filter_products = getProductFilterPage($query);
         $product_departments = \App\Product::product_departments();

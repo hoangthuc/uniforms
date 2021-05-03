@@ -1683,6 +1683,15 @@ span.attr_thumbnail{
 .border-brand{
     border: 1px solid #dedede;
 }
+.item-attribute-hidden label {
+    font-size: 26px;
+    color: #0c1b41;
+    margin: 0;
+}
+.item-attribute-hidden > span {
+    color: #cdcdcd;
+    font-size: 22px;
+}
 
 .full_modal-dialog {
     width: 90% !important;

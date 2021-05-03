@@ -384,6 +384,19 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
         </div>
     </div>
 </div>
+<div class="modal fade" id="quickcart" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog full_modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 40px;">&times;</span>
+                </button>
+                <div class="cart-page" display-quick-cart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var image_default = '{{ asset('images/image-coming-soon.jpg') }}';
 </script>

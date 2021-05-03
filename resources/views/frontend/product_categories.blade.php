@@ -9,7 +9,7 @@
         $list_cat[] = $child->id;
     }
     if( isset($category->media) )$banner = App\Media::get_url_media($category->media);
-    $query = ['product'=>$list_cat,'slug'=>$slug,'product_attribute'=>[],'sort'=>'sku'];
+    $query = ['product'=>$list_cat,'slug'=>$slug,'product_attribute'=>[],'sort'=>'sku','cat'=>$list_cat];
     //$filters = get_filter_product( ['cat'=>[$category->id] ] );
     $filter_products = getProductFilterPage($query);
     ?>
@@ -95,7 +95,8 @@
 @section('footer_layout')
     <script>
         var cat_default = {!! json_encode( $list_cat ) !!};
-        var query_filter = {!! json_encode( ['cat'=>$list_cat ]  ) !!};
+        var brand_default ={};
+        var query_filter = {!! json_encode( $query  ) !!};
         display_filter_product();
     </script>
 @endsection

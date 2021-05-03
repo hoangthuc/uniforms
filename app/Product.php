@@ -518,12 +518,10 @@ class Product extends Model
         }
         $products = DB::table(DB::raw('products ' . $Attribute_inner))
             ->join('relationships as Categories', 'products.id', '=', 'Categories.object_id')
-//            ->join('relationships as Attribute', function($join){
-//                $join->on('products.id', '=', 'Attribute.object_id');
-//                })
             ->join('product_meta', 'products.id', '=', 'product_meta.product_id')
+            ->join('product_categories', 'Categories.term_id', '=', 'product_categories.id')
             ->join('product_meta as table_sku', 'products.id', '=', 'table_sku.product_id')
-            ->select(['products.*', 'table_sku.meta_value as sku_search', ($orderby['type'] == 'number') ? DB::raw('FORMAT(product_meta.meta_value,0) as ' . $orderby['name']) : 'product_meta.meta_value as ' . $orderby['name']])
+            ->select(['products.*','product_categories.loop as loop_cat', 'table_sku.meta_value as sku_search', ($orderby['type'] == 'number') ? DB::raw('FORMAT(product_meta.meta_value,0) as ' . $orderby['name']) : 'product_meta.meta_value as ' . $orderby['name']])
             ->where('products.status', 2)
             ->where('table_sku.meta_key', 'sku')
             ->where(function ($select) use ($search) {
@@ -533,6 +531,7 @@ class Product extends Model
             ->where(function ($products) use ($orderby) {
                 if ($orderby['name'] != 'products.updated_at') $products->where('product_meta.meta_key', $orderby['name']);
             })
+            ->where('Categories.type','LIKE','%product_category_%')
             ->where(
                 function ($products) use ($categories) {
                     if (count($categories) > 0) {
@@ -545,6 +544,7 @@ class Product extends Model
                 }
             )
             ->where(DB::raw($Attribute_where . " 1"), '1')
+            ->orderBy('loop_cat', 'DESC')
             ->groupBy('products.id')
             ->orderBy(($orderby['type'] == 'number') ? DB::raw($orderby['name'] . '+ 0') : $orderby['name'], $orderby['value'])
             ->paginate(12, ['*'], 'page', $page);
@@ -658,6 +658,51 @@ class Product extends Model
                 $attr_return[$attr->term_id]++;
             } else {
                 $attr_return[$attr->term_id] = 1;
+            }
+        }
+        return $attr_return;
+    }
+
+    // get count product by categories & attribute
+    public static function get_product_byTax_attribute_array($query = [],$select_table='cat')
+    {
+        $attr_return = [];
+        $query['cat'] = isset($query['cat']) ? $query['cat'] : [];
+        $query['attr'] = isset($query['attr']) ? $query['attr'] : [];
+        $query['search'] = isset($query['search']) ? $query['search'] : '';
+        $products = DB::table('relationships')
+            ->join('products', 'products.id', '=', 'relationships.object_id')
+            ->join('relationships as cat', 'relationships.object_id', '=', 'cat.object_id')
+            ->join('product_meta', 'products.id', '=', 'product_meta.product_id')
+            ->select(DB::raw($select_table.'.*'))
+            ->where('meta_key', 'sku')
+            ->where(function ($select) use ($query) {
+                if (count($query['attr']) > 0) {
+                    foreach ($query['attr'] as $term_id) {
+                        $select->orwhere('relationships.type', 'product_attribute_' . $term_id);
+                    }
+                }
+                if (count($query['cat']) > 0) {
+                    foreach ($query['cat'] as $cat) {
+                        $select->orwhere('relationships.type', 'product_category_' . $cat);
+                    }
+                }
+            })
+//            ->where(function ($select) use ($query) {
+//
+//            })
+            ->where('status', 2)
+            ->where(function ($select) use ($query) {
+                $select->orwhere('name', 'LIKE', "%{$query['search']}%");
+                $select->orwhere('product_meta.meta_value', 'LIKE', "%{$query['search']}%");
+            })
+            ->groupBy('cat.re_id')
+            ->get();
+        foreach ($products as $attr) {
+            if (isset($attr_return[$attr->type])) {
+                $attr_return[$attr->type]++;
+            } else {
+                $attr_return[$attr->type] = 1;
             }
         }
         return $attr_return;

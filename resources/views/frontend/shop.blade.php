@@ -4,7 +4,7 @@
     $type= (isset($_GET['type']))?$_GET['type']:'';
     $cat= ($type)?get_categories_bytype($type):[];
     $search = isset($_GET['search'])?$_GET['search']:'';
-    $query = ['type'=>$type,'sort'=>'sku','product'=>$cat,'product_attribute'=>[],'search'=>$search];
+    $query = ['type'=>$type,'sort'=>'sku','product'=>$cat,'product_attribute'=>[],'search'=>$search,'cat'=>list_ob_to_array($cat)];
     $filter_products = getProductFilterPage($query);
     $product_departments = \App\Product::product_departments();
     ?>
@@ -93,7 +93,8 @@
 @section('footer_layout')
     <script>
         var cat_default = {!! json_encode( list_ob_to_array($cat) ) !!};
-        var query_filter = {!! json_encode( ['type'=>$type,'search'=>$search] ) !!};
+        var brand_default ={};
+        var query_filter = {!! json_encode( $query ) !!};
         display_filter_product();
     </script>
 @endsection

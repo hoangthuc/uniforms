@@ -667,17 +667,18 @@ if( !function_exists('DisplayAttributeType') ){
 if( !function_exists('get_filter_product') ){
     function get_filter_product($query=[]){
         $filter = [];
+        $data_count_all = \App\Product::get_product_byTax_attribute_array($query);
         $product_categories =  App\Product::get_product_categories_all($query);
         $list_cat = list_ob_to_array($product_categories);
         if($product_categories){
             $query['cat'] = $list_cat;
-            $data_count =  App\Product::get_product_byTax_array($query);
+//            $data_count =  App\Product::get_product_byTax_array($query);
             $product_categories =  App\Product::get_sort_categories($product_categories);
             $data = [];
             $count = 0;
             foreach ($product_categories as $key=>$item){
-                $count = ( isset($data_count[$item['id']]) )?$data_count[$item['id']]:0;
-                $data[] = [
+                $count = ( isset($data_count_all['product_category_'.$item['id']]) )?$data_count_all['product_category_'.$item['id']]:0;
+                if($count)$data[] = [
                         'title'=>$item['name'],
                         'value'=>$item['id'],
                         'slug'=>$item['slug'],
@@ -688,7 +689,7 @@ if( !function_exists('get_filter_product') ){
                 ];
                 if(isset($item['child'])){
                     foreach ($item['child'] as $item){
-                        $count = ( isset($data_count[$item['id']]) )?$data_count[$item['id']]:0;
+                        $count = ( isset($data_count_all['product_category_'.$item['id']]) )?$data_count_all['product_category_'.$item['id']]:0;
                         if($count)$data[] = [
                             'title'=>$item['name'],
                             'value'=>$item['id'],
@@ -722,9 +723,9 @@ if( !function_exists('get_filter_product') ){
                     $data = [];
                     $list_attr =  list_ob_to_array($attribute_detail);
                     $query['attr'] = $list_attr;
-                    $data_count_att =   App\Product::get_product_byTax_cat_array($query);
+                  //  $data_count_att =   App\Product::get_product_byTax_cat_array($query);
                     foreach ($attribute_detail as $item_attribute){
-                        $count_att =  (isset($data_count_att[$item_attribute->id]))?$data_count_att[$item_attribute->id]:0;
+                        $count_att =  (isset($data_count_all['product_attribute_'.$item_attribute->id]))?$data_count_all['product_attribute_'.$item_attribute->id]:0;
                       //  $count_att =   get_product_byTax_cat($item_attribute->id,$list_cat);
                         if($count_att)$data[] = [
                             'title'=>$item_attribute->name,
@@ -777,6 +778,7 @@ if( !function_exists('getProductFilterPage') ){
                     'image'=> App\Media::get_url_media($item->featured_image),
                     'url'=> url('product/'.$item->slug),
                     'product_id'=> $item->id,
+                    'order'=> $item->loop_cat,
                 ];
             }
         }

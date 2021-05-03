@@ -116,7 +116,7 @@
                                 @if( isset($attributes) )
                                     @foreach($attributes as $item_attribute)
                                     	@if( $item_attribute['name'] != 'Weight')
-                                        <div class="item-attribute select_variant" Attribute-P{{ $item_attribute['id'] }}>
+                                        <div class="item-attribute{{ ($item_attribute['type']=='hidden')?'-hidden':'' }} select_variant" Attribute-P{{ $item_attribute['id'] }}>
                                             <label>{{ $item_attribute['name'] }}</label> <span class="ml-1">({{ $item_attribute['display'] }})</span>
                                             <div class="list">
                                               @if(isset($item_attribute['list']))

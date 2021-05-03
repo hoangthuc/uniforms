@@ -739,6 +739,12 @@ class ControllerAjax extends Controller
 
         }
 
+        //Get Cart ajax
+        if(isset($request['action']) && $request['action']=='get_cart_ajax_view'){
+            $cart = session()->get('cart');
+            return view('layouts.view_ajax.view_cart', compact('cart'));
+        }
+
 
 
 
