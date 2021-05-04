@@ -23,6 +23,7 @@
 
     $display_data_attribute = \App\Product::get_meta_product($product->id,'all_attributes');
     $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
+    $attr_hemming = \App\Product::get_meta_product($product->id,'attr_hemming');
 
     $galleries = \App\Product::get_meta_product($product->id,'gallery');
     $galleries= ($galleries)?(array)\GuzzleHttp\json_decode($galleries):[];
@@ -160,6 +161,7 @@
                                     <button class="btn btn-primary" type="button" onclick="$Attribute.setup_name_plate(this)">Add name plate</button>
                                 </div>
                             </div>
+                            <!---Name plate-->
                             <div class="form-group pt-3" display_name_plate_render_control>
                                 @if($name_plates)
                                     @foreach($plate_item = \GuzzleHttp\json_decode($name_plates) as $key_n => $value_n)
@@ -174,9 +176,41 @@
                                 @endif
                             </div>
 
+                            <!---Hemming-->
+                            <div class="form-group item-attributes item-attibute-99 row border-top pt-3">
+                                <label class="col-md-2" style="min-width: 110px;">Hemming</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="hemming" placeholder="Enter Hemming">
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-control" DataCurrency>$0</div>
+                                    <input type="number" class="DataCurrencyGet form-control" name="hemming_price" value="0" placeholder="Enter price" data-title="Price" data-required="false" onkeyup="load_data_money(this)" onchange="load_data_money(this)" autocomplete="off">
+                                    <span class="um-field-error d-none"></span>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary ml-1" type="button" onclick="$Attribute.setup_hemming(this)">Add Hemming</button>
+                                </div>
+                            </div>
+                            <div class="form-group pt-3" display_hemming_render_control>
+                                @if($attr_hemming)
+                                    @foreach($data_hemming = \GuzzleHttp\json_decode($attr_hemming) as $key_n => $value_n)
+                                        <?php
+                                        $hemming = $value_n->hemming;
+                                        $hemming_price = $value_n->hemming_price;
+                                        ?>
+                                        @include('admin.products.template_hemming_view')
+                                    @endforeach
+                                @endif
+                            </div>
+
                             <!--Show variations product render control-->
                             <div class="form-group pt-3 border-top" display_attribute_render_control>
                             </div>
+
+
+
+
+
 
 
 
@@ -351,6 +385,7 @@
             thumbnail_color:{},
             gallery:{},
             name_plate:{!! ($name_plates)?$name_plates:'{}' !!},
+            attr_hemming:{!! ($attr_hemming)?$attr_hemming:'{}' !!},
             setup: function(dom){
                 dom.innerHTML = '';
                 for(item in this.data){
@@ -382,6 +417,7 @@
                 this.thumbnail_attr = {};
                 this.thumbnail_color = {};
                 this.name_plate = {};
+                this.attr_hemming = {};
                 this.gallery = {};
                 document.querySelectorAll('[data-price-attribute]').forEach(p_attr=>{
                     this.price_attr[ p_attr.getAttribute('data-attribute-id') ] = Number(p_attr.value);
@@ -442,6 +478,14 @@
                     this.gallery[ t_attr.getAttribute('data-id') ] = t_attr.getAttribute('data-id');
                 });
 
+                // Hemming
+                document.querySelectorAll('[display_hemming_render_control] [data_display_hemming]').forEach(nl=>{
+                    var hemming = nl.getAttribute('data_display_hemming');
+                    var hemming_price = nl.getAttribute('data-price');
+                    hemming_price = Number(hemming_price);
+                    this.attr_hemming[hemming] = {hemming:hemming,hemming_price:hemming_price};
+                });
+
 
             },
             send:function(data,name){
@@ -476,6 +520,28 @@
                     });
                 }else{
                     Swal.fire('Name plate is exist.');
+                }
+
+            },
+            setup_hemming: function(event){
+                var hemming = document.querySelector('[name="hemming"]');
+                var hemming_price = document.querySelector('[name="hemming_price"]');
+                var check = document.querySelector('[data_display_hemming="'+hemming.value+'"]');
+                if(!hemming.value)Swal.fire('Hemming is required.');
+                if(!check && hemming){
+                    var data = {
+                        'action': 'get_hemming_ajax_view',
+                        '_token': setting.token,
+                        'hemming': hemming.value,
+                        'hemming_price': hemming_price.value,
+                    };
+                    $.post(setting.ajax_url, data, function(response) {
+                        var display = document.querySelector('[display_hemming_render_control]');
+                        display.insertAdjacentHTML('afterbegin',response);
+
+                    });
+                }else{
+                    Swal.fire('Hemming is exist.');
                 }
 
             }

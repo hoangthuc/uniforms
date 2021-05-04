@@ -166,9 +166,15 @@ async function add_cart() {
         var plate = name_plate.querySelector('select');
         if (plate) key += '_' + plate.value;
     }
+    var data_hemming = display_hemming();
+    if(data_hemming){
+        key += '_' + data_hemming['hemming'];
+        attributes += '<br/> <b>Hemming</b>: ' + data_hemming['hemming'] + ',';
+    }
     data['key'] = key;
     data['attributes'] = attributes.slice(0, -1);
     let check = in_cart(data['key'], cart.products);
+
     if (cart.products.length < 1 || check == 'insert') cart.products.push(data);
     if (check != 'insert') cart.products[check]['quantily'] = Number(cart.products[check]['quantily']) + Number(data['quantily']);
     if (Number(data['quantily']) > 0) {
@@ -1160,6 +1166,18 @@ function display_name_plate(event) {
     });
 }
 
+function display_hemming (event){
+    var hemming = document.querySelector('[data-hemming] [data-name="hemming"]');
+    if(hemming){
+        var data_hemming = hemming.getAttribute('data-json');
+        data_hemming = JSON.parse(data_hemming);
+        let attr = data_hemming[hemming.value];
+        document.querySelector('[data-hemming]').previousElementSibling.textContent = ' ('+format_currency(attr['hemming_price'])+')';
+        return data_hemming[hemming.value];
+    }
+    return false;
+}
+
 window.clickOutSide = (element, clickOutside, clickInside) => {
     document.addEventListener('click', (event) => {
         if (!element.contains(event.target)) {
@@ -1258,6 +1276,7 @@ var $name_plate = {
             sel.onchange();
             var selected =  sel.options[sel.selectedIndex];
         }
+        display_hemming();
     },
     check_required:function(){
         var error = 0;
@@ -1317,7 +1336,8 @@ var $name_plate = {
             }
 
         }
-    }
+    },
+
 }
 var $product_stock = {
         outstock: {},

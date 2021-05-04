@@ -145,11 +145,26 @@
                                     @endforeach
                                 @endif
                             </div>
-                            <div class="select_name_plate">
+
                                 @if($name_plates)
+                                <div class="select_name_plate">
                                     @include('layouts.view_ajax.view_product_name_plate')
+                                </div>
                                 @endif
-                            </div>
+
+                                @if($attr_hemming)
+                                <div class="select_hemming item-attribute-hidden">
+                                    <label>Hemming</label> <span class="ml-1"></span>
+                                    <div class="form-group" data-hemming>
+                                        <select class="form-control mb-2" data-name="hemming" onchange="display_hemming(this)" data-json="{{ \GuzzleHttp\json_encode($attr_hemming) }}" >
+                                            @foreach($attr_hemming as $hemming)
+                                            <option value="{{ $hemming->hemming }}">{{ $hemming->hemming.' ('.format_currency($hemming->hemming_price,2,'$').')' }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @endif
+
                             <div id="form-add-cart" class="add-cart mt-3 d-flex" data-outstock="{{ $outstock }}" data-all-price="{{ $all_price }}">
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <input type="hidden" name="thumbnail"

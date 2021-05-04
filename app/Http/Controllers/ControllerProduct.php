@@ -141,6 +141,7 @@ class ControllerProduct extends Controller
                 Product::update_meta_product($product_id, 'thumbnail_color', \GuzzleHttp\json_encode($request['thumbnail_color']));
                 Product::update_meta_product($product_id, 'thumbnail_attribute', \GuzzleHttp\json_encode($request['thumbnail_attribute']));
                 if($request['name_plate'])Product::update_meta_product($product_id, 'name_plate', \GuzzleHttp\json_encode($request['name_plate']));
+                if($request['attr_hemming'])Product::update_meta_product($product_id, 'attr_hemming', \GuzzleHttp\json_encode($request['attr_hemming']));
                 if($request['gallery'])Product::update_meta_product($product_id, 'gallery', \GuzzleHttp\json_encode($request['gallery']));
             }
             // end save attributes
@@ -215,6 +216,7 @@ class ControllerProduct extends Controller
                 Product::update_meta_product($product_id, 'thumbnail_color', \GuzzleHttp\json_encode($request['thumbnail_color']));
                 Product::update_meta_product($product_id, 'thumbnail_attribute', \GuzzleHttp\json_encode($request['thumbnail_attribute']));
                 if($request['name_plate'])Product::update_meta_product($product_id, 'name_plate', \GuzzleHttp\json_encode($request['name_plate']));
+                if($request['attr_hemming'])Product::update_meta_product($product_id, 'attr_hemming', \GuzzleHttp\json_encode($request['attr_hemming']));
                 if($request['gallery'])Product::update_meta_product($product_id, 'gallery', \GuzzleHttp\json_encode($request['gallery']));
             }
             // end save attributes
@@ -272,12 +274,15 @@ class ControllerProduct extends Controller
             $name_plates = \App\Product::get_meta_product($product->id,'name_plate');
             $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
 
+            $attr_hemming = \App\Product::get_meta_product($product->id,'attr_hemming');
+            $attr_hemming = ($attr_hemming)?(array)json_decode($attr_hemming):[];
+
             $galleries = \App\Product::get_meta_product($product->id,'gallery');
             $galleries= ($galleries)?(array)\GuzzleHttp\json_decode($galleries):[];
             $outstock = getUrlContent('https://upiconnect.com/api/inventory/sku/?productId='.$sku)??'{}';
             $all_price =  \App\Product::get_meta_product($product->id,'all_price');
             if(!$all_price)$all_price='{}';
-            return view('frontend.single-product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color','galleries','outstock','all_price'));
+            return view('frontend.single-product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color','galleries','outstock','all_price','attr_hemming'));
         }else{
             return redirect()->route('shops');
         }

@@ -734,9 +734,14 @@ class ControllerAjax extends Controller
             $plate = $request['plate'];
             $name_plate = Product::product_name_line()[$plate];
             $img='';
-
             return view('admin.products.template_name_plate_view', compact('detail_attribute','plate','name_plate','img'));
+        }
 
+        //Get Hemming product
+        if(isset($request['action']) && $request['action']=='get_hemming_ajax_view'){
+            $hemming = $request['hemming'];
+            $hemming_price = $request['hemming_price'];
+            return view('admin.products.template_hemming_view', compact('hemming','hemming_price'));
         }
 
         //Get Cart ajax

@@ -253,7 +253,7 @@ async function save_product(){
             jQuery.ajax({
                 url: products['action']['value'],
                 type: 'post',
-                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute(),price_attribute:$Attribute.price_attr,default_attribute:$Attribute.default_attr,thumbnail_attribute:$Attribute.thumbnail_attr, thumbnail_color:$Attribute.thumbnail_color, name_plate:$Attribute.name_plate,gallery:$Attribute.gallery},
+                data:{data:datas,_token:products['_token']['value'],all_attributes: get_data_attribute(),price_attribute:$Attribute.price_attr,default_attribute:$Attribute.default_attr,thumbnail_attribute:$Attribute.thumbnail_attr, thumbnail_color:$Attribute.thumbnail_color, name_plate:$Attribute.name_plate,gallery:$Attribute.gallery,attr_hemming:$Attribute.attr_hemming},
                 success: function(resulf){
                     if(resulf){
                         jQuery('#button-save-product span').addClass('d-none');
