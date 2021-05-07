@@ -518,3 +518,22 @@ a {
     font-size: 20px;
     font-weight: bold;
 }
+
+
+.carousel-fade .carousel-item {
+    opacity: 0;
+    transition: ease-in-out 6s;
+}
+.carousel-fade .carousel-item.active{
+    opacity: 1;
+    transition: ease-in 4s;
+}
+.carousel-fade .active.carousel-item-left,
+.carousel-fade .active.carousel-item-right {
+    opacity: 0;
+}
+.carousel-fade .carousel-item.active{
+    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
+}
+

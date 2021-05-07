@@ -14,7 +14,7 @@ if($data_brand){
 
     ?>
     <section class="banner_part mt-3">
-        <div id="CarouselHome" class="container carousel slide carousel-fade p-0" data-ride="carousel">
+        <div id="CarouselHome" class="container carousel slide carousel-fade p-0" data-ride="carousel" data-interval="6000">
             <div class="carousel-inner">
                 <div class="carousel-item active" style="background-image: url({{ url('images/slider1.jpg') }})">
                     <dic class="content-slider">
@@ -87,7 +87,7 @@ if($data_brand){
             <div class="row">
                 @if($top_category)
                     @foreach($top_category as $item)
-                <div class="Item-Category col-md-3 col-6" style="background-image: url( {{ ($item['image'])?url($item['image']):asset('images/products/default.jpg') }} )">
+                <div class="Item-Category col-md-3 col-6" onclick="window.location.href='{{ $item['url'] }}'" style="background-image: url( {{ ($item['image'])?url($item['image']):asset('images/products/default.jpg') }} )">
                     <div class="ContentItem">
                         <div class="title">{{  $item['name'] }}</div>
                         <div class="numberItem">{{ $item['number_products']  }} items</div>
