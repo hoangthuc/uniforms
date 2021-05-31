@@ -17,6 +17,7 @@ use App\Orders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\SimpleXLSX;
+use Psy\Util\Json;
 
 class ControllerAjax extends Controller
 {
@@ -346,9 +347,7 @@ class ControllerAjax extends Controller
             foreach ($request['data'] as $value) {
                 $data[$value['name']] = $value['value'];
             }
-            foreach ($data['payment'] as $value) {
-                $payment[$value['name']] = $value['value'];
-            }
+            $payment = (array)$data['payment'];
             $order_data = array(
                 'payment_type'=>$data['payment_type'],
                 'payment_status'=>3,
@@ -361,30 +360,25 @@ class ControllerAjax extends Controller
             );
             if(Auth::check())$order_data['user_id'] = Auth::id();
             if(isset($payment['notes']))$order_data['note'] = $payment['notes'];
-            $address = $payment['address']." \r ";
-            $address .= $payment['city'].', '.$payment['state'].', '.$payment['zipcode']." \r ";
-            $address .= $payment['email'].', '.$payment['phone'];
 
+            $address = $payment['billing'];
             $order_id =  DB::table('product_orders')->insertGetId($order_data);
             if($order_id){
                 Orders::update_meta_product_order($order_id,'products',  json_encode($data['products']));
-                Orders::update_meta_product_order($order_id,'customer_bill',  $payment['name']);
-                Orders::update_meta_product_order($order_id,'billing_address',  $address);
-                $shipping_name = (($payment['same_bill']) == 'false')?$payment['shipping_first_name'].' '.$payment['shipping_last_name']:$payment['name'];
+                Orders::update_meta_product_order($order_id,'customer_bill',  $address['name']);
+                Orders::update_meta_product_order($order_id,'billing_address',  json_encode($address));
                 $shipping_address =  $address;
                if(($payment['same_bill']) == 'false'){
-                   $shipping_address =    $payment['shipping_address_1']." \r ";
-                   $shipping_address .= $payment['shipping_city'].','.$payment['shipping_state'].','.$payment['shipping_zipcode']." \r ";
-                   $shipping_address .= $payment['shipping_email'].','.$payment['shipping_phone'];
+                   $shipping_address =    $payment['shipping'];
                 }
-                Orders::update_meta_product_order($order_id,'customer_shipping', $shipping_name );
-                Orders::update_meta_product_order($order_id,'shipping_address', $shipping_address );
+                Orders::update_meta_product_order($order_id,'customer_shipping', $shipping_address['name'] );
+                Orders::update_meta_product_order($order_id,'shipping_address', json_encode($shipping_address) );
                 if(isset($data['order']))Orders::update_meta_product_order($order_id,'orders',  json_encode($data['order']));
                 Orders::update_meta_product_order($order_id,'payment',  json_encode($payment));
                 Orders::update_meta_product_order($order_id,'total',  json_encode($data['total']));
-                $resulf['success'] = url('/order/'.$order_id.'?order_key='.md5($order_id));
-                session()->forget('cart');
-                Orders::email_template($order_id,$payment['email']);
+               $resulf['success'] = url('/order/'.$order_id.'?order_key='.md5($order_id));
+             //  session()->forget('cart');
+             //   Orders::email_template($order_id,$address['email']);
             }
 
 
@@ -748,6 +742,19 @@ class ControllerAjax extends Controller
         if(isset($request['action']) && $request['action']=='get_cart_ajax_view'){
             $cart = session()->get('cart');
             return view('layouts.view_ajax.view_cart', compact('cart'));
+        }
+
+        //Update field json order
+        if(isset($request['action']) && $request['action']=='update_address_order'){
+            $shipping_address=[];
+            $billing_address=[];
+            $tracking_order=[];
+            $data = $_POST['content'];
+            Orders::update_meta_product_order($_POST['order_id'],$_POST['field'],json_encode($data));
+            if($_POST['field'] == 'shipping_address')$shipping_address=$data;
+            if($_POST['field'] == 'billing_address')$billing_address=$data;
+            if(isset($data['Tracking']))$tracking_order=$data;
+            return view('admin.order.view-ajax-order',compact('shipping_address','billing_address','tracking_order'));
         }
 
 

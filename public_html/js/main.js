@@ -168,11 +168,18 @@ async function add_cart() {
     }
     var data_hemming = display_hemming();
     if(data_hemming){
-        key += '_' + data_hemming['hemming'];
-        attributes += '<br/> <b>Hemming</b>: ' + data_hemming['hemming'] + ',';
+        key += '_' + data_hemming['ProductID'];
+        attributes += '<br/> <b>Hemming</b>: ' + data_hemming['ItemAlteration'] + ',';
     }
     data['key'] = key;
     data['attributes'] = attributes.slice(0, -1);
+    let search =  $product_stock.search();
+    if( Number(search.QtyAvailable) > 0 ){
+        data['ListID'] = search.ListID;
+        data['dbLineId'] = search.Item;
+        data['alterations'] = search;
+    }
+
     let check = in_cart(data['key'], cart.products);
 
     if (cart.products.length < 1 || check == 'insert') cart.products.push(data);
@@ -198,7 +205,7 @@ async function buy_now(event) {
     if (Number(amount) > 0) {
         setTimeout(function () {
             //location.href = link;
-            quick_view_cart();
+            quick_view_cart(1);
         }, 1000)
     }
 
@@ -548,7 +555,7 @@ async function select_attribute(event) {
         $product_stock.all_price = JSON.parse(divcart.getAttribute('data-all-price'));
     }
     let outstock = $product_stock.search();
-    if( Number(outstock) > 0){
+    if( Number(outstock.QtyAvailable) > 0){
         document.querySelector('.out-of-stock').classList.add('d-none');
         document.querySelector('.btn-buy-now').classList.remove('d-none');
     }else{
@@ -565,22 +572,24 @@ async function select_attribute(event) {
 
 
 function payment_order() {
-    var data = [];
+    var data = {billing:{},shipping:{},notes:''};
     var error = '';
     var same_bill = document.getElementById("same_as_billing").checked;
     var notes = document.getElementById("notes").value;
-    data.push({name: 'notes', value: notes});
+    data['notes'] = notes;
+    data['same_bill'] = same_bill;
     $('#billing-form [name]').each(function () {
         var k = $(this).attr('name');
         var v = $(this).val();
+        var r = $(this).attr('data-required');
         v = v.trim();
-        if (!v) {
+        data['billing'][k] = v;
+        if (!v && r=='true') {
             $(this).addClass('error');
             error += k + ' is invalid';
         }
         if (v) {
             $(this).removeClass('error');
-            data.push({name: k, value: v});
         }
         if (k == 'email' && v && !ValidateEmail(v)) {
             error += k + ' is invalid';
@@ -591,13 +600,14 @@ function payment_order() {
         $('#shipping-form [name]').each(function () {
             var k = $(this).attr('name');
             var v = $(this).val();
-            if (!v) {
+            var r = $(this).attr('data-required');
+            data['shipping'][k] = v;
+            if (!v && r=='true') {
                 $(this).addClass('error');
                 error += k + ' is invalid';
             }
             if (v) {
                 $(this).removeClass('error');
-                data.push({name: k, value: v});
             }
             if (k == 'shipping_email' && v && !ValidateEmail(v)) {
                 error += k + ' is invalid';
@@ -606,7 +616,7 @@ function payment_order() {
         })
 
     }
-    data.push({name: 'same_bill', value: same_bill});
+
 
     if (error) {
         $('#payment-gate').addClass('d-none');
@@ -1166,13 +1176,25 @@ function display_name_plate(event) {
     });
 }
 
+// function display_hemming (event){
+//     var hemming = document.querySelector('[data-hemming] [data-name="hemming"]');
+//     if(hemming){
+//         var data_hemming = hemming.getAttribute('data-json');
+//         data_hemming = JSON.parse(data_hemming);
+//         let attr = data_hemming[hemming.value];
+//         document.querySelector('[data-hemming]').previousElementSibling.textContent = ' ('+format_currency(attr['hemming_price'])+')';
+//         return data_hemming[hemming.value];
+//     }
+//     return false;
+// }
+
 function display_hemming (event){
     var hemming = document.querySelector('[data-hemming] [data-name="hemming"]');
     if(hemming){
         var data_hemming = hemming.getAttribute('data-json');
         data_hemming = JSON.parse(data_hemming);
         let attr = data_hemming[hemming.value];
-        document.querySelector('[data-hemming]').previousElementSibling.textContent = ' ('+format_currency(attr['hemming_price'])+')';
+        document.querySelector('[data-hemming]').previousElementSibling.textContent = ' ('+format_currency(attr['Price'])+')';
         return data_hemming[hemming.value];
     }
     return false;
@@ -1210,9 +1232,11 @@ function quick_view_product(event) {
 }
 
 function quick_view_cart(event) {
-    if($("#quickviewproduct").data('bs.modal')){
+    var check = $("#quickviewproduct").data('bs.modal');
+    if(check){
         $('#quickviewproduct').modal('hide');
         $('#quickviewproduct').on('hidden.bs.modal', function (e) {
+            $('#quickviewproduct').modal('dispose');
             $('#quickcart').modal('show');
         });
     }else{
@@ -1345,7 +1369,7 @@ var $product_stock = {
         price: 0,
         choose:{},
         search: function(){
-            var search = 0;
+            var search = {};
             if(this.outstock.data){
                 var data = {};
                 document.querySelectorAll('.item-attribute.select_variant .item-attribute-list.active').forEach(attr=>{
@@ -1364,7 +1388,7 @@ var $product_stock = {
                         }   
                     }
                     if(s==count){
-                    search = outstock[i].QtyAvailable;
+                    search = outstock[i];
                     sku_item =outstock[i].ProductID;
                     }
                 }

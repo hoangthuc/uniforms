@@ -222,5 +222,18 @@ function get_parameters(key){
 }
 
 
+// window.addEventListener("DOMContentLoaded", function(e) {
+//
+//     var stage = document.getElementById("CarouselHome-inner");
+//     var fadeComplete = function(e) {
+//         let dom =  document.querySelector('#CarouselHome-inner .carousel-item');
+//         stage.appendChild(dom);
+//     };
+//     stage.querySelectorAll(".carousel-item").forEach(arr=>{
+//         arr.addEventListener("animationend", fadeComplete, false);
+//     })
+//
+// }, false);
+
 
 

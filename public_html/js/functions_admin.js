@@ -1726,10 +1726,75 @@ async function setup_media_gallery(data,id){
     $('#MediaModal').modal('hide');
 }
 
+
 // remove media gallery button
 function remove_media_gallery(color_id,img_id,name){
     var media = document.querySelector('.item_'+name+img_id);
     if(color_id)delete $Attribute.thumbnail_attr[color_id][img_id];
     media.remove();
     console.log($Attribute.thumbnail_attr);
+}
+
+function edit_address_order(event){
+    var off = $(event).data('field');
+    $('[data-field="'+off+'"]').addClass('d-none');
+    $('[data-field="edit-'+off+'"]').removeClass('d-none');
+}
+function send_address_order(event){
+    var dom = $(event).data('dom');
+    var order = $(event).data('order');
+    var fields = {};
+    document.querySelectorAll('[data-field="edit-'+dom+'"] input').forEach(data=>{
+        fields[ data.getAttribute('data-name') ] = data.value;
+    });
+    var data = {
+        action: 'update_address_order',
+        _token: setting.token,
+        field: dom,
+        order_id: order,
+        content: fields
+    };
+    var settings = {
+        "url": setting.ajax_url,
+        "method": "POST",
+        "headers": {},
+        "data": data,
+    };
+
+    $.ajax(settings).done(function (response) {
+        console.log(response);
+        document.querySelector('[data-field="'+dom+'"] .content').innerHTML = response;
+    });
+    $('[data-field="'+dom+'"]').removeClass('d-none');
+    $('[data-field="edit-'+dom+'"]').addClass('d-none');
+}
+
+function send_tracking_order(event){
+    var dom = $(event).data('dom');
+    var order = $(event).data('order');
+    let status = document.querySelector('[name="status"]').value;
+    var fields = {"status":status};
+    document.querySelectorAll('[data-field="edit-'+dom+'"] [data-name]').forEach(data=>{
+        console.log(data);
+        fields[ data.getAttribute('data-name') ] = data.value;
+    });
+    var data = {
+        action: 'update_address_order',
+        _token: setting.token,
+        field: dom,
+        order_id: order,
+        content: fields
+    };
+    var settings = {
+        "url": setting.ajax_url,
+        "method": "POST",
+        "headers": {},
+        "data": data,
+    };
+
+    $.ajax(settings).done(function (response) {
+      document.querySelector('[data-field="'+dom+'"] .content').innerHTML = response;
+    });
+    $('[data-field="'+dom+'"]').removeClass('d-none');
+    $('[data-field="edit-'+dom+'"]').addClass('d-none');
 }

@@ -302,6 +302,9 @@ Route::get('/my-account', function(){
     return view('frontend.account',['slug'=>'my-account']);
 })->name('my-account')->middleware('auth');
 
+Route::get('/my-order',['uses'=> 'ControllerOrders@my_order'])->name('my-order')->middleware('auth');
+Route::get('/tracking-order',['uses'=> 'ControllerOrders@find_order'])->middleware('auth');
+
 // ajax not admin all
 Route::post('nopriv_ajax', 'ControllerAjax@admin_ajax')->name('nopriv_ajax');
 Route::post('nopriv_upload','ControllerMedia@doUpload')->name('nopriv_ajax')->middleware('auth');

@@ -44,25 +44,28 @@
                                     @endif
                                     <div class="row" id="billing-form">
                                         <div class="col-sm-12 col-xs-12">
-                                            <input type="text" id="billing_name" name="name" value="{{ ($user_data)?$user_data->name:'' }}" placeholder="Name" class="form-control common-input">
+                                            <input type="text" name="name" value="{{ ($user_data)?$user_data->name:'' }}" placeholder="Name" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-12">
-                                            <input type="text" id="billing_address_1" name="address" value="{{ get_user_meta($user_id,'address') }}" placeholder="Address" class="form-control common-input">
+                                            <input type="text" name="address_1" value="{{ get_user_meta($user_id,'address') }}" placeholder="Address 1" class="form-control common-input" data-required="true">
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="text" name="address_2" value="{{ get_user_meta($user_id,'address_2') }}" placeholder="Address 2" class="form-control common-input" data-required="false">
                                         </div>
                                         <div class="col-lg-4 col-sm-12 col-xs-12">
-                                            <input type="text" id="billing_city" name="city"  value="{{ get_user_meta($user_id,'city') }}" placeholder="City" class="form-control common-input">
+                                            <input type="text" name="city"  value="{{ get_user_meta($user_id,'city') }}" placeholder="City" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-4 col-sm-12 col-xs-12">
-                                            <input type="text" id="billing_state" name="state"  value="{{ get_user_meta($user_id,'state') }}" placeholder="State" class="form-control common-input">
+                                            <input type="text"  name="state"  value="{{ get_user_meta($user_id,'state') }}" placeholder="State" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-4 col-sm-12 col-xs-12">
-                                            <input type="number" id="billing_zip" name="zipcode"  value="{{ get_user_meta($user_id,'zipcode') }}" placeholder="Zipcode" class="form-control common-input">
+                                            <input type="number" name="zipcode"  value="{{ get_user_meta($user_id,'zipcode') }}" placeholder="Zipcode" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="email" id="billing_email" name="email" value="{{ ($user_data)?$user_data->email:'' }}" placeholder="Email Address" class="form-control common-input">
+                                            <input type="email" name="email" value="{{ ($user_data)?$user_data->email:'' }}" placeholder="Email Address" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="number" id="billing_phone" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"  value="{{ get_user_meta($user_id,'phone') }}" placeholder="Phone Number" class="form-control common-input">
+                                            <input type="number" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"  value="{{ get_user_meta($user_id,'phone') }}" placeholder="Phone Number" class="form-control common-input" data-required="true">
                                         </div>
                                     </div>
                                     <h3 class="billing-title mt-5 mb-2"><i class="fa fa-truck fa-right-5"></i> Shipping Details</h3>
@@ -71,29 +74,29 @@
                                         <label for="same_as_billing">Shipping to the same address?</label>
                                     </div>
                                     <div class="row" data-show="same_as_billing"  id="shipping-form">
-                                        <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="text" id="shipping_first_name" name="shipping_first_name" placeholder="First Name" class="form-control common-input">
-                                        </div>
-                                        <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="text" id="shipping_last_name" name="shipping_last_name" placeholder="Last Name" class="form-control common-input">
+                                        <div class="col-sm-12 col-xs-12">
+                                            <input type="text" name="name" value="" placeholder="Name" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-12">
-                                            <input type="text" id="shipping_address_1" name="shipping_address_1" placeholder="Address" class="form-control common-input">
+                                            <input type="text" name="address_1" value="" placeholder="Address 1" class="form-control common-input" data-required="true">
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="text" name="address_2" value="" placeholder="Address 2" class="form-control common-input" data-required="false">
                                         </div>
                                         <div class="col-lg-4 col-sm-12 col-xs-12">
-                                            <input type="text" id="shipping_city" name="shipping_city" placeholder="City" class="form-control common-input">
+                                            <input type="text"  name="city"  value="" placeholder="City" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-4 col-sm-12 col-xs-12">
-                                            <input type="text" id="shipping_state" name="shipping_state" placeholder="State" class="form-control common-input">
+                                            <input type="text" name="state"  value="" placeholder="State" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-4 col-sm-12 col-xs-12">
-                                            <input type="number" id="shipping_zip" name="shipping_zipcode" placeholder="Zipcode" class="form-control common-input">
+                                            <input type="number" name="zipcode"  value="" placeholder="Zipcode" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="email" id="shipping_email" name="shipping_email" placeholder="Email Address" class="form-control common-input">
+                                            <input type="email"  name="email" value="" placeholder="Email Address" class="form-control common-input" data-required="true">
                                         </div>
                                         <div class="col-lg-6 col-sm-12 col-xs-12">
-                                            <input type="number" id="shipping_phone" name="shipping_phone" placeholder="Phone Number" class="form-control common-input">
+                                            <input type="number" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"  value="" placeholder="Phone Number" class="form-control common-input" data-required="true">
                                         </div>
                                     </div>
                                     <h3 class="billing-title mt-5 mb-2"><i class="far fa-file-alt"></i> Special Comments</h3>

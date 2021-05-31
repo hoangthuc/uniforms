@@ -6,9 +6,11 @@
     $payment_type = App\Orders::payment_type();
 
     $customer_bill = App\Orders::get_meta_product_order($order_id,'customer_bill');
-    $billing_address = App\Orders::get_meta_product_order($order_id,'billing_address');
     $customer_shipping = App\Orders::get_meta_product_order($order_id,'customer_shipping');
+    $billing_address = App\Orders::get_meta_product_order($order_id,'billing_address');
+    $billing_address = ($billing_address)?(array)json_decode($billing_address):[];
     $shipping_address = App\Orders::get_meta_product_order($order_id,'shipping_address');
+    $shipping_address = ($shipping_address)?(array)json_decode($shipping_address):[];
     $products = App\Orders::get_meta_product_order($order_id,'products');
     if(isset($products)){
         $products = display_product_in_order( json_decode($products) );
@@ -47,14 +49,26 @@
                                 Billing Address
                                 <address>
                                     <strong>{{  $customer_bill }}</strong><br>
-                                    {!! nl2br($billing_address) !!}
+                                    @if( isset($billing_address['address']) )
+                                        <span>{!! $billing_address['address'] !!}</span><br/>
+                                        <span>{!! $billing_address['city'].', '.$billing_address['state'].', '.$billing_address['zipcode'] !!}</span><br/>
+                                        <span>{!! $billing_address['email'].', '.$billing_address['phone'] !!}</span>
+                                    @endif
                                 </address>
                             </div>
                             <div style="width: 100%; padding-right: 7.5px;padding-left: 7.5px;">
                                 Shipping Address
                                 <address>
                                     <strong>{{ $customer_shipping }}</strong><br>
-                                    {!! nl2br($shipping_address) !!}
+                                    @if( isset($shipping_address['shipping_address_1']) )
+                                        <span>{!! $shipping_address['shipping_address_1'] !!}</span><br/>
+                                        <span>{!! $shipping_address['shipping_city'].', '.$shipping_address['shipping_state'].', '.$shipping_address['shipping_zipcode'] !!}</span><br/>
+                                        <span>{!! $shipping_address['shipping_email'].', '.$shipping_address['shipping_phone'] !!}</span>
+                                    @elseif(isset($shipping_address['address']))
+                                        <span>{!! $shipping_address['address'] !!}</span><br/>
+                                        <span>{!! $shipping_address['city'].', '.$shipping_address['state'].', '.$shipping_address['zipcode'] !!}</span><br/>
+                                        <span>{!! $shipping_address['email'].', '.$shipping_address['phone'] !!}</span>
+                                    @endif
                                 </address>
                             </div>
                             <div style="width: 100%; padding-right: 7.5px;padding-left: 7.5px;">

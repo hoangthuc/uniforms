@@ -280,9 +280,10 @@ class ControllerProduct extends Controller
             $galleries = \App\Product::get_meta_product($product->id,'gallery');
             $galleries= ($galleries)?(array)\GuzzleHttp\json_decode($galleries):[];
             $outstock = getUrlContent('https://upiconnect.com/api/inventory/sku/?productId='.$sku)??'{}';
+             $outstock_hemming = json_decode($outstock);
             $all_price =  \App\Product::get_meta_product($product->id,'all_price');
             if(!$all_price)$all_price='{}';
-            return view('frontend.single-product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color','galleries','outstock','all_price','attr_hemming'));
+            return view('frontend.single-product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color','galleries','outstock','all_price','attr_hemming','outstock_hemming'));
         }else{
             return redirect()->route('shops');
         }
@@ -334,9 +335,10 @@ class ControllerProduct extends Controller
             $galleries = \App\Product::get_meta_product($product->id,'gallery');
             $galleries= ($galleries)?(array)\GuzzleHttp\json_decode($galleries):[];
             $outstock = getUrlContent('https://upiconnect.com/api/inventory/sku/?productId='.$sku)??'{}';
+            $outstock_hemming = json_decode($outstock);
             $all_price =  \App\Product::get_meta_product($product->id,'all_price');
             if(!$all_price)$all_price='{}';
-            return view('layouts.view_ajax.view_single_product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color','galleries','outstock','all_price'));
+            return view('layouts.view_ajax.view_single_product',compact('product','category','price','shipping','sku','thumbnail_color','price_attribute','default_attribute','attributes','relation_product','variantions','name_plates','reviews','list_reviews','get_reviews','pagition','id_color','galleries','outstock','all_price','outstock_hemming'));
         }else{
             return 'Product not found.';
         }

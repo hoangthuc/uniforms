@@ -41,7 +41,7 @@ class Orders extends Model
     }
     // get orders by user
     public static function get_ordersBy_user($user){
-        $orders = DB::table('product_orders')->where('user_id',$user)->orderByDesc('updated_at')->get();
+        $orders = DB::table('product_orders')->where('user_id',$user)->orderByDesc('updated_at')->paginate(20);
         return $orders;
     }
 
@@ -60,8 +60,8 @@ class Orders extends Model
             4 => 'On hold',
             5 => 'Canceled',
             6 => 'Refunded',
-            7 => 'Gift',
-            8 => 'Pending payment',
+            7 => 'Pending payment',
+            8 => 'Shipped',
         ];
         return $order_status;
     }
@@ -75,6 +75,16 @@ class Orders extends Model
             3 => 'Authorize',
         ];
         return $product_type;
+    }
+
+    public static function ship_company(){
+        $company = [
+           'usps' =>['name'=>'USPS','url'=>'https://www.usps.com'],
+           'usp' =>['name'=>'USP','url'=>'https://www.ups.com'],
+           'fedex' =>['name'=>'FedEx','url'=>'https://www.fedex.com'],
+           'dhl' =>['name'=>'MyDHL','url'=>'https://mydhl.express.dhl'],
+        ];
+        return $company;
     }
 
     // get meta orders
@@ -173,6 +183,16 @@ class Orders extends Model
                 ->cc(env('MAIL_TO_CC'), 'Admin')
                 ->subject('You have an Order #'.$id);
         });
+
+    }
+    public static function updateOrder($order_id,$data){
+        $orderdata = self::get_order($order_id);
+        if($orderdata){
+            DB::table('product_orders')->where('id', $order_id)->update($data);
+            return true;
+        }else{
+            return false;
+        }
 
     }
 

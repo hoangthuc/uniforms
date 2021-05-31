@@ -137,6 +137,23 @@
                                 @include('layouts.view_ajax.view_product_name_plate')
                             @endif
                         </div>
+                         @if( isset($outstock_hemming->data->Alterations) && count($outstock_hemming->data->Alterations) > 1  )
+                                <div class="select_hemming item-attribute-hidden">
+                                    <label>Hemming</label> <span class="ml-1"></span>
+                                    <div class="form-group" data-hemming>
+                                        <select class="form-control mb-2" data-name="hemming" onchange="display_hemming(this)" data-json="{{ json_encode($outstock_hemming->data->Alterations) }}" >
+                                            @foreach($outstock_hemming->data->Alterations as $key => $hemming)
+                                            @if($key==1)
+                                            <optgroup label="{{ $hemming->AlterationGroup }}">{{ $hemming->AlterationGroup }}</optgroup>
+                                            @endif
+                                            @if($key>1)
+                                            <option value="{{ $key }}">{{ $hemming->ItemAlteration.' ('.format_currency($hemming->Price,2,'$').')' }}</option>
+                                            @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif     
                         <div id="form-add-cart" class="add-cart mt-3 d-flex" data-outstock="{{ $outstock }}" data-all-price="{{ $all_price }}">
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <input type="hidden" name="thumbnail"

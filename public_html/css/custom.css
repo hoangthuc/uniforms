@@ -521,19 +521,14 @@ a {
 
 
 .carousel-fade .carousel-item {
-    opacity: 0;
-    transition: ease-in-out 6s;
-}
+     transition: ease-in 2s;
+ }
 .carousel-fade .carousel-item.active{
-    opacity: 1;
-    transition: ease-in 4s;
+    transition: ease-out 4s;
 }
-.carousel-fade .active.carousel-item-left,
-.carousel-fade .active.carousel-item-right {
-    opacity: 0;
+.order-container{
+    max-width:  800px;
+    margin: 0 auto;
 }
-.carousel-fade .carousel-item.active{
-    transform: translateX(0);
-    transform: translate3d(0, 0, 0);
-}
+
 

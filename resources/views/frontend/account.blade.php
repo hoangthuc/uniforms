@@ -59,7 +59,7 @@
                                             @if($user->level =='administrator')
                                             <li><a href="{{ url('admin') }}" class="btn btn-unipro btn-block mb-3"><b>Dashboard</b></a></li>
                                             @endif
-                                            <li><a href="#" class="btn btn-unipro btn-block" data-toggle="modal" data-target="#ListMyOrder"><b>View my order</b></a></li>
+                                            <li><a href="{{ url('my-order') }}" class="btn btn-unipro btn-block"><b>View my order</b></a></li>
                                             <li><a href="{{ url('cart') }}" class="btn btn-unipro btn-block mt-3"><b>View cart</b></a></li>
                                             <li><a href="javascript:logout();" class="btn btn-unipro btn-block mt-3"><b>Log Out</b></a></li>
                                         </ul>

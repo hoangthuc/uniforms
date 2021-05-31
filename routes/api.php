@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware('api')->post('/callback/{order_id}',['uses'=> 'ControllerOrders@callback']);
+Route::middleware('api')->post('/create_api_token','ApiTokenController@update');
+Route::middleware('api')->post('/order/update/{order_id}',['uses'=> 'ControllerOrders@update_order']);

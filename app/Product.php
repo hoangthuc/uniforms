@@ -545,8 +545,8 @@ class Product extends Model
             )
             ->where(DB::raw($Attribute_where . " 1"), '1')
             ->orderBy('loop_cat', 'DESC')
-            ->groupBy('products.id')
             ->orderBy(($orderby['type'] == 'number') ? DB::raw($orderby['name'] . '+ 0') : $orderby['name'], $orderby['value'])
+            ->groupBy('products.id')
             ->paginate(12, ['*'], 'page', $page);
 //        ->toSql();
 //        dd($products);

@@ -7,15 +7,21 @@
     $payment_type = App\Orders::payment_type();
 
     $customer_bill = App\Orders::get_meta_product_order($order_id,'customer_bill');
-    $billing_address = App\Orders::get_meta_product_order($order_id,'billing_address');
     $customer_shipping = App\Orders::get_meta_product_order($order_id,'customer_shipping');
+    $billing_address = App\Orders::get_meta_product_order($order_id,'billing_address');
+    $billing_address = ($billing_address)?(array)json_decode($billing_address):[];
     $shipping_address = App\Orders::get_meta_product_order($order_id,'shipping_address');
+    $shipping_address = ($shipping_address)?(array)json_decode($shipping_address):[];
     $products = App\Orders::get_meta_product_order($order_id,'products');
     if( isset($products) ){
         $products = display_product_in_order( json_decode($products) );
         $products['tax'] = ($products['subtotal']*$order->tax)/100;
         $products['total'] = $order->shipping + $products['tax'] + $products['subtotal'];
     }
+    $tracking_field = ["Tracking", "Carrier", "url_tracking", "ShipDate", "PackingList"];
+    $tracking_order = App\Orders::get_meta_product_order($order_id,'tracking_order');
+    $tracking_order = ($tracking_order)?(array)json_decode($tracking_order):[];
+    $company = \App\Orders::ship_company();
     ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -43,30 +49,111 @@
                         <!-- /.card-header -->
                         <div class="card-body save_order">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Billing Address</label>
                                         <input type="text" name="customer_bill" class="form-control"
                                                placeholder="Customer name" data-title="Customer name"
                                                data-required="false" value="{{ $customer_bill }}">
                                         <span class="um-field-error d-none"></span>
-                                        <textarea class="form-control mt-3" name="billing_address" rows="5"
-                                                  placeholder="Billing Address" data-title="Billing Address"
-                                                  data-required="false">{{ strip_tags($billing_address) }}</textarea>
-                                        <span class="um-field-error d-none"></span>
+                                        <address class="p-2" data-field="billing_address">
+                                            <div class="content">
+                                            @if( isset($billing_address['address_1']) )
+                                                <span>{!! $billing_address['address_1'] !!}</span><br/>
+                                                <span>{!! $billing_address['address_2'] !!}</span><br/>
+                                                <span>{!! $billing_address['city'].', '.$billing_address['state'].', '.$billing_address['zipcode'] !!}</span><br/>
+                                                <span>{!! $billing_address['email'].', '.$billing_address['phone'] !!}</span>
+                                            @endif
+                                            </div>
+                                                <a onclick="edit_address_order(this)" data-json="{!! \GuzzleHttp\json_encode($billing_address) !!}" data-field="billing_address"><i class="far fa-edit" style="font-size: 20px;"></i></a>
+                                        </address>
+                                        <div class="d-none p-2" data-field="edit-billing_address">
+                                            @foreach($billing_address as $name => $field)
+                                                @if($name !='name')
+                                                <div class="form-group">
+                                                    <input type="text" data-name="{{ $name }}" class="form-control" placeholder="{{ $name }}"
+                                                           data-required="true" value="{{ $field }}">
+                                                    <span class="um-field-error d-none"></span>
+                                                </div>
+                                               @endif
+                                            @endforeach
+                                            <a class="btn btn-app" data-dom="billing_address" data-order="{{ $order_id }}" onclick="send_address_order(this)">
+                                                <i class="fa fa-save fa-right-5"></i> Save
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Shipping Address</label>
                                         <input type="text" name="customer_shipping" class="form-control"
                                                placeholder="Customer name" data-title="Customer name"
                                                data-required="true" value="{{ $customer_shipping }}">
                                         <span class="um-field-error d-none"></span>
-                                        <textarea class="form-control mt-3" name="shipping_address" rows="5"
-                                                  placeholder="Shipping Address" data-title="Shipping Address"
-                                                  data-required="true">{{ $shipping_address }}</textarea>
-                                        <span class="um-field-error d-none"></span>
+                                        <address class="p-2" data-field="shipping_address">
+                                            <div class="content">
+                                                    @if( isset($shipping_address['address_1']) )
+                                                        <span>{!! $shipping_address['address_1'] !!}</span><br/>
+                                                        <span>{!! $shipping_address['address_2'] !!}</span><br/>
+                                                        <span>{!! $shipping_address['city'].', '.$shipping_address['state'].', '.$shipping_address['zipcode'] !!}</span><br/>
+                                                        <span>{!! $shipping_address['email'].', '.$shipping_address['phone'] !!}</span>
+                                                    @endif
+                                            </div>
+                                            <a onclick="edit_address_order(this)" data-json="{!! \GuzzleHttp\json_encode($shipping_address) !!}" data-field="shipping_address"><i class="far fa-edit" style="font-size: 20px;"></i></a>
+                                        </address>
+                                        <div class="d-none p-2" data-field="edit-shipping_address">
+                                            @foreach($shipping_address as $name => $field)
+                                                @if($name !='name')
+                                                    <div class="form-group">
+                                                        <input type="text" data-name="{{ $name }}" class="form-control" placeholder="{{ $name }}"
+                                                               data-required="true" value="{{ $field }}">
+                                                        <span class="um-field-error d-none"></span>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                            <a class="btn btn-app" data-dom="shipping_address" data-order="{{ $order_id }}" onclick="send_address_order(this)">
+                                                <i class="fa fa-save fa-right-5"></i> Save
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Tracking Order</label>
+                                        <div class="p-2" data-field="tracking_order">
+                                            <div class="content">
+                                                @if( isset($tracking_order['Tracking']) )
+                                                    <span>Tracking number: {!! $tracking_order['Tracking'] !!}</span><br/>
+                                                    <span>Company: {!! isset($tracking_order['Carrier'])? $company[$tracking_order['Carrier']]['name']:'' !!}</span><br/>
+                                                    <span>URL: {!! $tracking_order['url_tracking'] !!}</span><br/>
+                                                    <span>Ship Date: {!! $tracking_order['ShipDate'] !!}</span><br/>
+                                                    <span>Packing List: {!! $tracking_order['PackingList'] !!}</span>
+                                                @endif
+                                            </div>
+                                            <a onclick="edit_address_order(this)" data-json="{!! \GuzzleHttp\json_encode($shipping_address) !!}" data-field="tracking_order"><i class="far fa-edit" style="font-size: 20px;"></i></a>
+                                        </div>
+                                        <div class="d-none p-2" data-field="edit-tracking_order">
+                                            @foreach($tracking_field as $field)
+                                                    <div class="form-group">
+                                                        @if($field == 'Carrier')
+                                                            <select data-name="{{ $field }}" class="form-control">
+                                                            @foreach( $company  as $id => $com )
+                                                                <option value="{{ $id }}" {{ ( isset($tracking_order[$field]) && $tracking_order[$field] == $id)?'selected':'' }}>{{ $com['name'] }}</option>
+                                                            @endforeach
+                                                            </select>
+                                                        @else
+                                                        <input type="text" data-name="{{ $field }}" class="form-control" placeholder="{{ $field }}"
+                                                               data-required="true" value="{{ isset($tracking_order[$field])?$tracking_order[$field]:'' }}">
+                                                        @endif
+                                                        <span class="um-field-error d-none"></span>
+                                                    </div>
+                                            @endforeach
+                                            <a class="btn btn-app" data-dom="tracking_order" data-order="{{ $order_id }}" onclick="send_tracking_order(this)">
+                                                <i class="fa fa-save fa-right-5"></i> Save
+                                            </a>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
