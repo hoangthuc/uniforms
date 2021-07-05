@@ -279,7 +279,8 @@ class ControllerProduct extends Controller
 
             $galleries = \App\Product::get_meta_product($product->id,'gallery');
             $galleries= ($galleries)?(array)\GuzzleHttp\json_decode($galleries):[];
-            $outstock = getUrlContent('https://upiconnect.com/api/inventory/sku/?productId='.$sku)??'{}';
+            //$outstock = getUrlContent('https://upiconnect.com/api/inventory/sku/?productId='.$sku)??'{}';
+            $outstock = getUrlContent('https://uniforms.kendemo.com/api/product/'.$sku)??'{}';
              $outstock_hemming = json_decode($outstock);
             $all_price =  \App\Product::get_meta_product($product->id,'all_price');
             if(!$all_price)$all_price='{}';
@@ -360,6 +361,11 @@ class ControllerProduct extends Controller
         $filter_products = getProductFilterPage($query);
         $product_departments = \App\Product::product_departments();
        return view('frontend.brand',compact('type','cat','search','query','filter_products','product_departments','brand','slug','brand_id','data_brand','parent_brand'));
+    }
+
+    public function get_product_system($sku){
+        $outstock = getUrlContent('https://upiconnect.com/api/inventory/sku/?productId='.$sku)??'{}';
+        return response()->json( json_decode($outstock) );
     }
 
 

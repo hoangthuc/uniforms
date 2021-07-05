@@ -1798,3 +1798,263 @@ function send_tracking_order(event){
     $('[data-field="'+dom+'"]').removeClass('d-none');
     $('[data-field="edit-'+dom+'"]').addClass('d-none');
 }
+
+function edit_product_order(event){
+    var list = $(event).attr('data-list');
+document.querySelector('[data-list-item="'+list+'"] [data-type="edit"]').classList.add('d-none');
+document.querySelector('[data-list-item="'+list+'"] [data-type="remove"]').classList.add('d-none');
+document.querySelector('[data-list-item="'+list+'"] [data-type="update"]').classList.remove('d-none');
+document.querySelectorAll('[data-list-item="'+list+'"] [data-show]').forEach(show=>{
+    show.classList.add('d-none');
+})
+document.querySelectorAll('[data-list-item="'+list+'"] .edit_form').forEach(show=>{
+        show.classList.remove('d-none');
+})
+}
+function delete_product_order(event){
+    var list = $(event).attr('data-list');
+    var id = $(event).attr('data-order');
+    var data = {list:list,order_id:id};
+    var settings = {
+        "url": setting.ajax_url,
+        "method": "POST",
+        "headers": {},
+        "data": {
+            action: 'admin_delete_product_order',
+            _token: setting.token,
+            content: data
+        }
+    };
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, do it!'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax(settings).done(function (response) {
+                document.querySelector('[data-display-ajax-product]').innerHTML = response;
+            });
+        }
+    })
+
+
+}
+
+
+function update_product_order(event){
+    var list = $(event).attr('data-list');
+    var id = $(event).attr('data-order');
+    var data = {list:list,order_id:id};
+    document.querySelector('[data-list-item="'+list+'"] [data-type="edit"]').classList.remove('d-none');
+    document.querySelector('[data-list-item="'+list+'"] [data-type="update"]').classList.add('d-none');
+    document.querySelectorAll('[data-list-item="'+list+'"] .edit_form').forEach(show=>{
+        show.classList.add('d-none');
+    })
+    document.querySelectorAll('[data-list-item="'+list+'"] [data-show]').forEach(show=>{
+        show.classList.remove('d-none');
+    });
+
+    document.querySelectorAll('[data-list-item="'+list+'"] .edit_form input').forEach(show=>{
+        data[show.getAttribute('data-name')] = show.value;
+    });
+    var settings = {
+        "url": setting.ajax_url,
+        "method": "POST",
+        "headers": {},
+        "data": {
+            action: 'admin_update_product_order',
+            _token: setting.token,
+            content: data
+        }
+    };
+
+    $.ajax(settings).done(function (response) {
+        document.querySelector('[data-display-ajax-product]').innerHTML = response;
+        document.querySelector('[name="search_product"]').value = '';
+        document.querySelector('[data-show-list-product]').innerHTML = '';
+    });
+
+
+}
+
+function change_product_order(event){
+    var value = $(event).val();
+    if(value < 1) return $(event).val(1);
+    var list = $(event).attr('data-list');
+    var data = {};
+    var display = document.querySelector('[data-list-item="'+list+'"] [data-display]');
+    document.querySelectorAll('[data-list-item="'+list+'"] .edit_form input').forEach(show=>{
+        data[show.getAttribute('data-name')] = show.value;
+    })
+    data['ListPrice'] =  data.subtotal / data.quantily;
+    display.textContent = format_currency( data.ListPrice  );
+}
+
+// add new product in order
+var request;
+function get_product_in_order(event){
+    var keyword = $(event).val();
+    if(keyword.length < 3) return false;
+    var settings = {
+        "url": setting.ajax_url,
+        "method": "POST",
+        "headers": {},
+        "data": {
+            action: 'admin_get_product_order',
+            _token: setting.token,
+            content: keyword
+        }
+    };
+    document.querySelector('[data-show-list-product]').innerHTML =  '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+    if (request && !request.status) {
+        request.abort();
+    }
+   request =  $.ajax(settings).done(function (response) {
+        document.querySelector('[data-show-list-product]').innerHTML = response;
+    });
+}
+
+function select_product_in_order(event){
+    var id  = $(event).data('id');
+    var settings = {
+        "url": setting.ajax_url,
+        "method": "POST",
+        "headers": {},
+        "data": {
+            action: 'admin_select_product_order',
+            _token: setting.token,
+            product: id
+        }
+    };
+    document.querySelector('[data-show-list-product]').innerHTML =  '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+    $.ajax(settings).done(function (response) {
+        document.querySelector('[data-show-list-product]').innerHTML = response;
+        change_attribute_product();
+    });
+}
+
+
+function change_attribute_product(event){
+    var outstock = document.querySelector('[data-show-list-product] [data-outstock]');
+    if(outstock)var outstock = JSON.parse( outstock.getAttribute('data-outstock') );
+    let resulf =  search_stock(outstock);
+var key =[];
+key.push(document.querySelector('[data-show-list-product] [name="product_id"]').value);
+document.querySelectorAll('[data-show-list-product] [data-name]').forEach(el=>{
+   key.push(el.value);
+});
+    resulf['key'] = key.join('_');
+    document.querySelectorAll('[data-show-list-product] [name]').forEach(el=>{
+        resulf[el.getAttribute('name')] = el.value;
+    });
+    document.querySelectorAll('[data-show-list-product] [name]').forEach(el=>{
+        resulf[el.getAttribute('name')] = el.value;
+    });
+    if(Number(resulf.quantily)< 0){
+        document.querySelector('[data-show-list-product] [name="quantily"]').value = 1;
+        change_attribute_product();
+    }
+    if( Number(resulf.QtyAvailable) > Number(resulf.quantily)){
+        document.querySelector('.out-of-stock').classList.add('d-none');
+        document.querySelector('.add-cart button').classList.remove('d-none');
+    }else{
+        document.querySelector('.out-of-stock').classList.remove('d-none');
+        document.querySelector('.add-cart button').classList.add('d-none');
+    }
+
+return resulf;
+}
+
+function search_stock(outstockall){
+    var search = {};
+    if(outstockall.item){
+        var outstock = outstockall.item;
+        var data = {};
+        var label = [];
+        var attributes = [];
+        var alteration = [];
+        document.querySelectorAll('.select_variant.attributes [data-name]').forEach(attr=>{
+            let title = attr.options[attr.selectedIndex].text;
+            let attr_title = {};
+            title = title.replace("|", "/");
+            data[ attr.getAttribute('data-name') ] = title;
+            attr_title[ attr.getAttribute('data-name') ] = title;
+            label.push('<b>'+attr.getAttribute('data-name')+'</b>:'+title);
+            attributes.push(attr_title);
+
+        });
+        document.querySelectorAll('.select_other_attr [data-name]').forEach(attr=>{
+            let title = attr.options[attr.selectedIndex].getAttribute('data-title');
+            let stt = attr.options[attr.selectedIndex].getAttribute('data-stt');
+            title = title.replace("|", "/");
+            label.push('<br><b>'+attr.getAttribute('data-name')+'</b>:'+title);
+            alteration[0] = outstockall.Alterations[stt];
+        });
+        var count = Object.keys(data).length;
+        var sku_item = '';
+        for (var i = 0; i < outstock.length; i++) {
+            var s = 0;
+            for(t in data){
+                if(outstock[i][t] == data[t]){
+                    s++;
+                }
+            }
+            if(s==count){
+                search = outstock[i];
+                sku_item =outstock[i].ProductID;
+            }
+        }
+    }
+    search['attributes'] = attributes;
+    search['alteration'] = alteration;
+    search['attributes_title'] = label.join(',');
+    return search;
+}
+
+function insert_product_in_order(){
+ var product = change_attribute_product();
+ let check  =  document.querySelector('[data-key="'+product.key+'"]');
+console.log(product);
+if(product.alteration[0]){
+        product.ListPrice =   Number(product.alteration[0]['Price']) + Number(product.ListPrice);
+}
+ if(check){
+let quantily = check.querySelector('[data-name="quantily"]').value;
+quantily = Number(quantily) + Number(product.quantily);
+     check.querySelector('[data-name="quantily"]').value = quantily;
+     check.querySelector('[data-name="subtotal"]').value = quantily * Number(product.ListPrice);
+     check.querySelector('[data-type="update"]').click();
+     $('#add-new-product').modal('hide');
+ }else{
+  product['subtotal'] =   Number(product.quantily) * Number(product.ListPrice);
+var product_meta = []
+  document.querySelectorAll('[data-display-ajax-product] [data-list-item]').forEach(tr=>{
+      product_meta.push( JSON.parse( tr.getAttribute('data-json') )  );
+  })
+     product_meta.push(product);
+  var settings = {
+         "url": setting.ajax_url,
+         "method": "POST",
+         "headers": {},
+         "data": {
+             action: 'admin_add_product_order',
+             _token: setting.token,
+             product: product_meta,
+             order_id: document.querySelector('input[data-title="ID"]').value,
+         }
+  };
+  document.querySelector('[data-show-list-product]').innerHTML =  '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+  $.ajax(settings).done(function (response) {
+         document.querySelector('[data-show-list-product]').innerHTML = response;
+      $('#add-new-product').modal('hide');
+      document.querySelector('[data-display-ajax-product] [data-type="update"]').click();
+     });
+
+ }
+
+}

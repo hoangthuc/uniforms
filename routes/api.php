@@ -21,3 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('api')->post('/callback/{order_id}',['uses'=> 'ControllerOrders@callback']);
 Route::middleware('api')->post('/create_api_token','ApiTokenController@update');
 Route::middleware('api')->post('/order/update/{order_id}',['uses'=> 'ControllerOrders@update_order']);
+Route::middleware('api')->get('/product/{sku}',['uses'=> 'ControllerProduct@get_product_system']);
+Route::middleware('api')->post('/order/product/{order_id}/{key}/{action}',['uses'=> 'ControllerOrders@update_product_order']);

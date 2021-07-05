@@ -303,21 +303,38 @@ if (! function_exists('format_currency')) {
 
 // display product in orders
 if (! function_exists('display_product_in_order')) {
-    function display_product_in_order($data){
+    function display_product_in_order($data,$order_id=''){
         $resulf = [];
        ob_start();
         if(isset($data)){
             $total = 0;
-            foreach($data as $value): $total += $value->subtotal * $value->quantily;
+            foreach($data as $key => $value): $total += $value->subtotal * $value->quantily;
              $detail_product  =    \App\Product::get_product($value->product_id);
              $title = (isset($detail_product))?'<a href="'.url('product/'.$detail_product->slug).'" target="_blank">'.$detail_product->name.'</a>':$value->title;
             ?>
-                <tr>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e($value->quantily) ?></td>
+                <tr data-key="<?= $value->key ?>" data-list-item="<?= $key ?>" data-json='<?= json_encode($value) ?>' data-product="<?= isset($detail_product->id)?$detail_product->id:'' ?>">
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;">
+                        <span data-show><?php _e($value->quantily) ?></span>
+                    <div class="no_print d-none edit_form">
+                        <input type="number" data-name="quantily" data-list="<?= $key ?>" onchange="change_product_order(this)" oninput="change_product_order(this)" value="<?= $value->quantily ?>">
+                    </div>
+                    </td>
                     <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e($title) ?></td>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e($value->attributes) ?></td>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e( format_currency( $value->subtotal,2,'$') ) ?></td>
-                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e( format_currency( $value->subtotal * $value->quantily,2,'$') ) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;"><?php _e($value->attributes_title) ?></td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;">
+                        <span data-display><?php _e( format_currency( $value->ListPrice,2,'$') ) ?></span>
+                    </td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;">
+                        <span data-show><?php _e( format_currency( $value->ListPrice * $value->quantily,2,'$') ) ?></span>
+                        <div class="no_print d-none edit_form">
+                            <input type="number" data-name="subtotal" data-list="<?= $key ?>" onchange="change_product_order(this)" oninput="change_product_order(this)"  value="<?= $value->ListPrice * $value->quantily ?>">
+                        </div>
+                    </td>
+                    <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;min-width: 80px" class="no_print">
+                        <span data-list="<?= $key ?>" data-type="edit" onclick="edit_product_order(this)" ><i class="far fa-edit" style="font-size: 20px;"></i></span>
+                        <span data-order="<?= $order_id ?>" data-list="<?= $key ?>" data-type="remove" onclick="delete_product_order(this)" ><i class="fas fa-trash ml-2" style="font-size: 20px;"></i></span>
+                        <span data-order="<?= $order_id ?>" class="d-none" data-list="<?= $key ?>" data-type="update" onclick="update_product_order(this)" ><i class="fa fa-save fa-right-5" style="font-size: 30px;"></i></span>
+                    </td>
                 </tr>
           <?php  endforeach;
             $resulf['subtotal'] =  $total;

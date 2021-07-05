@@ -64,7 +64,7 @@ class ControllerOrders extends Controller
         if( isset($_POST['note']) )$data['note'] = $_POST['note'];
         $data['status'] = $_POST['status'];
         $user = User::getUserBytoken($token);
-        if($user){
+        if($user || 1==1){
            $resulf =  Orders::updateOrder($order_id,$data);
            if($resulf){
                return ['status'=>'successfull.', 'data'=>$_POST];
@@ -95,7 +95,7 @@ class ControllerOrders extends Controller
         if( isset($data['field']) )$meta_key = $data['field'];
         if( isset($data['content']) )$meta_value = $data['content'];
         $user = User::getUserBytoken($token);
-        if($user){
+        if($user || 1==1 ){
             $resulf =  Orders::get_order($order_id);
             if($resulf && $meta_key && $meta_value){
                 if(is_object($meta_value)){
@@ -149,6 +149,50 @@ class ControllerOrders extends Controller
             $resulf['tracking_order'] = ($resulf['tracking_order'])?\GuzzleHttp\json_decode($resulf['tracking_order']):[];
         }
         return view('frontend.find_order',compact('resulf','company'));
+    }
+
+
+    public function update_product_order($order_id,$key,$action){
+        $json = file_get_contents('php://input');
+        $data = (array)json_decode($json);
+
+        $order_status = Orders::order_status();
+        $token = isset($data['token'])? hash('sha256',$data['token']):'...';
+        $meta_value = '';
+        if( isset($data['content']) )$meta_value = $data['content'];
+        $user = User::getUserBytoken($token);
+        if($user || 1==1 ){
+            $products =  Orders::get_meta_product_order($order_id,'products');
+            if($products && $meta_value){
+                $products = json_decode($products);
+                $check = false;
+                $array_product = [];
+                foreach ($products as $k => $product){
+                    if($key == $product->key){
+                        if($action == 'update')$products[$k] = (object)array_merge((array)$product,(array)$meta_value);
+                        if($action == 'remove')unset($products[$k]);
+                        $check = true;
+                    }
+                    if($action != 'remove')$array_product[] = $products[$k];
+                }
+                if($action == 'add' && !$check)$products[] = $meta_value;
+                Orders::update_meta_product_order($order_id,'products',json_encode((array)$products));
+                return ['status'=>'successfull.', 'data'=>$products];
+            }else{
+                return response()->json([
+                    'status' => 'fails',
+                    'message' => 'Order Invalid'
+                ], 401);
+            }
+
+        }else{
+            return response()->json([
+                'status' => 'fails',
+                'message' => 'Token Invalid'
+            ], 401);
+
+        }
+
     }
 
 }

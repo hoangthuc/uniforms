@@ -377,7 +377,7 @@ class ControllerAjax extends Controller
                 Orders::update_meta_product_order($order_id,'payment',  json_encode($payment));
                 Orders::update_meta_product_order($order_id,'total',  json_encode($data['total']));
                $resulf['success'] = url('/order/'.$order_id.'?order_key='.md5($order_id));
-             //  session()->forget('cart');
+               session()->forget('cart');
              //   Orders::email_template($order_id,$address['email']);
             }
 
@@ -757,6 +757,82 @@ class ControllerAjax extends Controller
             return view('admin.order.view-ajax-order',compact('shipping_address','billing_address','tracking_order'));
         }
 
+        ///admin_update_product_order
+        if(isset($request['action']) && $request['action']=='admin_update_product_order'){
+            $order = $_POST['content'];
+            $order['ListPrice'] = $order['subtotal'] / $order['quantily'];
+            $products = Orders::get_meta_product_order($order['order_id'],'products');
+            $resulf = ['html'=>''];
+            if($products){
+                $products = json_decode($products);
+                $products[ $order['list'] ]->quantily = $order['quantily'];
+                $products[ $order['list'] ]->subtotal = $order['subtotal'];
+                $products[ $order['list'] ]->ListPrice = $order['ListPrice'];
+                Orders::update_meta_product_order($order['order_id'],'products',json_encode($products));
+                $resulf =  display_product_in_order( $products,$order['order_id'] );
+            }
+
+            return $resulf['html'];
+        }
+        //admin_delete_product_order
+        if(isset($request['action']) && $request['action']=='admin_delete_product_order'){
+            $order = $_POST['content'];
+            $products = Orders::get_meta_product_order($order['order_id'],'products');
+            $resulf = ['html'=>''];
+            if($products){
+                $products = json_decode($products);
+                $array_product =[];
+                foreach ($products as $key => $product){
+                    if($key != $order['list'])$array_product[] = $product;
+                }
+                Orders::update_meta_product_order($order['order_id'],'products',json_encode($array_product));
+                $resulf =  display_product_in_order( $array_product,$order['order_id'] );
+            }
+
+            return $resulf['html'];
+        }
+
+        //admin_add_product_order
+        if(isset($request['action']) && $request['action']=='admin_get_product_order'){
+            $keyword = $_POST['content'];
+            $list_product = Product::get_products(['search'=>$keyword,'limit'=>5]);
+            if( !count($list_product) )$list_product = [];
+            return view('admin.order.view-ajax-order',compact('list_product'));
+        }
+        if(isset($request['action']) && $request['action']=='admin_select_product_order'){
+            $product_id = $_POST['product'];
+            $single_product = Product::get_product($product_id);
+            $attributes = DisplayAttributeProductSimple($product_id);
+            $sku = Product::get_meta_product($product_id, 'sku');
+            $name_plates = \App\Product::get_meta_product($product_id,'name_plate');
+            $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
+
+            $outstock = getUrlContent('https://uniforms.kendemo.com/api/product/'.$sku);
+            $outstock = ($outstock)?json_decode($outstock)->data:[];
+            $price = Product::get_meta_product($product_id, 'price');
+            return view('admin.order.view-ajax-order',compact('single_product','attributes', 'sku','name_plates', 'outstock','price') );
+        }
+
+        if(isset($request['action']) && $request['action']=='admin_select_product_order'){
+            $product_id = $_POST['product'];
+            $single_product = Product::get_product($product_id);
+            $attributes = DisplayAttributeProductSimple($product_id);
+            $sku = Product::get_meta_product($product_id, 'sku');
+            $name_plates = \App\Product::get_meta_product($product_id,'name_plate');
+            $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
+
+            $outstock = getUrlContent('https://uniforms.kendemo.com/api/product/'.$sku);
+            $outstock = ($outstock)?json_decode($outstock)->data:[];
+            $price = Product::get_meta_product($product_id, 'price');
+            return view('admin.order.view-ajax-order',compact('single_product','attributes', 'sku','name_plates', 'outstock','price') );
+        }
+
+        if(isset($request['action']) && $request['action']=='admin_add_product_order'){
+            $product_meta = $_POST['product'];
+            $order_id = $_POST['order_id'];
+            Orders::update_meta_product_order($order_id,'products',json_encode($product_meta));
+            return view('admin.order.view-ajax-order',compact('product_meta') );
+        }
 
 
 
@@ -765,6 +841,6 @@ class ControllerAjax extends Controller
 
 
 
-      /// end function action
+        /// end function action
     }
 }

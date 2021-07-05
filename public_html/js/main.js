@@ -146,22 +146,31 @@ async function add_cart() {
         var v = $(this).val();
         data[k] = v;
     });
-    console.log(data);
+    var attribute = [];
+    var Alteration = [];
     let key = data['product_id'];
-    let attributes = '';
+    let attributes_title = '';
     document.querySelectorAll('.item-attribute-list.active').forEach(att => {
         var k = att.getAttribute('data-name-parent');
         var v = att.getAttribute('data-title');
         var i = att.getAttribute('data-id');
         data[k] = v;
         key += '_' + i;
-        attributes += ' <b>' + k + '</b>: ' + v + ',';
+        attributes_title += ' <b>' + k + '</b>: ' + v + ',';
+        let attr = {};
+        attr[k] = v;
+        attribute.push(attr);
     })
     var name_plate = document.querySelector('[data-name-plate]');
     if (name_plate) {
-        attributes += '<br/> <b>Line:</b> ' + $name_plate.label + ' ,';
+        attributes_title += '<br/> <b>Line:</b> ' + $name_plate.label + ' ,';
         name_plate.querySelectorAll('input.active').forEach(inp => {
-            if (inp.value) attributes += '<br/> <b>' + inp.getAttribute('placeholder') + '</b>: <em>' + inp.value + '</em> ,';
+            if (inp.value){
+                attributes_title += '<br/> <b>' + inp.getAttribute('placeholder') + '</b>: <em>' + inp.value + '</em> ,';
+                let attr = {};
+                attr[inp.getAttribute('placeholder')] = inp.value;
+                attribute.push(attr);
+            }
         });
         var plate = name_plate.querySelector('select');
         if (plate) key += '_' + plate.value;
@@ -169,22 +178,30 @@ async function add_cart() {
     var data_hemming = display_hemming();
     if(data_hemming){
         key += '_' + data_hemming['ProductID'];
-        attributes += '<br/> <b>Hemming</b>: ' + data_hemming['ItemAlteration'] + ',';
+        attributes_title += '<br/> <b>Hemming</b>: ' + data_hemming['ItemAlteration'] + ',';
+        let attr = {};
+        attr['Hemming'] = data_hemming['ItemAlteration'];
+        Alteration.push(data_hemming);
     }
     data['key'] = key;
-    data['attributes'] = attributes.slice(0, -1);
+    data['attributes_title'] = attributes_title.slice(0, -1);
     let search =  $product_stock.search();
     if( Number(search.QtyAvailable) > 0 ){
-        data['ListID'] = search.ListID;
-        data['dbLineId'] = search.Item;
-        data['alterations'] = search;
+        data['dbLineId'] = data['product_id'];
+        data['attributes'] = attribute;
+        data['alterations'] = Alteration;
+        data['tax_ID'] = '10';
+        data = Object.assign(data,search);
+        data['subtotal'] = Number(data['quantily'])*Number(data['ListPrice']);
     }
 
     let check = in_cart(data['key'], cart.products);
-
     if (cart.products.length < 1 || check == 'insert') cart.products.push(data);
     if (check != 'insert') cart.products[check]['quantily'] = Number(cart.products[check]['quantily']) + Number(data['quantily']);
     if (Number(data['quantily']) > 0) {
+        var key_product = (check != 'insert')?check:0;
+        console.log(key_product);
+        cart.products[key_product]['subtotal'] = Number(cart.products[key_product]['quantily']) * Number(cart.products[key_product]['ListPrice']);
         send_cart(cart.products);
         Swal.fire({
             position: 'top-end',
@@ -278,8 +295,9 @@ function change_quantily(button) {
         $(button).val(quantily);
     }
     $(button).val(quantily);
-    document.querySelector('.cart-single-item[data-item-id="' + key + '"] .total-price').textContent = format_currency(cart.products[check]['subtotal'] * quantily, '$');
-    console.log(cart.products[check]['subtotal'] * quantily);
+    cart.products[check]['subtotal'] = Number(cart.products[check]['ListPrice']) * quantily;
+    document.querySelector('.cart-single-item[data-item-id="' + key + '"] .total-price').textContent = format_currency(cart.products[check]['subtotal'], '$');
+    console.log(cart.products[check]['subtotal']);
     cart.products[check]['quantily'] = Number(quantily);
     send_cart(cart.products);
     cart_total();
