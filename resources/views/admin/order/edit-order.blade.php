@@ -12,12 +12,14 @@
     $billing_address = ($billing_address)?(array)json_decode($billing_address):[];
     $shipping_address = App\Orders::get_meta_product_order($order_id,'shipping_address');
     $shipping_address = ($shipping_address)?(array)json_decode($shipping_address):[];
-    $products = App\Orders::get_meta_product_order($order_id,'products');
-    if( isset($products) ){
-        $products = display_product_in_order( json_decode($products) );
+    $list_products = App\Orders::get_meta_product_order($order_id,'products');
+
+    if( isset($list_products) ){
+        $products = display_product_in_order( json_decode($list_products),$order_id );
         $products['tax'] = ($products['subtotal']*$order->tax)/100;
         $products['total'] = $order->shipping + $products['tax'] + $products['subtotal'];
     }
+
     $tracking_field = ["Tracking", "Carrier", "url_tracking", "ShipDate", "PackingList"];
     $tracking_order = App\Orders::get_meta_product_order($order_id,'tracking_order');
     $tracking_order = ($tracking_order)?(array)json_decode($tracking_order):[];
@@ -217,9 +219,10 @@
                                             <th>Attributes</th>
                                             <th>Unit</th>
                                             <th>Subtotal</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody data-display-ajax-product>
                                         @if(isset($products))
                                             {!! $products['html']  !!}
                                         @endif
@@ -310,6 +313,7 @@
             </div>
         </div>
     </section>
+    @include('admin.order.edit-order-product-modal')
 @endsection
 
 

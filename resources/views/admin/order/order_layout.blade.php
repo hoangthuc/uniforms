@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="{{ asset('css/style_admin.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <style>
+        @media print {
+            .no_print { display: none; }
+        }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">

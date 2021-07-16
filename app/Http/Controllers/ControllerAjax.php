@@ -791,47 +791,39 @@ class ControllerAjax extends Controller
 
             return $resulf['html'];
         }
-
-        //admin_add_product_order
-        if(isset($request['action']) && $request['action']=='admin_get_product_order'){
-            $keyword = $_POST['content'];
-            $list_product = Product::get_products(['search'=>$keyword,'limit'=>5]);
-            if( !count($list_product) )$list_product = [];
-            return view('admin.order.view-ajax-order',compact('list_product'));
-        }
-        if(isset($request['action']) && $request['action']=='admin_select_product_order'){
-            $product_id = $_POST['product'];
-            $single_product = Product::get_product($product_id);
-            $attributes = DisplayAttributeProductSimple($product_id);
-            $sku = Product::get_meta_product($product_id, 'sku');
-            $name_plates = \App\Product::get_meta_product($product_id,'name_plate');
+        if(isset($request['action']) && $request['action']=='admin_get_product_order_info'){
+            $orderId = $request->get('content')['orderId'];
+            $productId = $request->get('content')['productId'];
+            $orderMeta = Orders::get_meta_product_order($orderId,'products');
+            $orderMeta = collect(json_decode($orderMeta));
+            $product =$orderMeta->filter(function ($product) use($productId){
+                return $product->product_id==$productId;
+            })->first();
+            $productInfo = Product::get_product($productId);
+            $attributes = DisplayAttributeProductSimple($productId);
+            $name_plates = \App\Product::get_meta_product($productId,'name_plate');
             $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
-
-            $outstock = getUrlContent('https://uniforms.kendemo.com/api/product/'.$sku);
-            $outstock = ($outstock)?json_decode($outstock)->data:[];
-            $price = Product::get_meta_product($product_id, 'price');
-            return view('admin.order.view-ajax-order',compact('single_product','attributes', 'sku','name_plates', 'outstock','price') );
-        }
-
-        if(isset($request['action']) && $request['action']=='admin_select_product_order'){
-            $product_id = $_POST['product'];
-            $single_product = Product::get_product($product_id);
-            $attributes = DisplayAttributeProductSimple($product_id);
-            $sku = Product::get_meta_product($product_id, 'sku');
-            $name_plates = \App\Product::get_meta_product($product_id,'name_plate');
-            $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
-
-            $outstock = getUrlContent('https://uniforms.kendemo.com/api/product/'.$sku);
-            $outstock = ($outstock)?json_decode($outstock)->data:[];
-            $price = Product::get_meta_product($product_id, 'price');
-            return view('admin.order.view-ajax-order',compact('single_product','attributes', 'sku','name_plates', 'outstock','price') );
-        }
-
-        if(isset($request['action']) && $request['action']=='admin_add_product_order'){
-            $product_meta = $_POST['product'];
-            $order_id = $_POST['order_id'];
-            Orders::update_meta_product_order($order_id,'products',json_encode($product_meta));
-            return view('admin.order.view-ajax-order',compact('product_meta') );
+            $attr_hemming = \App\Product::get_meta_product($productId,'attr_hemming');
+            $attr_hemming = ($attr_hemming)?(array)json_decode($attr_hemming):[];
+            $name_plate_array = [];
+                 foreach($name_plates as $value)
+                 {
+                            $color = $value->color;
+                            $detail_attribute = \App\Product::get_product_attributes_detail_single($color);
+                            $plate = $value->plate;
+                            $name_plate = \App\Product::product_name_line()[$plate];
+                            $line = 'line_1';
+                            if($plate =='2_even' || $plate =='2_r_small') $line = 'line_2';
+                            if($plate =='3_even' || $plate =='3_r_small') $line = 'line_3';
+                     $name_plate_array[]=['line'=>$line,'color'=>$color,'key'=>$value->key,'name'=>$name_plate.' '.$detail_attribute->name];
+                 }
+            return response()->json([
+                    'productOrder'      => $product,
+                    'productInfo'      => $productInfo,
+                    'attributes'   => $attributes,
+                    'name_plates'  => $name_plate_array,
+                    'attr_hemming' => $attr_hemming
+            ]);
         }
 
 
@@ -839,8 +831,6 @@ class ControllerAjax extends Controller
 
 
 
-
-
-        /// end function action
+      /// end function action
     }
 }

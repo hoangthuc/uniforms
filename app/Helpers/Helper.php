@@ -312,7 +312,7 @@ if (! function_exists('display_product_in_order')) {
              $detail_product  =    \App\Product::get_product($value->product_id);
              $title = (isset($detail_product))?'<a href="'.url('product/'.$detail_product->slug).'" target="_blank">'.$detail_product->name.'</a>':$value->title;
             ?>
-                <tr data-key="<?= $value->key ?>" data-list-item="<?= $key ?>" data-json='<?= json_encode($value) ?>' data-product="<?= isset($detail_product->id)?$detail_product->id:'' ?>">
+                <tr data-list-item="<?= $key ?>" data-json='<?= json_encode($value) ?>'>
                     <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;">
                         <span data-show><?php _e($value->quantily) ?></span>
                     <div class="no_print d-none edit_form">
@@ -331,7 +331,10 @@ if (! function_exists('display_product_in_order')) {
                         </div>
                     </td>
                     <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;min-width: 80px" class="no_print">
-                        <span data-list="<?= $key ?>" data-type="edit" onclick="edit_product_order(this)" ><i class="far fa-edit" style="font-size: 20px;"></i></span>
+
+<!--                        <span data-list="--><?//= $key ?><!--" data-type="edit" onclick="edit_product_order(this)" ><i class="far fa-edit" style="font-size: 20px;"></i></span>-->
+                        <span data-list="<?= $key ?>" data-type="edit"
+                              onclick="edit_product_order_with_modal(<?php _e($order_id.','.$value->product_id)?>)" ><i class="far fa-edit" style="font-size: 20px;"></i></span>
                         <span data-order="<?= $order_id ?>" data-list="<?= $key ?>" data-type="remove" onclick="delete_product_order(this)" ><i class="fas fa-trash ml-2" style="font-size: 20px;"></i></span>
                         <span data-order="<?= $order_id ?>" class="d-none" data-list="<?= $key ?>" data-type="update" onclick="update_product_order(this)" ><i class="fa fa-save fa-right-5" style="font-size: 30px;"></i></span>
                     </td>
