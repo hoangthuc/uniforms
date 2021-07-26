@@ -813,20 +813,6 @@ class ControllerAjax extends Controller
             return view('admin.order.view-ajax-order',compact('single_product','attributes', 'sku','name_plates', 'outstock','price') );
         }
 
-        if(isset($request['action']) && $request['action']=='admin_select_product_order'){
-            $product_id = $_POST['product'];
-            $single_product = Product::get_product($product_id);
-            $attributes = DisplayAttributeProductSimple($product_id);
-            $sku = Product::get_meta_product($product_id, 'sku');
-            $name_plates = \App\Product::get_meta_product($product_id,'name_plate');
-            $name_plates = ($name_plates)?(array)json_decode($name_plates):[];
-
-            $outstock = getUrlContent('https://uniforms.kendemo.com/api/product/'.$sku);
-            $outstock = ($outstock)?json_decode($outstock)->data:[];
-            $price = Product::get_meta_product($product_id, 'price');
-            return view('admin.order.view-ajax-order',compact('single_product','attributes', 'sku','name_plates', 'outstock','price') );
-        }
-
         if(isset($request['action']) && $request['action']=='admin_add_product_order'){
             $product_meta = $_POST['product'];
             $order_id = $_POST['order_id'];

@@ -12,9 +12,9 @@
     $billing_address = ($billing_address)?(array)json_decode($billing_address):[];
     $shipping_address = App\Orders::get_meta_product_order($order_id,'shipping_address');
     $shipping_address = ($shipping_address)?(array)json_decode($shipping_address):[];
-    $products = App\Orders::get_meta_product_order($order_id,'products');
-    if( isset($products) ){
-        $products = display_product_in_order( json_decode($products) );
+    $list_products = App\Orders::get_meta_product_order($order_id,'products');
+    if( isset($list_products) ){
+        $products = display_product_in_order( json_decode($list_products),$order_id );
         $products['tax'] = ($products['subtotal']*$order->tax)/100;
         $products['total'] = $order->shipping + $products['tax'] + $products['subtotal'];
     }
@@ -217,14 +217,18 @@
                                             <th>Attributes</th>
                                             <th>Unit</th>
                                             <th>Subtotal</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody data-display-ajax-product>
                                         @if(isset($products))
                                             {!! $products['html']  !!}
                                         @endif
                                         </tbody>
                                     </table>
+                                    <div class="add-product">
+                                        <button type="button" class="btn btn-outline-info btn-flat" data-toggle="modal" data-target="#add-new-product">Add Product</button>
+                                    </div>
                                 </div>
                                 <!-- /.col -->
                             </div>
@@ -310,6 +314,25 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" tabindex="-1" id="add-new-product" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="card card-primary m-0">
+                    <div class="card-header">
+                        <a type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                        <h3 class="card-title"> <i class="fas fa-tag"></i> Search product</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <input type="text" class="form-control rounded-0" name="search_product" oninput="get_product_in_order(this)" placeholder="Enter name or sku of product" autocomplete="off">
+                        <div data-show-list-product></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 @endsection
 
 

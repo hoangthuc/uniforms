@@ -109,9 +109,9 @@
                                                 <tr>
                                                     <td>{{ $value->quantily }}</td>
                                                     <td><a href="{{ display_url_product($value->product_id) }}">{{  $value->title }}</a></td>
-                                                    <td>{!! $value->attributes !!}</td>
-                                                    <td>{{ format_currency( $value->subtotal,2,'$') }}</td>
-                                                    <td>{{ format_currency( $value->subtotal * $value->quantily,2,'$') }}</td>
+                                                    <td>{!! $value->attributes_title !!}</td>
+                                                    <td>{{ format_currency( $value->ListPrice,2,'$') }}</td>
+                                                    <td>{{ format_currency( $value->ListPrice * $value->quantily,2,'$') }}</td>
                                                 </tr>
                                                   @endforeach
                                             @endif
