@@ -13,7 +13,6 @@
     $shipping_address = App\Orders::get_meta_product_order($order_id,'shipping_address');
     $shipping_address = ($shipping_address)?(array)json_decode($shipping_address):[];
     $list_products = App\Orders::get_meta_product_order($order_id,'products');
-
     if( isset($list_products) ){
         $products = display_product_in_order( json_decode($list_products),$order_id );
         $products['tax'] = ($products['subtotal']*$order->tax)/100;

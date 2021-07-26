@@ -54,12 +54,12 @@
                                                         <img src="{{ $item['thumbnail'] }}" alt="image">
                                                     </a>
                                                     <h6 class="pl-3"><a class="font-weight-bold" href="{{ $item['link'] }}">{{ $item['title'] }}</a>
-                                                       <div class="mt-3">{!! $item['attributes'] !!}</div>
+                                                       <div class="mt-3">{!! $item['attributes_title'] !!}</div>
                                                     </h6>
                                                 </div>
                                             </div>
                                             <div class="col-md-2 col-4">
-                                                <div class="price">{{ format_currency( floatval($item['subtotal']),2,'$')  }}</div>
+                                                <div class="price">{{ format_currency( floatval($item['ListPrice']),2,'$')  }}</div>
                                             </div>
                                             <div class="col-md-2 col-4">
                                                 <div class="quantity-container d-flex align-items-center mt-15">
@@ -67,7 +67,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-2 d-none d-sm-none d-md-block">
-                                                <div class="total-price price">{{ format_currency( floatval($item['subtotal'])*$item['quantily'] ,2,'$')  }}</div>
+                                                <div class="total-price price">{{ format_currency( floatval($item['ListPrice'])*$item['quantily'] ,2,'$')  }}</div>
                                             </div>
                                             <div class="col-md-1 col-4 text-right">
                                                 <button type="button" class="btn btn-link btn-lg btn-remove-product" onclick="remove_product(this)" data-product-id="{{ $item['key'] }}"><i class="fa fa-trash"></i></button>

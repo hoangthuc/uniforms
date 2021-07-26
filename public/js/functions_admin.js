@@ -1869,17 +1869,12 @@ function edit_product_order(event) {
         show.classList.remove('d-none');
     })
 }
-var formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
 
-    // These options are needed to round to whole numbers if that's what you want.
-    minimumFractionDigits: 2, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)loaditem
-});
 
 function edit_product_order_with_modal(orderId, productId) {
     var data = {orderId: orderId, productId: productId};
+    $('#updateProductOrder').attr('data-order',orderId)
+    $('#updateProductOrder').attr('data-product',productId)
     var settings = {
         "url": setting.ajax_url,
         "method": "POST",
@@ -1891,92 +1886,141 @@ function edit_product_order_with_modal(orderId, productId) {
         }
     };
     $.ajax(settings).done(function (response) {
-        $('#product_order_detail').html('');
-        $('#edit_product_name').html(response.productInfo.name);
-        $('#edit_product_qty').val(response.productOrder.quantily);
-        $('#edit_product_unit_price').html(formatter.format(response.productOrder.price_default));
-        $('#edit_product_subtotal').val(response.productOrder.subtotal);
-        var attributeHtml=line1=line2=line3 = ''
-        var nameplate=false;
-        if (response.attributes.length) {
-            selectColor=0;
-            $.each(response.attributes, function (key, attribute) {
-                if (attribute.name != 'Weight') {
-                    var selectValue ='';
-                    $.each(response.productOrder.attributes, function(productOrderKey,productOrderAttributes){
-                        for (const [i, val] of Object.entries(productOrderAttributes)) {
-                            if(i===attribute.name)
-                            {
-                                selectValue = val;
-                                selectColor = attribute.id
-                            }
-                            if(i==='Engrave Line 1')
-                            {
-                                nameplate=true;
-                                line1=val
-                            }
-                            if(i==='Engrave Line 2')
-                            {
-                                nameplate=true;
-                                line2=val
-                            }
-                            if(i==='Engrave Line 3')
-                            {
-                                nameplate=true;
-                                line3=val
-                            }
-
-                        }
-                    })
-                    attributeHtml += '<tr><td class="text-center"><b>' + attribute.name + '</b></td>' +
-                        '<td><select onchange="change_color_edit_product_order()" id="edit_product_attribute" data-attribute="' + attribute.id + '" class="form-control select2">';
-                    var attributes = attribute.list;
-                    if(selectValue==='')
-                    {
-                        attributeHtml += '<option value="">------</option>'
-                    }
-                    $.each(attributes, function (index, item) {
-                        attributeHtml += '<option ' + (selectValue===item.name?'selected':'')+' value="' + item.id + '">' + item.name + '</option>'
-                    })
-                    attributeHtml += '</select></td>';
-                }
-            })
-        }
-        if (response.name_plates.length) {
-
-            attributeHtml += '<tr><td class="text-center"><b>Name plate</b></td>' +
-                '<td><select onchange="display_name_plate_input()" id="edit_product_nameplate"  class="form-control select2">';
-            if(!nameplate)
-            {
-                attributeHtml += '<option value="">------</option>'
-            }
-            $.each(response.name_plates, function (key, attribute) {
-                attributeHtml += '<option data-line="'+attribute.line+'" style="'+(attribute.color!=selectColor?'display:none':'')+'"' +
-                    ' class="nameplate color_'+attribute.color+'" ' +(response.productOrder.key.search(attribute.color+'_'+attribute.line)!=-1?'selected':'')+
-                    ' data-color="' + attribute.color + '" value="' + attribute.key + '">' + attribute.name + '</option>'
-            })
-            attributeHtml += '</select>' +
-                '<input type="text" class="form-control mb-2 line_1 line_2 line_3" style="display: none" value="'+line1+'"  placeholder="Engrave Line 1">\n' +
-                '        <input type="text" class="form-control mb-2 line_2 line_3" style="display: none" value="'+line2+'"  placeholder="Engrave Line 2">\n' +
-                '        <input type="text" class="form-control mb-2 line_3" style="display: none" value="'+line3+'" placeholder="Engrave Line 3"></td>';
-            attributeHtml += '</tr>'
-
-        }
-        // if (!$.isEmptyObject(response.attr_hemming)) {
-        //     attributeHtml += '<tr><td class="text-center"><b>Hemming</b></td>' +
-        //         '<td><select id="edit_product_hemming"  class="form-control select2">';
-        //     $.each(response.attr_hemming, function (key, attribute) {
-        //         attributeHtml += '<option value="' + attribute.hemming + '" data-hemming-price="' + attribute.hemming_price + '">' + attribute.hemming + '</option>'
-        //     })
-        //     attributeHtml += '</select></td>';
-        //     attributeHtml += '</tr>'
-        // }
-        $('#product_order_detail').html(attributeHtml)
+        $('#updateHtml').html(response);
         $('#editProductOrderModal').modal('show');
-        if(nameplate)
-            display_name_plate_input()
+        $('#btnUpdateOrder').attr('onclick',"updateOrder("+orderId+")")
+        // $('#product_order_detail').html('');
+        // $('#edit_product_name').html(response.productInfo.name);
+        // $('#edit_product_qty').val(response.productOrder.quantily);
+        //
+        // $('#edit_product_unit_price').html(format_currency(response.productOrder.price_default));
+        // $('#product_unit_price').val(response.productOrder.price_default);
+        // $('#update_product_unit_price').val(response.productOrder.price_default);
+        // $('#edit_product_subtotal').val(response.productOrder.subtotal);
+        // var priceAttribute =response.price_attribute;
+        // var attributeHtml=line1=line2=line3 = ''
+        // var nameplate=false;
+        // if (response.attributes.length) {
+        //     selectColor=0;
+        //     $.each(response.attributes, function (key, attribute) {
+        //         if (attribute.name != 'Weight') {
+        //             var selectValue ='';
+        //             $.each(response.productOrder.attributes, function(productOrderKey,productOrderAttributes){
+        //                 for (const [i, val] of Object.entries(productOrderAttributes)) {
+        //                     if(i===attribute.name)
+        //                     {
+        //                         selectValue = val;
+        //                         selectColor = attribute.id
+        //                     }
+        //                     if(i==='Engrave Line 1')
+        //                     {
+        //                         nameplate=true;
+        //                         line1=val
+        //                     }
+        //                     if(i==='Engrave Line 2')
+        //                     {
+        //                         nameplate=true;
+        //                         line2=val
+        //                     }
+        //                     if(i==='Engrave Line 3')
+        //                     {
+        //                         nameplate=true;
+        //                         line3=val
+        //                     }
+        //
+        //                 }
+        //             })
+        //             attributeHtml += '<tr><td class="text-center"><b>' + attribute.name + '</b></td>' +
+        //                 '<td><select ';
+        //             if (attribute.name == 'Color')
+        //             {
+        //                 attributeHtml += 'onchange="change_color_edit_product_order()" id="edit_product_attribute" ' ;
+        //             }
+        //             else
+        //                 attributeHtml += 'onchange="change_product_order_attribute()" ' ;
+        //
+        //             attributeHtml += ' data-attribute="' + attribute.id + '" ' +
+        //                 'data-attribute-title="'+attribute.name+'"' +
+        //                 'class="edit_product_attribute form-control select2">';
+        //             var attributes = attribute.list;
+        //             if(selectValue==='')
+        //             {
+        //                 attributeHtml += '<option value="">------</option>'
+        //             }
+        //             $.each(attributes, function (index, item) {
+        //                 attributeHtml += '<option data-price="'+priceAttribute[item.id]+'"' + (selectValue===item.name?'selected':'')+' value="' + item.id + '">'
+        //                     + item.name +' ('+format_currency(priceAttribute[item.id])+')'
+        //                     '</option>'
+        //             })
+        //             attributeHtml += '</select></td>';
+        //         }
+        //     })
+        // }
+        // if (response.name_plates.length) {
+        //
+        //     attributeHtml += '<tr><td class="text-center"><b>Name plate</b></td>' +
+        //         '<td><select onchange="display_name_plate_input()" id="edit_product_nameplate"  class="form-control select2">';
+        //     if(!nameplate)
+        //     {
+        //         attributeHtml += '<option value="">------</option>'
+        //     }
+        //     $.each(response.name_plates, function (key, attribute) {
+        //         attributeHtml += '<option data-line="'+attribute.line+'" style="'+(attribute.color!=selectColor?'display:none':'')+'"' +
+        //             ' class="nameplate color_'+attribute.color+'" ' +(response.productOrder.key.search(attribute.color+'_'+attribute.line)!=-1?'selected':'')+
+        //             ' data-color="' + attribute.color + '" value="' + attribute.key + '">' + attribute.name + '</option>'
+        //     })
+        //     attributeHtml += '</select>' +
+        //         '<input type="text" class="form-control mb-2 line_1 line_2 line_3" style="display: none" value="'+line1+'"  placeholder="Engrave Line 1">\n' +
+        //         '        <input type="text" class="form-control mb-2 line_2 line_3" style="display: none" value="'+line2+'"  placeholder="Engrave Line 2">\n' +
+        //         '        <input type="text" class="form-control mb-2 line_3" style="display: none" value="'+line3+'" placeholder="Engrave Line 3"></td>';
+        //     attributeHtml += '</tr>'
+        //
+        // }
+        // $('#product_order_detail').html(attributeHtml)
+        // $('#editProductOrderModal').modal('show');
+        // if(nameplate)
+        //     display_name_plate_input()
 
     })
+}
+$('#editProductOrderModal').on('shown.bs.modal', function (event) {
+    $('.active').each(function(){
+        $(this).click()
+    })
+    $('.item-attribute-list').attr('onclick','select_attribute(this,true)')
+})
+function change_product_order_attribute(element) {
+    var addedPrice = $(element).val()
+    var unitPrice = 0;
+    $('.edit_product_attribute').each(function(){
+        var price = $(this).find(":selected").attr('data-price');
+        if((typeof price)=='undefined')
+        {
+            price = 0;
+        }
+        unitPrice+=Number(price);
+    })
+    $('#edit_product_unit_price').html(format_currency(Number($('#product_unit_price').val())+unitPrice))
+    $('#update_product_unit_price').val(Number($('#product_unit_price').val())+unitPrice)
+    changeQuantity()
+}
+function changeQuantity()
+{
+    var updatePrice = $('#update_product_unit_price').val()*$('#edit_product_qty').val();
+    $('#edit_product_subtotal').val(updatePrice)
+}
+function changeQuantity()
+{
+    var updateUnitPrice = $('#update_product_unit_price').val()*$('#edit_product_qty').val();
+    $('#edit_product_subtotal').val(updatePrice)
+}
+function updateProductOrder(element)
+{
+    var orderId = $('#updateProductOrder').attr('data-order')
+    var productId = $('#updateProductOrder').attr('data-product')
+    var  qty = $('#edit_product_qty').val();
+    var  subTotal = $('#edit_product_subtotal').val();
+
 }
 function display_name_plate_input()
 {
@@ -1985,6 +2029,7 @@ function display_name_plate_input()
 }
 function change_color_edit_product_order()
 {
+    change_product_order_attribute()
     $('.nameplate').hide()
     $('.color_'+$('#edit_product_attribute').val()).show();
     if(typeof $('.color_'+$('#edit_product_attribute').val())[0] !='undefined')

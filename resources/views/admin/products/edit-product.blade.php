@@ -177,31 +177,31 @@
                             </div>
 
                             <!---Hemming-->
-                            <div class="form-group item-attributes item-attibute-99 row border-top pt-3">
-                                <label class="col-md-2" style="min-width: 110px;">Hemming</label>
-                                <div class="col-md-3">
-                                    <input type="text" class="form-control" name="hemming" placeholder="Enter Hemming">
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-control" DataCurrency>$0</div>
-                                    <input type="number" class="DataCurrencyGet form-control" name="hemming_price" value="0" placeholder="Enter price" data-title="Price" data-required="false" onkeyup="load_data_money(this)" onchange="load_data_money(this)" autocomplete="off">
-                                    <span class="um-field-error d-none"></span>
-                                </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-primary ml-1" type="button" onclick="$Attribute.setup_hemming(this)">Add Hemming</button>
-                                </div>
-                            </div>
-                            <div class="form-group pt-3" display_hemming_render_control>
-                                @if($attr_hemming)
-                                    @foreach($data_hemming = \GuzzleHttp\json_decode($attr_hemming) as $key_n => $value_n)
-                                        <?php
-                                        $hemming = $value_n->hemming;
-                                        $hemming_price = $value_n->hemming_price;
-                                        ?>
-                                        @include('admin.products.template_hemming_view')
-                                    @endforeach
-                                @endif
-                            </div>
+{{--                            <div class="form-group item-attributes item-attibute-99 row border-top pt-3">--}}
+{{--                                <label class="col-md-2" style="min-width: 110px;">Hemming</label>--}}
+{{--                                <div class="col-md-3">--}}
+{{--                                    <input type="text" class="form-control" name="hemming" placeholder="Enter Hemming">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-md-3">--}}
+{{--                                    <div class="form-control" DataCurrency>$0</div>--}}
+{{--                                    <input type="number" class="DataCurrencyGet form-control" name="hemming_price" value="0" placeholder="Enter price" data-title="Price" data-required="false" onkeyup="load_data_money(this)" onchange="load_data_money(this)" autocomplete="off">--}}
+{{--                                    <span class="um-field-error d-none"></span>--}}
+{{--                                </div>--}}
+{{--                                <div class="col-md-2">--}}
+{{--                                    <button class="btn btn-primary ml-1" type="button" onclick="$Attribute.setup_hemming(this)">Add Hemming</button>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group pt-3" display_hemming_render_control>--}}
+{{--                                @if($attr_hemming)--}}
+{{--                                    @foreach($data_hemming = \GuzzleHttp\json_decode($attr_hemming) as $key_n => $value_n)--}}
+{{--                                        <?php--}}
+{{--                                        $hemming = $value_n->hemming;--}}
+{{--                                        $hemming_price = $value_n->hemming_price;--}}
+{{--                                        ?>--}}
+{{--                                        @include('admin.products.template_hemming_view')--}}
+{{--                                    @endforeach--}}
+{{--                                @endif--}}
+{{--                            </div>--}}
 
                             <!--Show variations product render control-->
                             <div class="form-group pt-3 border-top" display_attribute_render_control>

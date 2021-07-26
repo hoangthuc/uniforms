@@ -116,7 +116,7 @@
                                             <div class="item-product d-md-flex border-bottom mt-2 pb-2">
                                                 <div class="col-md-7">
                                                     <a href="{{ $item['link'] }}">{{ $item['title'] }}</a>
-                                                   <span>{!! $item['attributes'] !!}</span>
+                                                   <span>{!! $item['attributes_title'] !!}</span>
                                                 </div>
                                                 <div class="col-md-2 p-md-0 amount text-md-center text-truncate"><label class="font-weight-bold d-inline-block d-md-none">Quantity: </label> {{ $item['quantily'] }}</div>
                                                 <div class="col-md-3 p-md-0 price text-md-right text-truncate"><label class="font-weight-bold d-inline-block d-md-none">Total: </label> {{ format_currency( floatval($item['subtotal'])*$item['quantily'] ,2,'$')  }}</div>

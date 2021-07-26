@@ -13,7 +13,7 @@
     $shipping_address = ($shipping_address)?(array)json_decode($shipping_address):[];
     $products = App\Orders::get_meta_product_order($order_id,'products');
     if(isset($products)){
-        $products = display_product_in_order( json_decode($products) );
+        $products = display_product_in_order( json_decode($products),$order_id );
         $products['tax'] = ($products['subtotal']*$order->tax)/100;
         $products['total'] = $order->shipping + $products['tax'] + $products['subtotal'];
     }
@@ -165,6 +165,7 @@
             </div>
         </div>
     </section>
+    @include('admin.order.edit-order-product-modal')
 @endsection
 
 

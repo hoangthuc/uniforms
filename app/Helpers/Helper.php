@@ -308,7 +308,8 @@ if (! function_exists('display_product_in_order')) {
        ob_start();
         if(isset($data)){
             $total = 0;
-            foreach($data as $key => $value): $total += $value->subtotal * $value->quantily;
+//            foreach($data as $key => $value): $total += $value->subtotal * $value->quantily;
+            foreach($data as $key => $value): $total += $value->subtotal ;
              $detail_product  =    \App\Product::get_product($value->product_id);
              $title = (isset($detail_product))?'<a href="'.url('product/'.$detail_product->slug).'" target="_blank">'.$detail_product->name.'</a>':$value->title;
             ?>
@@ -325,7 +326,8 @@ if (! function_exists('display_product_in_order')) {
                         <span data-display><?php _e( format_currency( $value->ListPrice,2,'$') ) ?></span>
                     </td>
                     <td style="padding: .75rem;vertical-align: top;border-bottom: 1px solid #dee2e6;">
-                        <span data-show><?php _e( format_currency( $value->ListPrice * $value->quantily,2,'$') ) ?></span>
+<!--                        <span data-show>--><?php //_e( format_currency( $value->ListPrice * $value->quantily,2,'$') ) ?><!--</span>-->
+                        <span data-show><?php _e( format_currency( $value->subtotal,2,'$') ) ?></span>
                         <div class="no_print d-none edit_form">
                             <input type="number" data-name="subtotal" data-list="<?= $key ?>" onchange="change_product_order(this)" oninput="change_product_order(this)"  value="<?= $value->ListPrice * $value->quantily ?>">
                         </div>
@@ -519,7 +521,8 @@ if( !function_exists('cart_total') ){
             'total'=>0,
         ];
         foreach ($cart['products'] as $key => $item){
-            $total['subtotal'] += $item['subtotal']*$item['quantily'];
+//            $total['subtotal'] += $item['subtotal']*$item['quantily'];
+            $total['subtotal'] += $item['subtotal'];
         }
         $total['tax'] = $tax*100;
         $total['shipping'] = $shipping;
